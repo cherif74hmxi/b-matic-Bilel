@@ -1,122 +1,196 @@
-import { useState, FormEvent } from "react";
-import { Clock, CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useMemo, useState, FormEvent } from "react";
+import {
+  Clock, Check, ChevronRight, ChevronLeft, User, Mail, Phone,
+  Car, FileText, Upload, Info, ShieldCheck, CalendarDays,
+} from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
-import NeonButton from "@/components/NeonButton";
 import mechanicBg from "@/assets/mechanic-bg.jpg";
-import { vehiculesData, marques } from "@/data/vehicules";
+import { serviceCategories, findService, type Service } from "@/data/services";
 
-const carburants = ["Essence", "Diesel", "Hybride", "Hybride Rechargeable", "Électrique", "Hydrogène", "GPL", "Gaz Naturel (GNV)", "Autre"];
+/* ------------------------------------------------------------------ helpers */
+const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+const HEURES = Array.from({ length: 11 }, (_, i) => `${(i + 8).toString().padStart(2, "0")}:00`); // 08:00 → 18:00
 
-const heures = Array.from({ length: 16 }, (_, i) => {
-  const h = i + 7;
-  return `${h.toString().padStart(2, "0")}:00`;
-});
+const pad = (n: number) => (n < 10 ? "0" : "") + n;
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const money = (n: number) => "€" + n.toLocaleString("fr-BE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+function durLabel(min: number) {
+  if (!min) return "";
+  const h = Math.floor(min / 60), m = min % 60;
+  return h ? `${h} h${m ? " " + pad(m) : ""}` : `${m} min`;
+}
+function longDate(iso: string) {
+  const [y, mo, d] = iso.split("-").map(Number);
+  const dt = new Date(y, mo - 1, d);
+  return `${DAYS[dt.getDay()]} ${dt.getDate()} ${MONTHS[dt.getMonth()]} ${y}`;
+}
+function priceNode(s: Service) {
+  if (s.priceType === "devis") return <span className="text-neon-cyan font-semibold">Sur devis</span>;
+  return (
+    <span className="text-neon-cyan font-semibold">
+      {s.priceType === "from" && <span className="text-muted-foreground font-normal text-[0.86em]">à partir de </span>}
+      {money(s.price)}
+    </span>
+  );
+}
+
+const STEPS = ["Service", "Date & heure", "Vos informations", "Confirmation"];
 
 const Mecanique = () => {
   const [step, setStep] = useState(1);
 
-  // Step 1
-  const [marque, setMarque] = useState("");
-  const [modele, setModele] = useState("");
-  const [autreMarqueModele, setAutreMarqueModele] = useState("");
-  const [annee, setAnnee] = useState("");
+  // step 1
+  const [catId, setCatId] = useState(serviceCategories[0].id);
+  const [svcId, setSvcId] = useState("");
+  const svc = findService(svcId);
 
-  const isAutre = marque === "Autre";
-  const modelesDisponibles = marque && !isAutre ? vehiculesData[marque] || [] : [];
-  const [carburant, setCarburant] = useState("");
-  const [boite, setBoite] = useState("");
-  const [typeDemande, setTypeDemande] = useState("");
-  const [description, setDescription] = useState("");
-  const [motorisation, setMotorisation] = useState("");
+  // step 2
+  const [month, setMonth] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
+  const [date, setDate] = useState<string>("");
+  const [time, setTime] = useState<string>("");
 
-  // Step 2
-  const [nom, setNom] = useState("");
+  // step 3
   const [prenom, setPrenom] = useState("");
-  const [telephone, setTelephone] = useState("");
+  const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [vin, setVin] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  // step 4
   const [consent, setConsent] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date>();
-  const [selectedTime, setSelectedTime] = useState("");
-
-  const step1Valid = (isAutre ? autreMarqueModele.trim().length > 0 : marque && modele) && annee && carburant && boite && typeDemande && description;
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const phoneValid = /^\+\d{1,4}\s?\d+/.test(telephone);
-  const step2Valid = nom && prenom && emailValid && phoneValid && consent;
-
   const [formState, setFormState] = useState<{ status: string; message: string }>({ status: "idle", message: "" });
+  const [sent, setSent] = useState(false);
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phoneValid = telephone.replace(/[^\d]/g, "").length >= 8;
+  const vinValid = !vin || /^[A-HJ-NPR-Z0-9]{15,20}$/.test(vin.toUpperCase());
+  const step3Valid = prenom.trim().length >= 2 && nom.trim().length >= 2 && emailValid && phoneValid && vinValid && (vin.trim() || file);
+
+  const cat = serviceCategories.find((c) => c.id === catId)!;
+
+  /* ---------------------------------------------------------------- calendar */
+  const days = useMemo(() => {
+    const y = month.getFullYear(), m = month.getMonth();
+    const lead = (new Date(y, m, 1).getDay() + 6) % 7; // lundi = 0
+    const total = new Date(y, m + 1, 0).getDate();
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const cells: { key: string; day: number; free: boolean; empty?: boolean }[] = [];
+    for (let i = 0; i < lead; i++) cells.push({ key: `e${i}`, day: 0, free: false, empty: true });
+    for (let i = 1; i <= total; i++) {
+      const d = new Date(y, m, i);
+      const free = d >= today && d.getDay() !== 0; // fermé le dimanche, pas de date passée
+      cells.push({ key: ymd(d), day: i, free });
+    }
+    return cells;
+  }, [month]);
+
+  const canPrev = useMemo(() => {
+    const cur = new Date(); cur.setDate(1); cur.setHours(0, 0, 0, 0);
+    return new Date(month.getFullYear(), month.getMonth(), 1) > cur;
+  }, [month]);
+
+  const goto = (n: number) => { setStep(n); setFormState({ status: "idle", message: "" }); window.scrollTo({ top: 0, behavior: "smooth" }); };
+
+  const takeFile = (f: File) => {
+    if (!/^(image\/jpeg|image\/png|application\/pdf)$/.test(f.type)) {
+      setFormState({ status: "error", message: "Format non accepté. Utilisez un fichier JPG, PNG ou PDF." });
+      return;
+    }
+    if (f.size > 5 * 1024 * 1024) {
+      setFormState({ status: "error", message: "Fichier trop volumineux. Maximum 5 Mo." });
+      return;
+    }
+    setFormState({ status: "idle", message: "" });
+    setFile(f);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!consent || !svc) return;
     setFormState({ status: "loading", message: "Envoi en cours..." });
 
-    const data = {
-      marque: isAutre ? "Autre" : marque,
-      modele: isAutre ? autreMarqueModele : modele,
-      annee,
-      motorisation,
-      carburant,
-      boite,
-      typeDemande,
-      description,
-      date: selectedDate ? format(selectedDate, "dd/MM/yyyy") : "",
-      heure: selectedTime,
-      nom,
-      prenom,
-      telephone,
-      email,
+    const prix = svc.priceType === "devis" ? "Sur devis" : (svc.priceType === "from" ? "à partir de " : "") + money(svc.price);
+    const base: Record<string, string> = {
+      service: svc.name,
+      categorie: cat.name,
+      prix,
+      date: date ? longDate(date) : "",
+      heure: time,
+      duree: durLabel(svc.duration),
+      prenom, nom, email, telephone,
+      vin: vin ? vin.toUpperCase() : "",
+      carteGrise: file ? file.name : "",
     };
 
     try {
-      const response = await fetch("https://formspree.io/f/xlgokywp", {
-        method: "POST",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        setFormState({ status: "success", message: "Merci ! Votre demande de rendez-vous a été envoyée avec succès." });
-        setTimeout(() => setFormState({ status: "idle", message: "" }), 6000);
+      let response: Response;
+      if (file) {
+        const fd = new FormData();
+        Object.entries(base).forEach(([k, v]) => fd.append(k, v));
+        fd.append("carteGriseFichier", file, file.name);
+        response = await fetch("https://formspree.io/f/xlgokywp", { method: "POST", headers: { Accept: "application/json" }, body: fd });
       } else {
-        throw new Error("Erreur serveur");
+        response = await fetch("https://formspree.io/f/xlgokywp", {
+          method: "POST",
+          headers: { Accept: "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(base),
+        });
       }
+      if (!response.ok) throw new Error("server");
+      setSent(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
-      setFormState({ status: "error", message: "Une erreur est survenue. Veuillez réessayer ou nous contacter directement." });
-      setTimeout(() => setFormState({ status: "idle", message: "" }), 6000);
+      setFormState({ status: "error", message: "Une erreur est survenue. Réessayez ou contactez-nous directement." });
     }
   };
 
-  const inputClass = "w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-sm";
-  const selectClass = `${inputClass} appearance-none`;
-  const labelClass = "block text-sm font-medium text-foreground mb-1.5";
+  const inputClass = "w-full bg-input border border-border rounded-lg pl-11 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-sm";
+  const iconWrap = "absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none";
 
-  const StepIndicator = () => (
-    <div className="flex items-center justify-center gap-2 mb-10">
-      {[1, 2].map((s) => (
-        <div key={s} className="flex items-center gap-2">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-heading text-sm font-bold transition-all ${s <= step ? "bg-gradient-neon text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-            {s}
+  /* --------------------------------------------------------------- recap rows */
+  const recap = () => {
+    if (!svc) return null;
+    const rows: [string, string][] = [["Service", svc.name]];
+    rows.push(["Date", date ? longDate(date) : "—"]);
+    rows.push(["Heure", svc.duration ? `${time} — durée estimée ${durLabel(svc.duration)}` : time]);
+    rows.push(["Nom", `${prenom} ${nom}`]);
+    rows.push(["E-mail", email]);
+    rows.push(["Téléphone", telephone]);
+    if (vin) rows.push(["Numéro de châssis", vin.toUpperCase()]);
+    if (file) rows.push(["Carte grise", file.name]);
+    const totalLabel = svc.priceType === "devis" ? "Montant" : svc.priceType === "from" ? "Montant estimé, à régler sur place" : "Total à régler sur place";
+    return (
+      <div className="border border-border rounded-lg overflow-hidden mb-6">
+        {rows.map(([k, v], i) => (
+          <div key={i} className="flex justify-between gap-5 px-5 py-3.5 border-b border-border text-sm">
+            <span className="text-muted-foreground shrink-0">{k}</span>
+            <span className="font-semibold text-right break-words">{v}</span>
           </div>
-          {s < 2 && <div className={`w-12 h-0.5 ${s < step ? "bg-gradient-neon" : "bg-muted"}`} />}
+        ))}
+        <div className="flex justify-between gap-5 px-5 py-3.5 bg-primary/10 text-sm">
+          <span className="text-muted-foreground shrink-0">{totalLabel}</span>
+          <span className="font-semibold text-right text-neon-cyan text-base">
+            {svc.priceType === "devis" ? "Sur devis" : (svc.priceType === "from" ? "à partir de " : "") + money(svc.price)}
+          </span>
         </div>
-      ))}
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
     <div className="pt-24 pb-20">
       <div className="container mx-auto px-4">
         <AnimatedSection>
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-center mb-4">
-            <span className="text-gradient-neon">Mécanique</span>
+            <span className="text-gradient-neon">Prendre rendez-vous</span>
           </h1>
           <p className="text-muted-foreground text-center max-w-xl mx-auto mb-6">
-            Entretien & réparation automobile. Confiez votre véhicule à des experts passionnés.
+            Entretien, mécanique, pare-brise ou detailing. Choisissez votre prestation, votre créneau, c'est réservé.
           </p>
         </AnimatedSection>
 
@@ -135,174 +209,284 @@ const Mecanique = () => {
           </div>
         </AnimatedSection>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <AnimatedSection delay={200}>
-            <GlowCard>
-              <h2 className="font-heading text-2xl font-semibold mb-2 text-center text-foreground">Prise de rendez-vous</h2>
-              <p className="text-muted-foreground text-center text-sm mb-8">Remplissez le formulaire ci-dessous pour prendre rendez-vous.</p>
-
-              <StepIndicator />
-
-              <form onSubmit={handleSubmit} action="">
-                {step === 1 && (
-                  <div className="space-y-4 animate-fade-in">
-                    <h3 className="font-heading text-lg font-semibold">
-                      <span className="text-neon-purple">Étape 1 :</span> Véhicule & demande
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className={labelClass}>Marque *</label>
-                        <select className={selectClass} value={marque} onChange={(e) => { setMarque(e.target.value); setModele(""); setAutreMarqueModele(""); }} required>
-                          <option value="">Sélectionner une marque</option>
-                          {marques.map((m) => <option key={m} value={m}>{m}</option>)}
-                        </select>
+            <GlowCard className="md:p-8">
+              {/* ---------------------------------------------------- Stepper */}
+              <div className="flex items-start mb-9">
+                {STEPS.map((label, i) => {
+                  const n = i + 1;
+                  const active = n === step, done = n < step;
+                  return (
+                    <div key={label} className="flex-1 flex flex-col items-center relative gap-2.5">
+                      {i > 0 && <div className={`absolute top-[17px] right-1/2 left-0 h-px mr-6 ${n <= step ? "bg-gradient-neon" : "bg-border"}`} />}
+                      {i < STEPS.length - 1 && <div className={`absolute top-[17px] left-1/2 right-0 h-px ml-6 ${n < step ? "bg-gradient-neon" : "bg-border"}`} />}
+                      <div className={`w-9 h-9 rounded-full grid place-items-center font-heading text-sm font-bold relative z-10 transition-all ${
+                        active ? "bg-gradient-neon text-primary-foreground shadow-[0_0_0_4px_hsl(270_80%_60%/0.18)]"
+                        : done ? "bg-muted text-foreground" : "bg-muted text-muted-foreground"}`}>
+                        {done ? <Check className="w-4 h-4" /> : n}
                       </div>
-                      {isAutre ? (
-                        <div>
-                          <label className={labelClass}>Précisez marque et modèle *</label>
-                          <textarea className={inputClass} rows={2} placeholder="Ex : Fiat 500, Seat Leon..." value={autreMarqueModele} onChange={(e) => setAutreMarqueModele(e.target.value)} required />
+                      <div className={`text-[10px] md:text-[11px] uppercase tracking-wider font-semibold text-center transition-colors ${active ? "text-neon-purple" : "text-muted-foreground"} ${active ? "block" : "hidden md:block"}`}>
+                        {label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {formState.message && (
+                <div className={`mb-5 p-4 rounded-lg text-sm ${formState.status === "error" ? "bg-destructive/15 text-destructive border border-destructive/30" : "bg-muted text-muted-foreground"}`}>
+                  {formState.message}
+                </div>
+              )}
+
+              {/* =============================================== Étape 1 — Service */}
+              {step === 1 && (
+                <div className="animate-fade-in">
+                  <h2 className="font-heading text-xl font-bold mb-1">Choisissez votre service</h2>
+                  <p className="text-muted-foreground text-sm mb-6">Sélectionnez la prestation souhaitée pour votre véhicule.</p>
+
+                  {/* category pills */}
+                  <div className="flex flex-wrap gap-2.5 mb-6">
+                    {serviceCategories.map((c) => (
+                      <button key={c.id} type="button" onClick={() => setCatId(c.id)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                          c.id === catId
+                            ? c.promo ? "bg-neon-pink border-neon-pink text-white" : "bg-gradient-neon border-transparent text-primary-foreground"
+                            : `border-border text-muted-foreground hover:text-foreground hover:border-muted-foreground ${c.promo ? "border-neon-pink/60 text-neon-pink" : ""}`}`}>
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* service cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {cat.services.map((s) => {
+                      const on = s.id === svcId;
+                      return (
+                        <button key={s.id} type="button" onClick={() => setSvcId(s.id)}
+                          className={`text-left relative border rounded-lg p-4 pr-10 bg-input transition-all ${on ? "border-primary bg-primary/10" : "border-border hover:border-muted-foreground hover:bg-card"}`}>
+                          <span className={`absolute top-4 right-4 w-5 h-5 rounded-full grid place-items-center border transition-all ${on ? "bg-primary border-primary text-primary-foreground" : "border-border"}`}>
+                            {on && <Check className="w-3 h-3" />}
+                          </span>
+                          <div className="font-semibold text-sm pr-2">{s.name}</div>
+                          {s.description && <div className="text-muted-foreground text-xs leading-relaxed mt-1.5">{s.description}</div>}
+                          <div className="flex gap-4 text-sm mt-2.5 items-center">
+                            {priceNode(s)}
+                            {s.duration > 0 && <span className="text-muted-foreground text-xs">{durLabel(s.duration)}</span>}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {cat.services.some((s) => s.priceType === "from") && (
+                    <p className="text-muted-foreground text-xs mt-4 pl-3 border-l-2 border-border">
+                      Pour les tarifs « à partir de » : le prix peut varier selon le modèle de véhicule et les pièces nécessaires.
+                    </p>
+                  )}
+
+                  <div className="flex justify-end mt-7">
+                    <button type="button" disabled={!svcId} onClick={() => goto(2)} className="btn-main">
+                      Continuer <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ========================================== Étape 2 — Date & heure */}
+              {step === 2 && (
+                <div className="animate-fade-in">
+                  <h2 className="font-heading text-xl font-bold mb-1">Date &amp; heure</h2>
+                  <p className="text-muted-foreground text-sm mb-6">Choisissez le créneau qui vous convient le mieux.</p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-7 items-start">
+                    {/* calendar */}
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="font-semibold capitalize">{MONTHS[month.getMonth()]} {month.getFullYear()}</div>
+                        <div className="flex gap-1.5">
+                          <button type="button" disabled={!canPrev} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+                            className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-foreground enabled:hover:border-primary enabled:hover:text-primary disabled:opacity-30 transition-colors">
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <button type="button" onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                            className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-7 gap-1.5 mb-2">
+                        {["Lu","Ma","Me","Je","Ve","Sa","Di"].map((d) => (
+                          <span key={d} className="text-center text-[11px] font-semibold text-muted-foreground uppercase py-1">{d}</span>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-7 gap-1.5">
+                        {days.map((c) => c.empty ? <div key={c.key} /> : (
+                          <button key={c.key} type="button" disabled={!c.free}
+                            onClick={() => { setDate(c.key); setTime(""); }}
+                            className={`py-3 rounded-lg text-sm grid place-items-center transition-all ${
+                              c.key === date ? "bg-primary text-primary-foreground font-bold"
+                              : c.free ? "bg-input border border-border text-foreground hover:border-primary hover:text-primary"
+                              : "text-muted-foreground/40 pointer-events-none"}`}>
+                            {c.day}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* slots */}
+                    <div>
+                      <div className="font-semibold mb-3.5">{date ? `Horaires du ${longDate(date)}` : "Horaires disponibles"}</div>
+                      {date ? (
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2.5">
+                          {HEURES.map((h) => (
+                            <button key={h} type="button" onClick={() => setTime(h)}
+                              className={`py-3 rounded-lg border text-sm font-medium transition-all ${
+                                h === time ? "bg-primary border-primary text-primary-foreground font-bold" : "bg-input border-border hover:border-primary hover:text-primary"}`}>
+                              {h}
+                            </button>
+                          ))}
                         </div>
                       ) : (
-                        <div>
-                          <label className={labelClass}>Modèle *</label>
-                          <select className={selectClass} value={modele} onChange={(e) => setModele(e.target.value)} required disabled={!marque}>
-                            <option value="">Sélectionner un modèle</option>
-                            {modelesDisponibles.map((m) => <option key={m} value={m}>{m}</option>)}
-                          </select>
-                        </div>
+                        <p className="text-muted-foreground text-sm py-6 text-center">Sélectionnez d'abord une date dans le calendrier.</p>
                       )}
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className={labelClass}>Année *</label>
-                        <input type="number" className={inputClass} value={annee} onChange={(e) => setAnnee(e.target.value)} required />
-                      </div>
-                      <div>
-                        <label className={labelClass}>Motorisation <span className="text-muted-foreground text-xs">(conseillé)</span></label>
-                        <input type="text" className={inputClass} placeholder="Ex : 1.5 dCi, 2.0 TSI..." value={motorisation} onChange={(e) => setMotorisation(e.target.value)} />
-                      </div>
+                  </div>
+
+                  <div className="flex justify-between mt-7">
+                    <button type="button" onClick={() => goto(1)} className="btn-ghost"><ChevronLeft className="w-4 h-4" /> Retour</button>
+                    <button type="button" disabled={!date || !time} onClick={() => goto(3)} className="btn-main">Continuer <ChevronRight className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              )}
+
+              {/* ===================================== Étape 3 — Vos informations */}
+              {step === 3 && (
+                <div className="animate-fade-in">
+                  <h2 className="font-heading text-xl font-bold mb-1">Vos informations</h2>
+                  <p className="text-muted-foreground text-sm mb-6">Vos coordonnées et les informations de votre véhicule.</p>
+
+                  <h3 className="font-semibold text-sm mb-3.5">Vos coordonnées</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Prénom *" value={prenom} onChange={(e) => setPrenom(e.target.value)} autoComplete="given-name" /></div>
+                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Nom *" value={nom} onChange={(e) => setNom(e.target.value)} autoComplete="family-name" /></div>
+                    <div className="relative">
+                      <Mail className={iconWrap} /><input type="email" className={inputClass} placeholder="E-mail *" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+                      {email && !emailValid && <p className="text-destructive text-xs mt-1">Adresse e-mail invalide</p>}
                     </div>
-                    <div>
-                      <label className={labelClass}>Carburant *</label>
-                      <select className={selectClass} value={carburant} onChange={(e) => setCarburant(e.target.value)} required>
-                        <option value="">Sélectionner</option>
-                        {carburants.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Boîte de vitesse *</label>
-                      <div className="flex gap-6">
-                        {["Manuelle", "Automatique"].map((b) => (
-                          <label key={b} className="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="boite_mec" value={b} checked={boite === b} onChange={() => setBoite(b)} className="w-4 h-4 accent-neon-purple" />
-                            <span className="text-sm text-foreground">{b}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Type de demande *</label>
-                      <div className="flex gap-6">
-                        {["Entretien", "Réparation"].map((t) => (
-                          <label key={t} className="flex items-center gap-2 cursor-pointer">
-                            <input type="radio" name="type_demande" value={t} checked={typeDemande === t} onChange={() => setTypeDemande(t)} className="w-4 h-4 accent-neon-purple" />
-                            <span className="text-sm text-foreground">{t}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Décrivez votre besoin *</label>
-                      <textarea rows={4} className={inputClass} placeholder="Décrivez le problème ou l'entretien souhaité..." value={description} onChange={(e) => setDescription(e.target.value)} required />
-                    </div>
-                    <div className="pt-4">
-                      <NeonButton onClick={() => setStep(2)} disabled={!step1Valid} className="w-full">
-                        Étape suivante
-                      </NeonButton>
+                    <div className="relative">
+                      <Phone className={iconWrap} /><input type="tel" className={inputClass} placeholder="Téléphone *" value={telephone} onChange={(e) => setTelephone(e.target.value)} autoComplete="tel" />
+                      {telephone && !phoneValid && <p className="text-destructive text-xs mt-1">Numéro invalide</p>}
                     </div>
                   </div>
-                )}
 
-                {step === 2 && (
-                  <div className="space-y-4 animate-fade-in">
-                    <h3 className="font-heading text-lg font-semibold">
-                      <span className="text-neon-purple">Étape 2 :</span> Coordonnées & créneau
-                    </h3>
-
-                    {/* Date & heure */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className={labelClass}>Date souhaitée</label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <button type="button" className={cn(inputClass, "flex items-center gap-2 text-left", !selectedDate && "text-muted-foreground")}>
-                              <CalendarIcon className="w-4 h-4 shrink-0" />
-                              {selectedDate ? format(selectedDate, "dd MMMM yyyy", { locale: fr }) : "Choisir une date"}
-                            </button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={selectedDate}
-                              onSelect={setSelectedDate}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                              className={cn("p-3 pointer-events-auto")}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      <div>
-                        <label className={labelClass}>Heure souhaitée</label>
-                        <select className={selectClass} value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
-                          <option value="">Choisir une heure</option>
-                          {heures.map((h) => <option key={h} value={h}>{h}</option>)}
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className={labelClass}>Nom *</label>
-                        <input type="text" className={inputClass} value={nom} onChange={(e) => setNom(e.target.value)} required />
-                      </div>
-                      <div>
-                        <label className={labelClass}>Prénom *</label>
-                        <input type="text" className={inputClass} value={prenom} onChange={(e) => setPrenom(e.target.value)} required />
-                      </div>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Téléphone *</label>
-                      <input type="tel" className={inputClass} placeholder="+33" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
-                      {telephone && !phoneValid && <p className="text-destructive text-xs mt-1">Format : +33 6 12 34 56 78</p>}
-                    </div>
-                    <div>
-                      <label className={labelClass}>E-mail *</label>
-                      <input type="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} required />
-                      {email && !emailValid && <p className="text-destructive text-xs mt-1">Format d'e-mail invalide</p>}
-                    </div>
-                    <label className="flex items-start gap-2 cursor-pointer pt-2">
-                      <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="w-4 h-4 accent-neon-purple mt-0.5" required />
-                      <span className="text-xs text-muted-foreground leading-relaxed">
-                        J'accepte que mes données soient traitées conformément à la politique de confidentialité et aux conditions d'utilisation.
-                      </span>
-                    </label>
-                    <div className="flex gap-4 pt-4">
-                      <button type="button" onClick={() => setStep(1)} className="flex-1 border border-border text-foreground rounded-full py-3 text-sm font-heading uppercase tracking-wider hover:bg-muted transition-colors">
-                        Retour
-                      </button>
-                      <NeonButton type="submit" disabled={!step2Valid || formState.status === "loading"} className="flex-1">
-                        {formState.status === "loading" ? "Envoi en cours..." : "Envoyer ma demande"}
-                      </NeonButton>
-                    </div>
-                    {formState.message && (
-                      <div className={`mt-4 p-4 rounded-lg text-sm text-center font-medium ${formState.status === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : formState.status === "error" ? "bg-destructive/20 text-destructive border border-destructive/30" : "bg-muted text-muted-foreground"}`}>
-                        {formState.message}
-                      </div>
-                    )}
+                  <h3 className="font-semibold text-sm mt-7 mb-3.5">Informations de votre véhicule</h3>
+                  <div className="flex gap-3.5 items-start bg-primary/5 border border-primary/20 border-l-[3px] border-l-primary rounded-lg p-4 mb-4 text-sm">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground grid place-items-center font-bold text-xs mt-0.5"><Info className="w-3.5 h-3.5" /></span>
+                    <div className="leading-relaxed text-muted-foreground">Afin de préparer les pièces avant votre rendez-vous, merci de nous transmettre votre <b className="text-foreground">VIN</b> ou une <b className="text-foreground">photo de votre carte grise</b>.</div>
                   </div>
-                )}
-              </form>
+
+                  <div className="border border-border rounded-lg p-5">
+                    {/* VIN */}
+                    <div className="flex gap-4 items-start">
+                      <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/15 text-primary grid place-items-center"><Car className="w-5 h-5" /></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm">Numéro de châssis (VIN)</div>
+                        <div className="text-muted-foreground text-xs mt-0.5">Le VIN comporte généralement 17 caractères.</div>
+                        <input value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} maxLength={20} placeholder="Ex. WBAAL71000CF63146"
+                          className="w-full bg-input border border-border rounded-lg px-4 py-3 mt-3 text-foreground placeholder:text-muted-foreground uppercase focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
+                        {vin && !vinValid && <p className="text-destructive text-xs mt-1.5">Le VIN doit comporter 15 à 20 caractères (sans I, O ni Q).</p>}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-xs font-semibold text-muted-foreground tracking-widest my-5">
+                      <span className="flex-1 h-px bg-border" /> OU <span className="flex-1 h-px bg-border" />
+                    </div>
+
+                    {/* carte grise */}
+                    <div className="flex gap-4 items-start">
+                      <div className="shrink-0 w-10 h-10 rounded-lg bg-primary/15 text-primary grid place-items-center"><FileText className="w-5 h-5" /></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-semibold text-sm">Photo de la carte grise</div>
+                        <div className="text-muted-foreground text-xs mt-0.5">JPG, PNG ou PDF (max. 5 Mo)</div>
+                        {!file ? (
+                          <label
+                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                            onDragLeave={() => setDragOver(false)}
+                            onDrop={(e) => { e.preventDefault(); setDragOver(false); if (e.dataTransfer.files[0]) takeFile(e.dataTransfer.files[0]); }}
+                            className={`block mt-3 border border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${dragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary"}`}>
+                            <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground"><b className="text-foreground">Cliquez pour ajouter un fichier</b><br />ou glissez-déposez votre fichier ici</span>
+                            <input type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" hidden onChange={(e) => e.target.files?.[0] && takeFile(e.target.files[0])} />
+                          </label>
+                        ) : (
+                          <div className="flex items-center gap-3 mt-3 bg-input border border-border rounded-lg px-4 py-3 text-sm">
+                            <Check className="w-4 h-4 text-green-400 shrink-0" />
+                            <span className="truncate">{file.name}</span>
+                            <button type="button" onClick={() => setFile(null)} className="ml-auto text-muted-foreground hover:text-destructive text-lg leading-none">&times;</button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 items-start text-xs text-muted-foreground mt-5 leading-relaxed">
+                    <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>Vos données sont utilisées uniquement pour la gestion de votre rendez-vous et ne seront jamais partagées avec des tiers.</span>
+                  </div>
+
+                  <div className="flex justify-between mt-7">
+                    <button type="button" onClick={() => goto(2)} className="btn-ghost"><ChevronLeft className="w-4 h-4" /> Retour</button>
+                    <button type="button" disabled={!step3Valid} onClick={() => goto(4)} className="btn-main">Continuer <ChevronRight className="w-4 h-4" /></button>
+                  </div>
+                </div>
+              )}
+
+              {/* ======================================== Étape 4 — Confirmation */}
+              {step === 4 && !sent && (
+                <form onSubmit={handleSubmit} className="animate-fade-in">
+                  <h2 className="font-heading text-xl font-bold mb-1">Confirmation</h2>
+                  <p className="text-muted-foreground text-sm mb-6">Vérifiez les informations ci-dessous avant de valider votre rendez-vous.</p>
+
+                  {recap()}
+
+                  <div className="flex gap-3.5 items-start bg-primary/5 border border-primary/20 border-l-[3px] border-l-primary rounded-lg p-4 mb-5 text-sm">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground grid place-items-center mt-0.5"><Info className="w-3.5 h-3.5" /></span>
+                    <div className="leading-relaxed text-muted-foreground">
+                      Le paiement s'effectue <b className="text-foreground">sur place</b> à l'atelier. Aucun prélèvement n'est réalisé en ligne.
+                      {svc?.priceType === "from" && <><br />Ce tarif est un <b className="text-foreground">montant de départ</b> : le prix peut varier selon le modèle. Le prix définitif est confirmé après diagnostic.</>}
+                      {svc?.priceType === "devis" && <><br />Cette intervention est chiffrée <b className="text-foreground">sur devis</b> : le montant dépend du modèle et des pièces. Il vous est communiqué après diagnostic.</>}
+                    </div>
+                  </div>
+
+                  <label className="flex gap-3 items-start text-sm text-muted-foreground mb-6 cursor-pointer">
+                    <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="w-[18px] h-[18px] mt-0.5 accent-neon-purple shrink-0" />
+                    <span>J'accepte que B MATIC traite mes données pour la gestion de ce rendez-vous, conformément à la politique de confidentialité.</span>
+                  </label>
+
+                  <div className="flex justify-between">
+                    <button type="button" onClick={() => goto(3)} className="btn-ghost"><ChevronLeft className="w-4 h-4" /> Retour</button>
+                    <button type="submit" disabled={!consent || formState.status === "loading"} className="btn-main">
+                      {formState.status === "loading" ? "Envoi en cours…" : <>Confirmer le rendez-vous <Check className="w-4 h-4" /></>}
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* ---------------------------------------------- Écran de succès */}
+              {step === 4 && sent && (
+                <div className="text-center py-6 animate-fade-in">
+                  <div className="w-16 h-16 rounded-full bg-green-500/15 text-green-400 grid place-items-center mx-auto mb-5"><Check className="w-8 h-8" /></div>
+                  <div className="font-heading text-2xl font-bold mb-2">
+                    {svc?.priceType === "devis" ? "Demande bien reçue" : "Rendez-vous confirmé"}
+                  </div>
+                  <p className="text-muted-foreground max-w-md mx-auto mb-7 leading-relaxed">
+                    Merci {prenom}. Votre demande est enregistrée. Nous vous recontactons rapidement pour confirmer votre rendez-vous.
+                  </p>
+                  <div className="text-left max-w-xl mx-auto">{recap()}</div>
+                </div>
+              )}
             </GlowCard>
           </AnimatedSection>
         </div>

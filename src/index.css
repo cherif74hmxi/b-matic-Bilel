@@ -123,4 +123,12 @@
     background: var(--gradient-neon);
     box-shadow: 0 0 8px hsl(270 80% 60% / 0.6);
   }
+
+  .btn-main {
+    @apply inline-flex items-center justify-center gap-2 bg-gradient-btn text-primary-foreground font-heading text-xs uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-[0_0_25px_hsl(270_80%_60%/0.5)] disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 border border-border text-foreground font-heading text-xs uppercase tracking-wider px-7 py-3.5 rounded-full transition-colors duration-300 hover:border-muted-foreground hover:bg-muted;
+  }
 }
