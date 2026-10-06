@@ -1,4 +1,5 @@
 import { useMemo, useState, FormEvent } from "react";
+import { Link } from "react-router-dom";
 import {
   Clock, Check, ChevronRight, ChevronLeft, User, Mail, Phone,
   Car, FileText, Upload, Info, ShieldCheck, CalendarDays,
@@ -462,7 +463,7 @@ const Mecanique = () => {
 
                   <label className="flex gap-3 items-start text-sm text-muted-foreground mb-6 cursor-pointer">
                     <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="w-[18px] h-[18px] mt-0.5 accent-neon-purple shrink-0" />
-                    <span>J'accepte que B MATIC traite mes données pour la gestion de ce rendez-vous, conformément à la politique de confidentialité.</span>
+                    <span>J'accepte que B MATIC traite mes données pour la gestion de ce rendez-vous, conformément à la <Link to="/politique-de-confidentialite" className="text-neon-cyan underline underline-offset-2 hover:text-neon-blue">politique de confidentialité</Link>.</span>
                   </label>
 
                   <div className="flex justify-between">

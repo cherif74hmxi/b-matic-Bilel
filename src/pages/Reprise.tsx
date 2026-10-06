@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
@@ -333,7 +334,7 @@ const Reprise = () => {
                   <label className="flex items-start gap-2 cursor-pointer pt-2">
                     <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="w-4 h-4 accent-neon-purple mt-0.5" required />
                     <span className="text-xs text-muted-foreground leading-relaxed">
-                      J'accepte que mes données soient traitées conformément à la politique de confidentialité et aux conditions d'utilisation.
+                      J'accepte que mes données soient traitées pour le traitement de ma demande de reprise, conformément à la <Link to="/politique-de-confidentialite" className="text-neon-cyan underline underline-offset-2 hover:text-neon-blue">politique de confidentialité</Link>.
                     </span>
                   </label>
                   <div className="flex gap-4 pt-4">

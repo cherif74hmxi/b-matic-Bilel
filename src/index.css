@@ -131,4 +131,33 @@
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 border border-border text-foreground font-heading text-xs uppercase tracking-wider px-7 py-3.5 rounded-full transition-colors duration-300 hover:border-muted-foreground hover:bg-muted;
   }
+
+  .legal-prose h2 {
+    @apply font-heading text-lg md:text-xl font-bold text-foreground mt-10 mb-3 pt-1;
+  }
+  .legal-prose h3 {
+    @apply font-heading text-base font-semibold text-foreground mt-6 mb-2;
+  }
+  .legal-prose p {
+    @apply mb-3;
+  }
+  .legal-prose a {
+    @apply text-neon-cyan underline underline-offset-2 hover:text-neon-blue transition-colors;
+  }
+  .legal-prose strong {
+    @apply text-foreground font-semibold;
+  }
+  .legal-prose ul {
+    @apply list-disc pl-5 space-y-1.5 mb-3;
+  }
+  .legal-prose table {
+    @apply w-full border-collapse my-4 text-left;
+  }
+  .legal-prose th,
+  .legal-prose td {
+    @apply border border-border px-3 py-2 align-top;
+  }
+  .legal-prose th {
+    @apply text-foreground font-semibold bg-muted/40;
+  }
 }

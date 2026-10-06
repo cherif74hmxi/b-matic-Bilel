@@ -4,12 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import APropos from "./pages/APropos";
 import Contact from "./pages/Contact";
 import Reprise from "./pages/Reprise";
 import Mecanique from "./pages/Mecanique";
 import Depannage from "./pages/Depannage";
+import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
+import MentionsLegales from "./pages/MentionsLegales";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +23,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
@@ -28,6 +32,8 @@ const App = () => (
             <Route path="/reprise" element={<Reprise />} />
             <Route path="/mecanique" element={<Mecanique />} />
             <Route path="/depannage" element={<Depannage />} />
+            <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
