@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Graphify — cache local régénérable (le graphe lui-même est versionné)
+graphify-out/cache/
