@@ -1,17 +1,17 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ImagePlus, Info, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, ImagePlus, Info, Loader2, RefreshCw, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import { Field, FormSection } from "@/components/admin/FormParts";
 import { adminInputClass, adminTextareaClass } from "@/components/admin/formStyles";
 import { PostActionsMenu, PostStatusBadge } from "@/components/admin/PostActions";
 import { AdminLoading } from "@/components/admin/RequireAdmin";
-import { UnsupportedImageError } from "@/lib/imageOptimize";
+import { canDecodeImage, UnsupportedImageError } from "@/lib/imageOptimize";
 import {
   autoExcerpt,
   createPost,
@@ -24,7 +24,8 @@ import {
   type PostInput,
 } from "@/lib/posts";
 import { slugify } from "@/lib/slug";
-import { guardLinkClick, setUnsaved } from "@/lib/unsavedChanges";
+import { guardLinkClick, setUnsaved, useLeaveGuard } from "@/lib/unsavedChanges";
+import { stashUploads, takeUploads } from "@/lib/stagedUploads";
 
 // ============================================================================
 //  Ajout / édition d'une actualité (admin)
@@ -61,42 +62,43 @@ const toInput = (f: FormValues, post?: Post): PostInput => ({
   content: f.content.trim(),
 });
 
-/** Image de couverture : choix, remplacement, suppression (optimisée en WebP). */
-const CoverImage = ({ post }: { post: Post }) => {
-  const queryClient = useQueryClient();
-  const inputId = useId();
-  // Ne met à jour que l'image : un enregistrement du texte peut être en cours.
-  const onSaved = (updated: Post) => {
-    queryClient.setQueryData<Post>(["admin", "post", updated.id], (old) => (old ? { ...old, cover_path: updated.cover_path } : updated));
-    void queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
-  };
-  const replace = useMutation({
-    mutationFn: (file: File) => replacePostCover(post, file),
-    onSuccess: (updated) => {
-      onSaved(updated);
-      toast.success("Image enregistrée.");
-    },
-    onError: (error) =>
-      toast.error(
-        error instanceof UnsupportedImageError
-          ? "Format non pris en charge (HEIC ?). Utilisez une image JPEG ou PNG."
-          : "Envoi impossible. Vérifiez la connexion et réessayez.",
-      ),
-  });
-  const remove = useMutation({
-    mutationFn: () => removePostCover(post),
-    onSuccess: onSaved,
-    onError: () => toast.error("Suppression impossible."),
-  });
-  const busy = replace.isPending || remove.isPending;
+const UNSUPPORTED = "Format non pris en charge (HEIC ?). Utilisez une image JPEG ou PNG.";
 
+/** Cadre commun : aperçu de l'image + boutons (ajouter / remplacer, retirer, réessayer). */
+const CoverEditor = ({
+  src,
+  badge,
+  busy = false,
+  disabled = false,
+  onPick,
+  onRemove,
+  retry,
+  note,
+}: {
+  src: string | null;
+  badge?: string;
+  busy?: boolean;
+  disabled?: boolean;
+  onPick: (file: File) => void;
+  onRemove?: () => void;
+  /** Envoi échoué : bouton « Réessayer » avec le même fichier. */
+  retry?: () => void;
+  note?: string;
+}) => {
+  const inputId = useId();
+  const locked = busy || disabled;
   return (
     <div className="grid gap-3">
       <div className="relative aspect-[16/9] rounded-xl overflow-hidden border border-border bg-muted flex items-center justify-center">
-        {post.cover_path ? (
-          <img src={postImageUrl(post.cover_path)} alt="" className="w-full h-full object-cover" />
+        {src ? (
+          <img src={src} alt="Image de couverture" className="w-full h-full object-cover" />
         ) : (
           <span className="text-sm text-muted-foreground">Aucune image</span>
+        )}
+        {badge && (
+          <span className="absolute left-2 bottom-2 rounded-full bg-background/85 text-[10px] font-heading uppercase tracking-wider px-2 py-0.5">
+            {badge}
+          </span>
         )}
         {busy && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/70" role="status">
@@ -106,30 +108,113 @@ const CoverImage = ({ post }: { post: Post }) => {
         )}
       </div>
       <div className="flex flex-wrap gap-2">
-        <label htmlFor={inputId} className={`btn-ghost min-h-[44px] px-4 cursor-pointer ${busy ? "opacity-50 pointer-events-none" : ""}`}>
+        {retry && (
+          <button type="button" onClick={retry} disabled={locked} className="btn-main min-h-[44px] px-4">
+            <RefreshCw className="w-4 h-4" aria-hidden="true" />
+            Réessayer l'envoi
+          </button>
+        )}
+        <label htmlFor={inputId} className={`btn-ghost min-h-[44px] px-4 cursor-pointer ${locked ? "opacity-50 pointer-events-none" : ""}`}>
           <ImagePlus className="w-4 h-4" aria-hidden="true" />
-          {post.cover_path ? "Remplacer l'image" : "Ajouter une image"}
+          {src ? "Remplacer l'image" : "Ajouter une image"}
           <input
             id={inputId}
             type="file"
             accept="image/*"
             className="sr-only"
-            disabled={busy}
+            disabled={locked}
             onChange={(e) => {
               const file = e.target.files?.[0];
               e.target.value = "";
-              if (file) replace.mutate(file);
+              if (file) onPick(file);
             }}
           />
         </label>
-        {post.cover_path && (
-          <button type="button" onClick={() => remove.mutate()} disabled={busy} className="btn-ghost min-h-[44px] px-4 hover:text-neon-pink">
+        {src && onRemove && (
+          <button type="button" onClick={onRemove} disabled={locked} className="btn-ghost min-h-[44px] px-4 hover:text-neon-pink">
             <Trash2 className="w-4 h-4" aria-hidden="true" />
             Retirer
           </button>
         )}
       </div>
+      {note && <p className="text-xs text-muted-foreground">{note}</p>}
     </div>
+  );
+};
+
+/** Image de couverture d'une actu enregistrée : envoi (optimisé en WebP), remplacement, suppression. */
+const CoverImage = ({ post }: { post: Post }) => {
+  const queryClient = useQueryClient();
+  // Fichier dont l'envoi a échoué (réseau) : gardé pour « Réessayer ».
+  const [failed, setFailed] = useState<File | null>(null);
+  // Ne met à jour que l'image : un enregistrement du texte peut être en cours.
+  const onSaved = (updated: Post) => {
+    queryClient.setQueryData<Post>(["admin", "post", updated.id], (old) => (old ? { ...old, cover_path: updated.cover_path } : updated));
+    void queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
+  };
+  const replace = useMutation({
+    mutationFn: (file: File) => replacePostCover(post, file),
+    onMutate: () => setFailed(null),
+    onSuccess: (updated) => {
+      onSaved(updated);
+      toast.success("Image enregistrée.");
+    },
+    onError: (error, file) => {
+      if (error instanceof UnsupportedImageError) return void toast.error(UNSUPPORTED);
+      setFailed(file);
+      toast.error("Envoi impossible. Vérifiez la connexion et réessayez.");
+    },
+  });
+  const remove = useMutation({
+    mutationFn: () => removePostCover(post),
+    onSuccess: onSaved,
+    onError: () => toast.error("Suppression impossible."),
+  });
+  const busy = replace.isPending || remove.isPending;
+  useLeaveGuard(busy || failed !== null, "cover");
+
+  // Image choisie avant le premier enregistrement : envoyée dès l'ouverture.
+  const { mutate: replaceCover } = replace;
+  useEffect(() => {
+    const [staged] = takeUploads(post.id);
+    if (staged) replaceCover(staged.file);
+  }, [post.id, replaceCover]);
+
+  return (
+    <CoverEditor
+      src={post.cover_path ? postImageUrl(post.cover_path) : null}
+      busy={busy}
+      onPick={(file) => replace.mutate(file)}
+      onRemove={() => remove.mutate()}
+      retry={failed ? () => replace.mutate(failed) : undefined}
+      note={failed ? "L'image choisie n'a pas encore été envoyée." : undefined}
+    />
+  );
+};
+
+/** Nouvelle actu (pas encore enregistrée) : image gardée en aperçu local, envoyée à l'enregistrement. */
+const StagedCover = ({ file, onChange, disabled }: { file: File | null; onChange: (file: File | null) => void; disabled: boolean }) => {
+  const [preview, setPreview] = useState<string | null>(null);
+  useEffect(() => {
+    if (!file) return setPreview(null);
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  return (
+    <CoverEditor
+      src={preview}
+      badge={preview ? "En attente" : undefined}
+      disabled={disabled}
+      onPick={async (picked) => {
+        // Vérifié dès maintenant : un HEIC illisible échouerait sinon après la création de l'actu.
+        if (await canDecodeImage(picked)) onChange(picked);
+        else toast.error(UNSUPPORTED);
+      }}
+      onRemove={() => onChange(null)}
+      note="L'image sera envoyée automatiquement à l'enregistrement."
+    />
   );
 };
 
@@ -146,6 +231,12 @@ const PostForm = ({ post }: { post?: Post }) => {
     formState: { errors, isDirty },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: toFormValues(post), mode: "onTouched" });
 
+  // Nouvelle actu : image choisie avant l'enregistrement (envoyée ensuite).
+  const [stagedCover, setStagedCover] = useState<File | null>(null);
+  // Lu à la fin de l'enregistrement : onSuccess garde sinon l'image du moment du clic.
+  const stagedCoverRef = useRef(stagedCover);
+  stagedCoverRef.current = stagedCover;
+
   // Slug : suit le titre tant qu'il n'a pas été modifié (création seulement).
   const slugTouched = useRef(!isNew);
   const title = watch("title");
@@ -153,16 +244,8 @@ const PostForm = ({ post }: { post?: Post }) => {
     if (!slugTouched.current) setValue("slug", slugify(title ?? ""), { shouldDirty: true });
   }, [title, setValue]);
 
-  useEffect(() => {
-    setUnsaved(isDirty);
-    return () => setUnsaved(false);
-  }, [isDirty]);
-  useEffect(() => {
-    if (!isDirty) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty]);
+  const hasUnsaved = isDirty || stagedCover !== null;
+  useLeaveGuard(hasUnsaved);
 
   const save = useMutation({
     mutationFn: (values: FormValues) => {
@@ -179,7 +262,10 @@ const PostForm = ({ post }: { post?: Post }) => {
       void queryClient.invalidateQueries({ queryKey: ["admin", "kpis"] });
       reset(toFormValues(saved));
       if (isNew) {
-        toast.success("Brouillon enregistré. Vous pouvez ajouter une image.");
+        const cover = stagedCoverRef.current;
+        if (cover) stashUploads(saved.id, [{ file: cover, slot: "cover" }]);
+        toast.success(cover ? "Brouillon enregistré. Envoi de l'image…" : "Brouillon enregistré.");
+        setUnsaved(false);
         navigate(`/admin/actualites/${saved.id}`, { replace: true });
       } else {
         toast.success("Modifications enregistrées.");
@@ -279,22 +365,20 @@ const PostForm = ({ post }: { post?: Post }) => {
           </p>
         </FormSection>
 
-        {post ? (
-          <FormSection title="Image de couverture">
-            <CoverImage post={post} />
-          </FormSection>
-        ) : (
+        <FormSection title="Image de couverture">
+          {post ? <CoverImage post={post} /> : <StagedCover file={stagedCover} onChange={setStagedCover} disabled={save.isPending} />}
+        </FormSection>
+        {!post && (
           <p className="flex gap-2 text-sm text-muted-foreground px-1">
             <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-            L'actualité est d'abord enregistrée en brouillon (invisible sur le site). Vous pourrez ensuite ajouter une image et la
-            publier.
+            L'actualité est enregistrée en brouillon (invisible sur le site) avec son image. Vous pourrez ensuite la publier.
           </p>
         )}
       </div>
 
       <div className="fixed md:sticky inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] md:bottom-4 z-30 mt-6 border-t md:border border-border bg-background/95 backdrop-blur-xl px-4 py-3 md:rounded-xl md:px-4">
         <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
-          <span className="text-xs text-muted-foreground hidden sm:block">{isDirty ? "Modifications non enregistrées" : "Tout est enregistré"}</span>
+          <span className="text-xs text-muted-foreground hidden sm:block">{hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}</span>
           <button type="submit" disabled={save.isPending || (!isNew && !isDirty)} className="btn-main min-h-[48px] w-full sm:w-auto">
             {save.isPending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
             {isNew ? "Enregistrer le brouillon" : "Enregistrer"}

@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   closestCenter,
@@ -35,6 +35,7 @@ import { photoUrl, thumbPath, type VehiclePhoto } from "@/lib/vehicles";
 import {
   deleteVehiclePhoto,
   GUIDED_SLOTS,
+  insertionIndex,
   MAX_PHOTOS,
   savePhotoOrder,
   setCoverPhoto,
@@ -42,7 +43,9 @@ import {
   uploadVehiclePhoto,
   type PhotoSlot,
 } from "@/lib/vehiclePhotos";
-import { UnsupportedImageError } from "@/lib/imageOptimize";
+import { canDecodeImage, UnsupportedImageError } from "@/lib/imageOptimize";
+import { useLeaveGuard } from "@/lib/unsavedChanges";
+import { takeUploads } from "@/lib/stagedUploads";
 
 // ============================================================================
 //  Photos guidées d'un véhicule (façon leboncoin), mobile-first
@@ -277,6 +280,16 @@ const VehiclePhotos = ({
     }
   };
 
+  // Photos choisies avant le premier enregistrement : envoyées dès l'ouverture.
+  useEffect(() => {
+    for (const { file, slot } of takeUploads<PhotoSlot>(vehicleId)) {
+      const key = crypto.randomUUID();
+      setPending((p) => [...p, { key, slot, name: file.name, file }]);
+      upload(file, slot, key);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- une seule reprise, au montage
+  }, [vehicleId]);
+
   // ----- Réorganisation (optimiste)
   const persistOrder = async (ordered: VehiclePhoto[]) => {
     const previous = current();
@@ -325,6 +338,8 @@ const VehiclePhotos = ({
   // chaque envoi s'appuie sur la liste en cache, qu'une autre action rendrait périmée.
   const uploading = pending.some((p) => !p.error);
   const busy = working || uploading;
+  // Quitter la page interromprait la file d'envoi (et masquerait ses erreurs).
+  useLeaveGuard(uploading, "photos");
 
   const usedSlots = new Set([...photos.map((p) => p.slot), ...pending.map((p) => p.slot)]);
   const emptySlots = GUIDED_SLOTS.filter((s) => !usedSlots.has(s.id));
@@ -428,6 +443,98 @@ const VehiclePhotos = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+//  Nouveau véhicule (pas encore enregistré) : photos gardées en aperçu local,
+//  envoyées automatiquement après le premier enregistrement.
+// ---------------------------------------------------------------------------
+
+export interface StagedPhoto {
+  key: string;
+  slot: PhotoSlot;
+  file: File;
+  /** URL locale (blob:) de l'aperçu. */
+  preview: string;
+}
+
+export const StagedVehiclePhotos = ({
+  items,
+  onChange,
+  disabled = false,
+}: {
+  items: StagedPhoto[];
+  onChange: Dispatch<SetStateAction<StagedPhoto[]>>;
+  /** Pendant l'enregistrement : la liste est figée (elle part avec le véhicule). */
+  disabled?: boolean;
+}) => {
+  // Libère les aperçus restants en quittant la page (les fichiers, eux, sont transmis).
+  const latest = useRef(items);
+  latest.current = items;
+  useEffect(() => () => latest.current.forEach((p) => URL.revokeObjectURL(p.preview)), []);
+
+  const add = async (files: File[], slot: PhotoSlot) => {
+    // Vérifié dès maintenant : un HEIC illisible échouerait sinon après la création du véhicule.
+    const readable: File[] = [];
+    for (const file of files) if (await canDecodeImage(file)) readable.push(file);
+    if (readable.length < files.length) toast.error("Format non pris en charge (HEIC ?). Utilisez une photo JPEG ou PNG.");
+    const room = MAX_PHOTOS - latest.current.length;
+    if (readable.length > room) toast.error(`${MAX_PHOTOS} photos maximum.`);
+    const added = readable.slice(0, Math.max(room, 0)).map((file) => ({ key: crypto.randomUUID(), slot, file, preview: URL.createObjectURL(file) }));
+    if (added.length === 0) return;
+    onChange((list) => {
+      const next = [...list];
+      for (const item of added) next.splice(insertionIndex(next, slot), 0, item);
+      return next.slice(0, MAX_PHOTOS);
+    });
+  };
+
+  const remove = (item: StagedPhoto) => {
+    URL.revokeObjectURL(item.preview);
+    onChange((list) => list.filter((p) => p.key !== item.key));
+  };
+
+  const used = new Set(items.map((p) => p.slot));
+  const full = items.length >= MAX_PHOTOS || disabled;
+
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground mb-4">
+        Touchez un emplacement pour prendre ou choisir la photo. Elles seront envoyées automatiquement à l'enregistrement du
+        véhicule.
+      </p>
+      <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" aria-label="Photos du véhicule (en attente)">
+        {items.map((item, index) => (
+          <li key={item.key} className="min-w-0">
+            <div className={`${tileClass} bg-muted border border-border`}>
+              <img src={item.preview} alt={slotLabel(item.slot)} className="w-full h-full object-cover" />
+              <div className="absolute inset-x-0 top-0 flex justify-end p-1.5">
+                <button
+                  type="button"
+                  onClick={() => remove(item)}
+                  disabled={disabled}
+                  aria-label={`Retirer la photo « ${slotLabel(item.slot)} »`}
+                  className={`${iconButton} hover:text-neon-pink`}
+                >
+                  <X className="w-5 h-5" aria-hidden="true" />
+                </button>
+              </div>
+              <span className="absolute left-2 bottom-2 rounded-full bg-background/85 text-[10px] font-heading uppercase tracking-wider px-2 py-0.5">
+                En attente
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 truncate">
+              {index + 1}. {slotLabel(item.slot)}
+            </p>
+          </li>
+        ))}
+        {GUIDED_SLOTS.filter((s) => !used.has(s.id)).map((slot) => (
+          <AddTile key={slot.id} label={slot.label} slot={slot.id} disabled={full} onFiles={(files) => void add(files.slice(0, 1), slot.id)} />
+        ))}
+        <AddTile label="Ajouter d'autres photos" multiple dashed disabled={full} onFiles={(files) => void add(files, "autre")} />
+      </ul>
     </div>
   );
 };

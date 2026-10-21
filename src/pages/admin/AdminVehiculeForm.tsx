@@ -11,7 +11,8 @@ import { Field, FormSection } from "@/components/admin/FormParts";
 import { adminInputClass, adminSelectClass, adminTextareaClass } from "@/components/admin/formStyles";
 import { VehicleActionsMenu, VehicleStatusBadge } from "@/components/admin/VehicleActions";
 import { AdminLoading } from "@/components/admin/RequireAdmin";
-import VehiclePhotos from "@/components/admin/VehiclePhotos";
+import VehiclePhotos, { StagedVehiclePhotos, type StagedPhoto } from "@/components/admin/VehiclePhotos";
+import { stashUploads } from "@/lib/stagedUploads";
 import { vehiculesData } from "@/data/vehicules";
 import {
   createVehicle,
@@ -27,7 +28,7 @@ import {
   type VehicleInput,
 } from "@/lib/vehicles";
 import { decodeVin, normalizeVin, VIN_PATTERN, type VinSuggestion } from "@/lib/vin";
-import { guardLinkClick, setUnsaved } from "@/lib/unsavedChanges";
+import { guardLinkClick, setUnsaved, useLeaveGuard } from "@/lib/unsavedChanges";
 
 // ============================================================================
 //  Ajout / édition d'un véhicule (admin)
@@ -194,6 +195,11 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
     queryFn: () => listVehiclePhotos(vehicle!.id),
     enabled: Boolean(vehicle),
   });
+  // Nouveau véhicule : photos choisies avant l'enregistrement (envoyées ensuite).
+  const [staged, setStaged] = useState<StagedPhoto[]>([]);
+  // Lu à la fin de l'enregistrement : onSuccess garde sinon la liste du moment du clic.
+  const stagedRef = useRef(staged);
+  stagedRef.current = staged;
 
   const {
     register,
@@ -266,16 +272,8 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
 
   // ----- Avertir avant de quitter avec des modifications non enregistrées
   // (liens internes via setUnsaved/confirmLeave, onglet/rechargement via beforeunload)
-  useEffect(() => {
-    setUnsaved(isDirty);
-    return () => setUnsaved(false);
-  }, [isDirty]);
-  useEffect(() => {
-    if (!isDirty) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty]);
+  const hasUnsaved = isDirty || staged.length > 0;
+  useLeaveGuard(hasUnsaved);
 
   // ----- Enregistrement
   const save = useMutation({
@@ -289,7 +287,13 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       void queryClient.invalidateQueries({ queryKey: ["admin", "kpis"] });
       reset(toFormValues(saved));
       if (isNew) {
-        toast.success("Brouillon enregistré. Ajoutez maintenant les photos.");
+        // Les photos en attente partent avec la page d'édition (envoi automatique).
+        const files = stagedRef.current.map(({ file, slot }) => ({ file, slot }));
+        stashUploads(saved.id, files);
+        // Nouveau véhicule = aucune photo en base : la galerie s'affiche (et envoie) sans attendre de requête.
+        queryClient.setQueryData(["admin", "vehicle-photos", saved.id], []);
+        toast.success(files.length > 0 ? "Brouillon enregistré. Envoi des photos…" : "Brouillon enregistré.");
+        setUnsaved(false);
         navigate(`/admin/vehicules/${saved.id}`, { replace: true });
       } else {
         toast.success("Modifications enregistrées.");
@@ -415,11 +419,20 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
           </Field>
         </FormSection>
 
-        {/* ---------- Photos (après le premier enregistrement) ---------- */}
-        {vehicle && (
+        {/* ---------- Photos ---------- */}
+        {!vehicle ? (
+          <FormSection title="Photos">
+            <StagedVehiclePhotos items={staged} onChange={setStaged} disabled={save.isPending} />
+          </FormSection>
+        ) : (
           <FormSection title="Photos">
             {photos.isError ? (
-              <p className="text-sm text-neon-pink">Chargement des photos impossible. Rechargez la page.</p>
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <span className="text-neon-pink">Chargement des photos impossible.</span>
+                <button type="button" onClick={() => void photos.refetch()} className="btn-ghost min-h-[44px] px-4">
+                  Réessayer
+                </button>
+              </div>
             ) : photos.data ? (
               <VehiclePhotos vehicleId={vehicle.id} vehicleTitle={vehicle.title} photos={photos.data} />
             ) : (
@@ -512,8 +525,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
         {isNew && (
           <p className="flex gap-2 text-sm text-muted-foreground px-1">
             <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-            Le véhicule est d'abord enregistré en brouillon (invisible sur le site). Vous pourrez ensuite ajouter les photos et le
-            publier.
+            Le véhicule est enregistré en brouillon (invisible sur le site) avec ses photos. Vous pourrez ensuite le publier.
           </p>
         )}
       </div>
@@ -522,7 +534,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       <div className="fixed md:sticky inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] md:bottom-4 z-30 mt-6 border-t md:border border-border bg-background/95 backdrop-blur-xl px-4 py-3 md:rounded-xl md:px-4">
         <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
           <span className="text-xs text-muted-foreground hidden sm:block">
-            {isDirty ? "Modifications non enregistrées" : "Tout est enregistré"}
+            {hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}
           </span>
           <button type="submit" disabled={save.isPending || (!isNew && !isDirty)} className="btn-main min-h-[48px] w-full sm:w-auto">
             {save.isPending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}

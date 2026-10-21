@@ -47,6 +47,17 @@ async function decode(file: Blob): Promise<Decoded> {
   }
 }
 
+/** L'image peut-elle être lue par ce navigateur ? (HEIC sur Chrome/Android : non) */
+export async function canDecodeImage(file: Blob): Promise<boolean> {
+  if (file.type && !file.type.startsWith("image/")) return false;
+  try {
+    (await decode(file)).release();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function canvasOf(width: number, height: number, readBack = false) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
