@@ -1,11 +1,12 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
 import ScrollToTop from "@/components/ScrollToTop";
+import ChunkErrorBoundary from "@/components/ChunkErrorBoundary";
 // Accueil chargé immédiatement (page d'atterrissage → LCP rapide).
 import Index from "./pages/Index";
 
@@ -22,12 +23,24 @@ const ConseilDetail = lazy(() => import("./pages/ConseilDetail"));
 const PolitiqueConfidentialite = lazy(() => import("./pages/PolitiqueConfidentialite"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+// Espace admin : chunk séparé (supabase-js inclus), jamais chargé par les visiteurs.
+const AdminApp = lazy(() => import("./pages/admin/AdminApp"));
 
 const queryClient = new QueryClient();
 
 // Repli discret pendant le chargement d'un chunk de page (hauteur réservée
 // pour éviter tout décalage de mise en page / CLS).
 const RouteFallback = () => <div className="min-h-screen" aria-hidden="true" />;
+
+// Site public : Header / Footer / bannière cookies restent affichés pendant
+// le chargement du chunk de la page.
+const PublicLayout = () => (
+  <Layout>
+    <Suspense fallback={<RouteFallback />}>
+      <Outlet />
+    </Suspense>
+  </Layout>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -36,9 +49,17 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
-        <Layout>
-          <Suspense fallback={<RouteFallback />}>
-            <Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route
+              path="/admin/*"
+              element={
+                <ChunkErrorBoundary>
+                  <AdminApp />
+                </ChunkErrorBoundary>
+              }
+            />
+            <Route element={<PublicLayout />}>
               <Route path="/" element={<Index />} />
               <Route path="/a-propos" element={<APropos />} />
               <Route path="/contact" element={<Contact />} />
@@ -51,9 +72,9 @@ const App = () => (
               <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
               <Route path="/mentions-legales" element={<MentionsLegales />} />
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Layout>
+            </Route>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

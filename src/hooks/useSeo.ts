@@ -82,4 +82,21 @@ export function useSeo({ title, description, canonical, jsonLd }: SeoOptions) {
   }, [title, description, canonical, jsonLdStr]);
 }
 
+/**
+ * Interdit l'indexation de la page courante (<meta name="robots" content="noindex, nofollow">).
+ * Utilisé par l'espace admin. Au démontage, la valeur précédente est restaurée.
+ * (Ne pas bloquer /admin dans robots.txt : Google ne verrait plus cette balise.)
+ */
+export function useNoIndex() {
+  useEffect(() => {
+    const meta = ensureMeta("robots");
+    const previous = meta.getAttribute("content");
+    meta.setAttribute("content", "noindex, nofollow");
+    return () => {
+      if (previous === null) meta.remove();
+      else meta.setAttribute("content", previous);
+    };
+  }, []);
+}
+
 export default useSeo;
