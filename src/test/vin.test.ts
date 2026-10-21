@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { mapVpicResult, normalizeVin, VIN_PATTERN } from "@/lib/vin";
 import { slugify } from "@/lib/vehicles";
+import { insertionIndex } from "@/lib/vehiclePhotos";
+import { fitWithin } from "@/lib/imageOptimize";
 
 describe("mapVpicResult", () => {
   it("VIN européen partiel : marque normalisée + année seulement", () => {
@@ -60,8 +62,6 @@ describe("slugify", () => {
   });
 });
 
-import { insertionIndex } from "@/lib/vehiclePhotos";
-import { fitWithin } from "@/lib/imageOptimize";
 
 describe("insertionIndex (ordre logique des photos)", () => {
   const photos = (...slots: string[]) => slots.map((slot) => ({ slot }));

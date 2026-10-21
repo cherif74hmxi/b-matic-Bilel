@@ -3,6 +3,7 @@
 //  Types, libellés et accès Supabase pour l'espace admin.
 // ============================================================================
 import { supabase, STORAGE_BUCKETS } from "@/lib/supabase";
+import { thumbPath, withFreeSlug } from "@/lib/slug";
 
 export type VehicleStatus = "draft" | "published" | "sold";
 export type Fuel = "essence" | "diesel" | "hybride" | "hybride_rechargeable" | "electrique" | "gpl" | "autre";
@@ -57,20 +58,7 @@ export interface VehicleListItem extends Vehicle {
   vehicle_photos: { storage_path: string; is_cover: boolean }[];
 }
 
-/** « Golf 7 1.6 TDI Highline » → « golf-7-1-6-tdi-highline » */
-export function slugify(text: string): string {
-  return text
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80)
-    .replace(/-+$/g, "");
-}
-
-/** Chemin de la miniature associée à une photo (même nom + « _thumb »). */
-export const thumbPath = (storagePath: string) => storagePath.replace(/\.webp$/, "_thumb.webp");
+export { slugify, thumbPath } from "@/lib/slug";
 
 export const photoUrl = (storagePath: string) =>
   supabase.storage.from(STORAGE_BUCKETS.vehiclePhotos).getPublicUrl(storagePath).data.publicUrl;
@@ -107,34 +95,8 @@ export async function getVehicle(id: string): Promise<Vehicle> {
   return data as Vehicle;
 }
 
-/** Renvoie `base`, ou `base-2`, `base-3`… si le slug est déjà pris par un autre véhicule. */
-export async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
-  const root = base || "vehicule";
-  const { data, error } = await supabase.from("vehicles").select("id, slug").like("slug", `${root}%`);
-  if (error) throw error;
-  const taken = new Set((data as { id: string; slug: string }[]).filter((v) => v.id !== excludeId).map((v) => v.slug));
-  if (!taken.has(root)) return root;
-  for (let i = 2; ; i++) if (!taken.has(`${root}-${i}`)) return `${root}-${i}`;
-}
-
-const isUniqueViolation = (error: unknown) => (error as { code?: string } | null)?.code === "23505";
-
-/**
- * Exécute une écriture avec un slug libre. Si un autre enregistrement prend le
- * même slug entre la vérification et l'écriture (contrainte UNIQUE), on recalcule
- * et on réessaie une fois.
- */
-async function withFreeSlug<T>(base: string, excludeId: string | undefined, write: (slug: string) => Promise<T>): Promise<T> {
-  try {
-    return await write(await uniqueSlug(base, excludeId));
-  } catch (error) {
-    if (!isUniqueViolation(error)) throw error;
-    return write(await uniqueSlug(base, excludeId));
-  }
-}
-
 export async function createVehicle(input: VehicleInput): Promise<Vehicle> {
-  return withFreeSlug(input.slug, undefined, async (slug) => {
+  return withFreeSlug("vehicles", input.slug || "vehicule", undefined, async (slug) => {
     const { data, error } = await supabase.from("vehicles").insert({ ...input, slug }).select().single();
     if (error) throw error;
     return data as Vehicle;
@@ -148,7 +110,7 @@ export async function updateVehicle(id: string, input: Partial<VehicleInput> & {
     return data as Vehicle;
   };
   if (input.slug === undefined) return write(input);
-  return withFreeSlug(input.slug, id, (slug) => write({ ...input, slug }));
+  return withFreeSlug("vehicles", input.slug || "vehicule", id, (slug) => write({ ...input, slug }));
 }
 
 /**
