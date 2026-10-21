@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import {
   Car, Wrench, Truck, ShieldCheck, Clock, Sparkles, HandCoins,
-  ArrowRight, Check, HelpCircle,
+  ArrowRight, Check, Lightbulb,
 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
+import AuroraBackground from "@/components/AuroraBackground";
 import useSeo from "@/hooks/useSeo";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-bg.webp";
 import { serviceCategories } from "@/data/services";
 
 const money = (n: number) =>
@@ -60,9 +61,18 @@ const Index = () => {
       {/* ============================================================ Hero */}
       <section className="relative min-h-[88vh] md:min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroBg} alt="Garage automobile futuriste" className="w-full h-full object-cover" width={1920} height={1080} />
+          <img
+            src={heroBg}
+            alt="Garage automobile futuriste"
+            className="parallax-hero w-full h-full object-cover"
+            width={1920}
+            height={1080}
+            fetchPriority="high"
+            decoding="async"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+          <AuroraBackground />
         </div>
 
         <div className="container mx-auto px-4 relative z-10 pt-24">
@@ -81,7 +91,10 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <NeonButton to="/mecanique">Prendre rendez-vous</NeonButton>
-                <Link to="/pare-brise-assurances" className="btn-ghost">
+                <Link
+                  to="/pare-brise-assurances"
+                  className="btn-ghost animate-glow-pulse border-neon-cyan/50"
+                >
                   Offre pare-brise <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -180,58 +193,61 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {services.map((s, i) => (
               <AnimatedSection key={s.title} delay={i * 150}>
-                <GlowCard className="flex flex-col items-center text-center h-full">
-                  <div className="w-16 h-16 rounded-full bg-gradient-neon flex items-center justify-center mb-5">
-                    <s.icon className="w-7 h-7 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-heading text-xl font-semibold mb-3 text-foreground">{s.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-1">{s.desc}</p>
-                  <NeonButton to={s.to}>{s.btn}</NeonButton>
-                </GlowCard>
+                <Link to={s.to} className="block h-full group">
+                  <GlowCard className="flex flex-col items-center text-center h-full">
+                    <div className="w-16 h-16 rounded-full bg-gradient-neon flex items-center justify-center mb-5">
+                      <s.icon className="w-7 h-7 text-primary-foreground" />
+                    </div>
+                    <h3 className="font-heading text-xl font-semibold mb-3 text-foreground">{s.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">{s.desc}</p>
+                    <span className="inline-flex items-center gap-1.5 text-neon-cyan text-sm font-heading uppercase tracking-wider">
+                      {s.btn}
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </GlowCard>
+                </Link>
               </AnimatedSection>
             ))}
           </div>
         </div>
       </section>
 
-      {/* =================================================== Pourquoi B MATIC */}
+      {/* ======================================== Pourquoi B MATIC + Conseils */}
       <section className="py-16 md:py-24 bg-card/30">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-center mb-12 md:mb-14">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-center mb-10 md:mb-12">
               <span className="text-gradient-neon">Pourquoi B MATIC</span>
             </h2>
           </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+
+          {/* Bandeau confiance compact (engagements factuels) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-12">
             {engagements.map((e, i) => (
               <AnimatedSection key={e.title} delay={i * 100}>
-                <div className="h-full bg-gradient-card border-glow rounded-xl p-6 text-center">
-                  <div className="w-12 h-12 rounded-full bg-primary/15 text-neon-cyan grid place-items-center mx-auto mb-4">
-                    <e.icon className="w-6 h-6" />
+                <div className="h-full bg-gradient-card border-glow rounded-xl p-5 text-center">
+                  <div className="w-11 h-11 rounded-full bg-primary/15 text-neon-cyan grid place-items-center mx-auto mb-3">
+                    <e.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-heading text-base font-bold mb-2">{e.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{e.desc}</p>
+                  <h3 className="font-heading text-sm font-bold mb-1.5">{e.title}</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed">{e.desc}</p>
                 </div>
               </AnimatedSection>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ====================================================== Teaser FAQ */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
+          {/* Teaser Conseils */}
           <AnimatedSection>
-            <div className="max-w-2xl mx-auto text-center">
-              <HelpCircle className="w-9 h-9 text-neon-cyan mx-auto mb-4" />
-              <h2 className="font-heading text-2xl md:text-3xl font-bold mb-4">
-                Une question ?
-              </h2>
-              <p className="text-muted-foreground mb-7">
-                Pare-brise, assurance, délais, paiement, reprise… retrouvez les réponses aux
-                questions les plus fréquentes.
-              </p>
-              <NeonButton to="/faq">Consulter la FAQ</NeonButton>
+            <div className="max-w-3xl mx-auto bg-gradient-card border-glow rounded-2xl p-6 md:p-8 flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+              <Lightbulb className="w-9 h-9 text-neon-cyan shrink-0" />
+              <div className="flex-1">
+                <h3 className="font-heading text-lg md:text-xl font-bold mb-1">Nos conseils auto</h3>
+                <p className="text-muted-foreground text-sm">
+                  Entretien, pare-brise, hiver, pneus, reprise… nos articles pratiques pour
+                  prendre soin de votre véhicule.
+                </p>
+              </div>
+              <NeonButton to="/conseils">Voir nos conseils</NeonButton>
             </div>
           </AnimatedSection>
         </div>

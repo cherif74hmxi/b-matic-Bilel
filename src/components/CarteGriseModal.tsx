@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import carteGriseImg from "@/assets/carte-grise.png";
+import carteGriseImg from "@/assets/carte-grise.webp";
 
 const CarteGriseModal = () => {
   const [open, setOpen] = useState(true);

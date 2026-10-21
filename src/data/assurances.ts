@@ -1,26 +1,37 @@
 // ============================================================================
 //  B MATIC — Assureurs partenaires (offre pare-brise / bris de glace)
 // ----------------------------------------------------------------------------
-//  Liste affichée sous forme de BADGES TEXTE (pas de logos tant que le garage
-//  n'a pas l'autorisation d'utiliser les marques). Formulation volontairement
-//  ouverte : « Nous travaillons avec toutes les assurances, dont… ».
+//  Liste affichée dans un CARROUSEL défilant (marquee), en BADGES TEXTE pour
+//  l'instant (pas de logos tant que le garage n'a pas l'autorisation d'utiliser
+//  les marques). Formulation volontairement ouverte :
+//  « Nous travaillons avec toutes les assurances, dont… ».
 //
 //  ➜ Pour ajouter / retirer un assureur : modifier simplement le tableau
-//    ci-dessous. L'affichage se met à jour automatiquement.
+//    `assureurs` ci-dessous. L'affichage se met à jour automatiquement.
+//  ➜ Pour afficher un LOGO plus tard : importer l'image en haut du fichier et
+//    renseigner le champ `logo` de l'assureur concerné (le carrousel bascule
+//    alors automatiquement du badge texte à l'image).
 //  ➜ À COMPLÉTER / CONFIRMER par le propriétaire (ex. AXA, Baloise, AG…).
 // ============================================================================
 
-/** Phrase d'introduction affichée au-dessus des badges. */
+/** Phrase d'introduction affichée au-dessus du carrousel. */
 export const assurancesIntro =
   "Nous travaillons avec toutes les assurances, dont :";
 
-/** Assureurs partenaires (badges texte). Ordre = ordre d'affichage. */
-export const assureursPartenaires: string[] = [
-  "Ethias",
-  "P&V (PV) Assurances",
-  "Belfius Assurance",
-  "BNP Paribas Fortis Assurance",
-  "CBC Assurance",
-  "KBC Assurance",
+/** Un assureur partenaire : nom obligatoire, logo optionnel (ajout ultérieur). */
+export interface Assureur {
+  nom: string;
+  /** Image de logo importée (facultatif). Si absent → badge texte. */
+  logo?: string;
+}
+
+/** Assureurs partenaires. Ordre = ordre d'affichage dans le carrousel. */
+export const assureurs: Assureur[] = [
+  { nom: "Ethias" },
+  { nom: "P&V (PV) Assurances" },
+  { nom: "Belfius Assurance" },
+  { nom: "BNP Paribas Fortis Assurance" },
+  { nom: "CBC Assurance" },
+  { nom: "KBC Assurance" },
   // À CONFIRMER / COMPLÉTER : AXA, Baloise, AG, …
 ];

@@ -12,6 +12,10 @@
 //        - le bon numéro WhatsApp (voir src/data/legal.ts).
 // ============================================================================
 import { Gamepad2, Zap, Gift, type LucideIcon } from "lucide-react";
+import ps5Img from "@/assets/cadeaux/ps5.png";
+import switchImg from "@/assets/cadeaux/nintendo-switch.jpg";
+import trottinetteImg from "@/assets/cadeaux/trottinette.png";
+import billetsImg from "@/assets/cadeaux/billets-100.webp";
 
 /** Accroche principale de l'offre. */
 export const pareBriseAccroche = {
@@ -57,14 +61,17 @@ export const pareBriseAvantages: PareBriseAvantage[] = [
 /** Cadeaux possibles selon le remplacement effectué (correspondance À CONFIRMER). */
 export interface PareBriseCadeau {
   nom: string;
-  icon: LucideIcon;
+  /** Visuel du cadeau (image importée depuis src/assets/cadeaux/). */
+  image: string;
+  /** Icône de repli (conservée au cas où l'image serait retirée). */
+  icon?: LucideIcon;
 }
 
 export const pareBriseCadeaux: PareBriseCadeau[] = [
-  { nom: "PlayStation 5", icon: Gamepad2 },
-  { nom: "Nintendo Switch", icon: Gamepad2 },
-  { nom: "Trottinette électrique", icon: Zap },
-  { nom: "Jusqu'à 300 € offerts", icon: Gift },
+  { nom: "PlayStation 5", image: ps5Img, icon: Gamepad2 },
+  { nom: "Nintendo Switch", image: switchImg, icon: Gamepad2 },
+  { nom: "Trottinette électrique", image: trottinetteImg, icon: Zap },
+  { nom: "Jusqu'à 300 € offerts", image: billetsImg, icon: Gift },
 ];
 
 /**

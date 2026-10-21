@@ -12,8 +12,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1792584267.414836,
-    "seen": 1792584826.0411055,
+    "mtime": 1792600515.594998,
+    "seen": 1792600856.2501998,
     "ast_hash": "ae5031bde2cbfdf99c956a03b7d3ef9c",
     "semantic_hash": ""
   },
@@ -36,21 +36,21 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1792584541.4370394,
-    "seen": 1792584826.0411222,
-    "ast_hash": "693aeb45a28c1c1588f2787d017dcfac",
+    "mtime": 1792600616.5166395,
+    "seen": 1792600856.2502165,
+    "ast_hash": "44be4dbd51d923ad8795dcb15f32bf19",
     "semantic_hash": ""
   },
   "src/components/AnimatedSection.tsx": {
-    "mtime": 1792029176.6547112,
-    "seen": 1792030689.1637046,
-    "ast_hash": "36b3ffb6a331d96e43b3b81095a22861",
+    "mtime": 1792600203.9247956,
+    "seen": 1792600856.2502208,
+    "ast_hash": "9ea067909f2621519084cff7fa9991b0",
     "semantic_hash": ""
   },
   "src/components/CarteGriseModal.tsx": {
-    "mtime": 1792029176.6570854,
-    "seen": 1792030689.1637075,
-    "ast_hash": "7e4065abc248108c24fe4ace933d58a1",
+    "mtime": 1792600499.3395178,
+    "seen": 1792600856.2502298,
+    "ast_hash": "acf93080749c7c51d7269b239be05722",
     "semantic_hash": ""
   },
   "src/components/CookieConsent.tsx": {
@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src/components/Footer.tsx": {
-    "mtime": 1792584580.8931937,
-    "seen": 1792584826.0411358,
-    "ast_hash": "ad4e8cd08d6fc282ffe73edb015dadb5",
+    "mtime": 1792600499.3008537,
+    "seen": 1792600856.2502358,
+    "ast_hash": "dbb30e3f7f3c084367f893de994d404b",
     "semantic_hash": ""
   },
   "src/components/GlowCard.tsx": {
@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "src/components/Header.tsx": {
-    "mtime": 1792584575.4198337,
-    "seen": 1792584826.04114,
-    "ast_hash": "4b45567180d6670295cf3701372eb1a8",
+    "mtime": 1792600499.2972221,
+    "seen": 1792600856.2502406,
+    "ast_hash": "67257063bbd0c96a19a6b693b25bd846",
     "semantic_hash": ""
   },
   "src/components/Layout.tsx": {
@@ -402,9 +402,9 @@
     "semantic_hash": ""
   },
   "src/data/legal.ts": {
-    "mtime": 1792584229.1042757,
-    "seen": 1792584826.0413003,
-    "ast_hash": "f8f4f639a34e341e9ab76b7f00a98ca1",
+    "mtime": 1792598380.5574806,
+    "seen": 1792598870.2686265,
+    "ast_hash": "6d0057303ec751fe2dfc6662e15cd804",
     "semantic_hash": ""
   },
   "src/data/services.ts": {
@@ -444,15 +444,15 @@
     "semantic_hash": ""
   },
   "src/pages/APropos.tsx": {
-    "mtime": 1792029176.6677094,
-    "seen": 1792030689.1638489,
-    "ast_hash": "fb91cb8cd789666164a8430af3742b5d",
+    "mtime": 1792600499.349929,
+    "seen": 1792600856.2504177,
+    "ast_hash": "43624530492339afe7b034b55afd8959",
     "semantic_hash": ""
   },
   "src/pages/Contact.tsx": {
-    "mtime": 1792029176.6702464,
-    "seen": 1792030689.163851,
-    "ast_hash": "db4533cfabcbfadc513457a99bd55141",
+    "mtime": 1792598403.2646592,
+    "seen": 1792598870.268665,
+    "ast_hash": "bacee82e5d7eb19f9004f66a924d9c60",
     "semantic_hash": ""
   },
   "src/pages/Depannage.tsx": {
@@ -462,15 +462,15 @@
     "semantic_hash": ""
   },
   "src/pages/Index.tsx": {
-    "mtime": 1792584656.386242,
-    "seen": 1792584826.0413303,
-    "ast_hash": "7b48473fac672c6335f37f5184fa0150",
+    "mtime": 1792600499.3122354,
+    "seen": 1792600856.2504284,
+    "ast_hash": "134b7f1b81e80b15dd8857ac2b8b2076",
     "semantic_hash": ""
   },
   "src/pages/Mecanique.tsx": {
-    "mtime": 1792584679.6075654,
-    "seen": 1792584826.041333,
-    "ast_hash": "93bbafa7ce7499589af5104e884678a0",
+    "mtime": 1792600499.3519378,
+    "seen": 1792600856.250431,
+    "ast_hash": "3cc3679a1174b7defb581bdc02ce9be9",
     "semantic_hash": ""
   },
   "src/pages/MentionsLegales.tsx": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "src/pages/Reprise.tsx": {
-    "mtime": 1792029176.6702464,
-    "seen": 1792030689.1638625,
-    "ast_hash": "f9f764e63bde3379a9a2a36ac1df0b46",
+    "mtime": 1792600499.3379707,
+    "seen": 1792600856.2504435,
+    "ast_hash": "f15e8a458712f690c468f8dc9ea7dc06",
     "semantic_hash": ""
   },
   "src/test/example.test.ts": {
@@ -618,9 +618,9 @@
     "semantic_hash": ""
   },
   "docs/PROJET-V2.md": {
-    "mtime": 1792560071.6050715,
-    "seen": 1792560093.231679,
-    "ast_hash": "52d98abb174c22695c7f37d2bf4c4d04",
+    "mtime": 1792598804.9122562,
+    "seen": 1792598870.2687297,
+    "ast_hash": "4e5ad45b6063fe6ceaf3696d3f989efc",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -630,27 +630,27 @@
     "semantic_hash": ""
   },
   "src/components/MobileActionBar.tsx": {
-    "mtime": 1792584243.5482664,
-    "seen": 1792584826.0411487,
-    "ast_hash": "d9a3359e0b172284cd0232d8dd6102a7",
+    "mtime": 1792598397.570974,
+    "seen": 1792598870.2684553,
+    "ast_hash": "68ded7e47e928b287d32ae592bba50b0",
     "semantic_hash": ""
   },
   "src/data/assurances.ts": {
-    "mtime": 1792584166.0709848,
-    "seen": 1792584826.0412953,
-    "ast_hash": "4894840992abcec116cc012b4e260ea9",
+    "mtime": 1792598432.039016,
+    "seen": 1792598870.268617,
+    "ast_hash": "0fb5cd30a5452e9fb8e87749ba5ef147",
     "semantic_hash": ""
   },
   "src/data/faq.ts": {
-    "mtime": 1792584222.2999926,
-    "seen": 1792584826.0412977,
-    "ast_hash": "707a422b9e37be82d3ebea5fcd5fca97",
+    "mtime": 1792598768.976445,
+    "seen": 1792598870.2686234,
+    "ast_hash": "025588fdfb5651af801a0ff4ea645738",
     "semantic_hash": ""
   },
   "src/data/pareBrise.ts": {
-    "mtime": 1792584183.1360397,
-    "seen": 1792584826.041302,
-    "ast_hash": "59f3202281f4b1278cbfd7cd29ea8df1",
+    "mtime": 1792600499.3288193,
+    "seen": 1792600856.250396,
+    "ast_hash": "eba503cc828788b829857b374db61df6",
     "semantic_hash": ""
   },
   "src/hooks/useSeo.ts": {
@@ -659,16 +659,106 @@
     "ast_hash": "3e0054ecc8d7285ce67f6b459d330e3e",
     "semantic_hash": ""
   },
-  "src/pages/Faq.tsx": {
-    "mtime": 1792584533.493979,
-    "seen": 1792584826.0413282,
-    "ast_hash": "d1c547b5cbbda4cf3e51c2a79596cbb2",
+  "src/pages/PareBrise.tsx": {
+    "mtime": 1792598552.6281686,
+    "seen": 1792598870.268682,
+    "ast_hash": "60f8e692302930eb06243853c79589d2",
     "semantic_hash": ""
   },
-  "src/pages/PareBrise.tsx": {
-    "mtime": 1792584511.9986773,
-    "seen": 1792584826.0413392,
-    "ast_hash": "b1dfc097543bf3daad2ae1a4e9cf4863",
+  "src/components/AuroraBackground.tsx": {
+    "mtime": 1792600219.663106,
+    "seen": 1792600856.2502258,
+    "ast_hash": "572422936b436022366a5ff2faf0f745",
+    "semantic_hash": ""
+  },
+  "src/components/InsurerMarquee.tsx": {
+    "mtime": 1792598516.10839,
+    "seen": 1792598870.2684414,
+    "ast_hash": "8928e5a2155b98cbbc35ba84f6e174a5",
+    "semantic_hash": ""
+  },
+  "src/data/conseils.ts": {
+    "mtime": 1792598671.463314,
+    "seen": 1792598870.2686203,
+    "ast_hash": "1419eb3b53871ea09d0953ec2a58e884",
+    "semantic_hash": ""
+  },
+  "src/pages/ConseilDetail.tsx": {
+    "mtime": 1792598720.5434408,
+    "seen": 1792598870.2686584,
+    "ast_hash": "3d18c7ec92dd21b6b9c5ea2c978e9e30",
+    "semantic_hash": ""
+  },
+  "src/pages/Conseils.tsx": {
+    "mtime": 1792598701.9002926,
+    "seen": 1792598870.2686617,
+    "ast_hash": "b28ec43e62b0534ffeda9393e4d69a31",
+    "semantic_hash": ""
+  },
+  "src/test/conseils.test.ts": {
+    "mtime": 1792598852.668535,
+    "seen": 1792598870.26869,
+    "ast_hash": "a2d222c8e7e6d4cfaa2bcf5a30f27aaa",
+    "semantic_hash": ""
+  },
+  "src/assets/cadeaux/billets-100.jpg": {
+    "mtime": 1792597669.0753896,
+    "seen": 1792598870.2687426,
+    "ast_hash": "390040e2f507b5abbf6445a56726097d",
+    "semantic_hash": ""
+  },
+  "src/assets/cadeaux/nintendo-switch.jpg": {
+    "mtime": 1792597669.2073896,
+    "seen": 1792598870.268745,
+    "ast_hash": "42529304f1a228c06b43a56df7d8106c",
+    "semantic_hash": ""
+  },
+  "src/assets/cadeaux/ps5.png": {
+    "mtime": 1792597669.3393896,
+    "seen": 1792598870.2687476,
+    "ast_hash": "849a4c29efff73f3886d33695f47245a",
+    "semantic_hash": ""
+  },
+  "src/assets/cadeaux/trottinette.png": {
+    "mtime": 1792597669.4713895,
+    "seen": 1792598870.2687497,
+    "ast_hash": "81e904df5adffe337e6b970dd0f2ab83",
+    "semantic_hash": ""
+  },
+  "src/lib/motion.ts": {
+    "mtime": 1792600183.5272436,
+    "seen": 1792600856.2504108,
+    "ast_hash": "3d80eaed9b0a67c53062381ec22bd39f",
+    "semantic_hash": ""
+  },
+  "src/assets/bmatic-logo.webp": {
+    "mtime": 1792600481.1650302,
+    "seen": 1792600856.2504833,
+    "ast_hash": "d0cb6bd82e28d4d236e617629cd245fa",
+    "semantic_hash": ""
+  },
+  "src/assets/cadeaux/billets-100.webp": {
+    "mtime": 1792600482.759423,
+    "seen": 1792600856.2504873,
+    "ast_hash": "93e3db5cede8bd3417a19aeeef814782",
+    "semantic_hash": ""
+  },
+  "src/assets/carte-grise.webp": {
+    "mtime": 1792600482.3794303,
+    "seen": 1792600856.2504976,
+    "ast_hash": "c6c752649893d661ec1e4623418e41f7",
+    "semantic_hash": ""
+  },
+  "src/assets/hero-bg.webp": {
+    "mtime": 1792600481.6050303,
+    "seen": 1792600856.2505012,
+    "ast_hash": "d7b347de69d3e3e3a423495e4a3a2a0e",
+    "semantic_hash": ""
+  },
+  "src/assets/mechanic-bg.webp": {
+    "mtime": 1792600482.6434302,
+    "seen": 1792600856.2505066,
+    "ast_hash": "74adfbf62d2c3397e8f2b5650629a3b0",
     "semantic_hash": ""
   }
 }

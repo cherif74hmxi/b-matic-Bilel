@@ -2,6 +2,7 @@ import { Phone, Check, ShieldCheck, Sparkles, MapPin } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
+import InsurerMarquee from "@/components/InsurerMarquee";
 import useSeo from "@/hooks/useSeo";
 import {
   pareBriseAccroche,
@@ -10,7 +11,7 @@ import {
   pareBriseCadeaux,
   pareBriseMentions,
 } from "@/data/pareBrise";
-import { assurancesIntro, assureursPartenaires } from "@/data/assurances";
+import { assurancesIntro } from "@/data/assurances";
 
 const PareBrise = () => {
   useSeo({
@@ -72,8 +73,13 @@ const PareBrise = () => {
             {pareBriseCadeaux.map((c, i) => (
               <AnimatedSection key={c.nom} delay={i * 100}>
                 <div className="h-full bg-gradient-card border-glow rounded-xl p-5 flex flex-col items-center text-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-neon grid place-items-center shrink-0">
-                    <c.icon className="w-6 h-6 text-primary-foreground" />
+                  <div className="w-full aspect-square rounded-lg bg-background/40 grid place-items-center overflow-hidden">
+                    <img
+                      src={c.image}
+                      alt={c.nom}
+                      loading="lazy"
+                      className="w-full h-full object-contain p-2"
+                    />
                   </div>
                   <span className="font-semibold text-sm">{c.nom}</span>
                 </div>
@@ -81,7 +87,7 @@ const PareBrise = () => {
             ))}
           </div>
           <p className="text-muted-foreground text-xs text-center italic max-w-xl mx-auto mb-14">
-            Nature du cadeau selon le remplacement effectué — à confirmer avec le garage.
+            Cadeau offert selon le remplacement effectué — à confirmer avec le garage.
           </p>
         </AnimatedSection>
 
@@ -113,16 +119,7 @@ const PareBrise = () => {
           <GlowCard className="max-w-4xl mx-auto mb-14 text-center md:p-10">
             <ShieldCheck className="w-8 h-8 text-neon-cyan mx-auto mb-4" />
             <p className="text-foreground font-semibold mb-5">{assurancesIntro}</p>
-            <div className="flex flex-wrap justify-center gap-2.5">
-              {assureursPartenaires.map((nom) => (
-                <span
-                  key={nom}
-                  className="px-4 py-2 rounded-full text-sm font-medium border border-border bg-input text-foreground"
-                >
-                  {nom}
-                </span>
-              ))}
-            </div>
+            <InsurerMarquee />
             <p className="text-muted-foreground text-xs mt-6">
               … et d'autres assureurs. Indiquez-nous le vôtre, nous vérifions la prise en charge.
             </p>

@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
-import mechanicBg from "@/assets/mechanic-bg.jpg";
+import mechanicBg from "@/assets/mechanic-bg.webp";
 import { serviceCategories, findService, type Service } from "@/data/services";
 
 /* ------------------------------------------------------------------ helpers */

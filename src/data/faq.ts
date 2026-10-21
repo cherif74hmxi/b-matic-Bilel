@@ -1,8 +1,9 @@
 // ============================================================================
 //  B MATIC — FAQ / Conseils
 // ----------------------------------------------------------------------------
-//  Source unique des questions/réponses de la page /faq. Elles alimentent À LA
-//  FOIS l'accordéon affiché ET les données structurées schema.org (FAQPage)
+//  Source unique des questions/réponses affichées dans le bloc « Questions
+//  fréquentes » en bas de la page /conseils. Elles alimentent À LA FOIS
+//  l'accordéon affiché ET les données structurées schema.org (FAQPage)
 //  injectées pour le SEO — les deux restent donc toujours synchronisées.
 //
 //  ⚠️  « À CONFIRMER » = tout engagement concret du garage (délais précis, zone

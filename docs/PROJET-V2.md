@@ -52,9 +52,14 @@
 ### Public (visiteurs)
 - **Accueil** repensé (inspiration sparkauto, DA B MATIC) : hero, services, mise en avant
   **promotions** et **offre pare-brise**, preuve sociale, CTA RDV/contact. Mobile-first.
-- **Pare-brise & Assurances** (nouvelle page dédiée, voir §5).
-- **FAQ / Conseils** (nouvelle page, inspiration `sparkauto.be/conseils`) avec **données structurées FAQ**
-  (schema.org FAQPage) pour le SEO.
+- **Pare-brise & Assurances** (nouvelle page dédiée, voir §5). Section cadeaux en **images**
+  (`src/assets/cadeaux/`) et **carrousel défilant** des assureurs (badges texte, structure
+  prête à recevoir des logos via `src/data/assurances.ts`).
+- **Conseils** (nouvelle page `/conseils`, inspiration `sparkauto.be/conseils`) : **grille d'articles**
+  (vignette + titre + extrait) + **pages détail** `/conseils/:slug` avec données structurées **`Article`**.
+  Articles éditables dans `src/data/conseils.ts`. **Remplace l'ancienne page FAQ** ; les questions
+  fréquentes sont repliées en bas de `/conseils` (accordéon) et conservent le balisage **schema.org
+  FAQPage** (combiné à un `ItemList` dans un même `@graph`) pour le SEO. Données dans `src/data/faq.ts`.
 - **Véhicules à vendre** : liste + **page détail** façon **autohero** (galerie photos, caractéristiques,
   prix, CTA contact/WhatsApp). Données structurées `Vehicle`/`Car`.
 - **Actualités** : liste + page détail (blog du garage).
@@ -129,9 +134,13 @@ Les mettre en avant sur l'accueil.
   (`database-schema-designer`) : tables `vehicles`, `vehicle_photos`, `posts`, `page_views`, `leads` (demandes).
 - **Phase 1 — Vitrine (sans backend, visible vite)** :
   1. Accueil repensé (inspiration sparkauto, DA B MATIC, mise en avant promos + pare-brise).
-  2. Page **Pare-brise & Assurances** (§5.1, §5.2).
-  3. Page **FAQ / Conseils** avec schema FAQPage (§4).
-  4. **Mobile-first** sur l'ensemble.
+     **Condensé** (5 sections, ~5 CTA clés), fond d'ambiance **Aurora néon** (CSS léger) et CTA
+     « Offre pare-brise » **scintillant**. Toute animation respecte **`prefers-reduced-motion`**.
+  2. Page **Pare-brise & Assurances** (§5.1, §5.2) : cadeaux en images + carrousel assureurs.
+  3. Page **Conseils** (`/conseils` + `/conseils/:slug`, schema `Article`) **remplaçant la FAQ** ;
+     bloc Questions fréquentes conservé en bas avec schema **FAQPage** (§4).
+  4. **Mobile-first** sur l'ensemble. Barre d'action mobile : **WhatsApp** (numéro belge
+     confirmé `+32 470 85 35 51`, source unique `src/data/legal.ts`) + Prendre RDV.
   → Finitions `/impeccable`, SEO on-page de base, build OK, commit.
 - **Phase 2 — Fondations backend** : projet Supabase, schéma BDD, Storage (photos), Auth,
   variables d'environnement, RLS. (Le proprio crée le projet Supabase et fournit les clés.)

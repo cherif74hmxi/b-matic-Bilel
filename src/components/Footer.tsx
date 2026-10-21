@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
-import logo from "@/assets/bmatic-logo.jpeg";
+import logo from "@/assets/bmatic-logo.webp";
 import { legalInfo } from "@/data/legal";
 
 const Footer = () => {
@@ -30,7 +30,7 @@ const Footer = () => {
                 { label: "Mécanique", path: "/mecanique" },
                 { label: "Reprise de véhicule", path: "/reprise" },
                 { label: "Dépannage", path: "/depannage" },
-                { label: "FAQ", path: "/faq" },
+                { label: "Conseils", path: "/conseils" },
                 { label: "À propos", path: "/a-propos" },
                 { label: "Contact", path: "/contact" },
               ].map((l) => (

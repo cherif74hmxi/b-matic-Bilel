@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
-import logo from "@/assets/bmatic-logo.jpeg";
+import logo from "@/assets/bmatic-logo.webp";
 
 // Liens de 1er niveau affichés AVANT le menu « Services »
 const navLinksBefore = [
@@ -11,7 +11,7 @@ const navLinksBefore = [
 
 // Liens de 1er niveau affichés APRÈS le menu « Services »
 const navLinksAfter = [
-  { label: "FAQ", path: "/faq" },
+  { label: "Conseils", path: "/conseils" },
   { label: "À propos", path: "/a-propos" },
   { label: "Contact", path: "/contact" },
 ];
@@ -166,8 +166,8 @@ const Header = () => {
               )}
             </div>
 
-            <Link to="/faq" onClick={() => handleNavClick("/faq")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
-              FAQ
+            <Link to="/conseils" onClick={() => handleNavClick("/conseils")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
+              Conseils
             </Link>
             <Link to="/a-propos" onClick={() => handleNavClick("/a-propos")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               À propos

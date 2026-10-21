@@ -161,3 +161,94 @@
     @apply text-foreground font-semibold bg-muted/40;
   }
 }
+
+/* ==========================================================================
+   Animations d'ambiance (Phase 1)
+   --------------------------------------------------------------------------
+   Performance prioritaire : transform/opacity uniquement (GPU), aucune image
+   lourde. Tout est désactivé/figé sous prefers-reduced-motion (bloc en bas).
+   ========================================================================== */
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes aurora-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(6%, -4%, 0) scale(1.1); }
+  66%      { transform: translate3d(-5%, 5%, 0) scale(0.95); }
+}
+
+/* --- Carrousel d'assureurs (marquee défilant en continu) ------------------ */
+.insurer-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.insurer-marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+.insurer-marquee:hover .insurer-marquee__track {
+  animation-play-state: paused;
+}
+
+/* --- Fond Aurora néon (accueil) ------------------------------------------- */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.45;
+  will-change: transform;
+  animation: aurora-drift 22s ease-in-out infinite;
+}
+/* Mobile : flou plus léger (compositing moins coûteux). */
+@media (max-width: 767px) {
+  .aurora-blob { filter: blur(48px); opacity: 0.4; }
+}
+
+/* --- Parallax du visuel du hero (desktop uniquement) ---------------------- */
+/*  100 % CSS via scroll-driven animations (animation-timeline) : AUCUN
+    écouteur de scroll JS. Désactivé sur mobile, sous reduced-motion, et là où
+    la fonctionnalité n'est pas supportée (repli statique propre).           */
+@keyframes parallax-rise {
+  from { transform: translate3d(0, -4%, 0) scale(1.12); }
+  to   { transform: translate3d(0, 4%, 0) scale(1.12); }
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .parallax-hero {
+      will-change: transform;
+      animation: parallax-rise linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+/* --- Respect de prefers-reduced-motion (transverse) ----------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Carrousel → liste statique centrée (pas de défilement ni de duplicata). */
+  .insurer-marquee {
+    overflow: visible;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+  .insurer-marquee__track {
+    flex-wrap: wrap;
+    width: auto;
+    justify-content: center;
+    animation: none;
+  }
+  .insurer-marquee__dup { display: none; }
+}

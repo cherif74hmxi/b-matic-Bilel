@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
-import carteGriseImg from "@/assets/carte-grise.png";
+import carteGriseImg from "@/assets/carte-grise.webp";
 import { vehiculesData, marques } from "@/data/vehicules";
 
 const carburants = ["Essence", "Diesel", "Hybride", "Hybride Rechargeable", "Électrique", "Hydrogène", "GPL", "Gaz Naturel (GNV)", "Autre"];
