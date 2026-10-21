@@ -12,7 +12,7 @@ import { legalInfo } from "@/data/legal";
 
 const MobileActionBar = () => {
   const itemClass =
-    "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] text-[11px] font-heading uppercase tracking-wider transition-colors";
+    "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] px-2 text-center leading-tight text-[11px] font-heading uppercase tracking-wider transition-colors";
 
   return (
     <nav
