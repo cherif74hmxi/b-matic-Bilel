@@ -1,22 +1,22 @@
 # Graph Report - b-matic-Bilel  (2026-10-21)
 
 ## Corpus Check
-- 110 files · ~266,679 words
+- 112 files · ~54,520 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 6 file(s) not represented in the graph (top: .css 2, (none) 1, .lock 1)
+- Unclassified: 7 file(s) not represented in the graph (top: .css 2, .example 1, (none) 1)
 
 ## Summary
-- 725 nodes · 1429 edges · 49 communities (38 shown, 11 thin omitted)
+- 732 nodes · 1436 edges · 54 communities (44 shown, 10 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.95)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `326decbe`
+- Built from commit: `b3b0901d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- react
+- lucide-react
 - dependencies
 - carousel.tsx
 - sidebar.tsx
@@ -32,7 +32,7 @@
 - compilerOptions
 - chart.tsx
 - context-menu.tsx
-- InsurerMarquee.tsx
+- PareBrise.tsx
 - compilerOptions
 - utils.ts
 - Graphify — graphe de connaissances du projet
@@ -50,18 +50,24 @@
 - scroll-area.tsx
 - dropdown-menu.tsx
 - resizable.tsx
-- radio-group.tsx
+- AnimatedSection
 - avatar.tsx
-- alert.tsx
+- App.tsx
 - popover.tsx
 - main.tsx
-- slider.tsx
-- switch.tsx
+- react-router-dom
+- navigation-menu.tsx
 - README.md
 - @radix-ui/react-aspect-ratio
 - @radix-ui/react-collapsible
 - tailwindcss
 - @testing-library/jest-dom
+- vite-env.d.ts
+- react
+- Reprise.tsx
+- tabs.tsx
+- supabase.ts
+- progress.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 228 edges
@@ -80,25 +86,25 @@
   CLAUDE.md → src/components/AnimatedSection.tsx
 - `Architecture` --references--> `GlowCard()`  [INFERRED]
   CLAUDE.md → src/components/GlowCard.tsx
+- `1. Contexte & état actuel` --references--> `GlowCard()`  [INFERRED]
+  docs/PROJET-V2.md → src/components/GlowCard.tsx
 - `Architecture` --references--> `NeonButton()`  [INFERRED]
   CLAUDE.md → src/components/NeonButton.tsx
-- `Architecture` --references--> `CookieConsent()`  [INFERRED]
-  CLAUDE.md → src/components/CookieConsent.tsx
-- `Architecture` --references--> `Footer()`  [INFERRED]
-  CLAUDE.md → src/components/Footer.tsx
+- `1. Contexte & état actuel` --references--> `NeonButton()`  [INFERRED]
+  docs/PROJET-V2.md → src/components/NeonButton.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (49 total, 11 thin omitted)
+## Communities (54 total, 10 thin omitted)
 
-### Community 0 - "react"
-Cohesion: 0.05
-Nodes (66): 1. Contexte & état actuel, lucide-react, react-router-dom, App(), APropos, ConseilDetail, Conseils, Contact (+58 more)
+### Community 0 - "lucide-react"
+Cohesion: 0.16
+Nodes (17): lucide-react, @radix-ui/react-accordion, AccordionContent, AccordionItem, AccordionTrigger, Conseil, conseils, findConseil() (+9 more)
 
 ### Community 1 - "dependencies"
 Cohesion: 0.04
-Nodes (52): dependencies, class-variance-authority, clsx, cmdk, date-fns, embla-carousel-react, @fontsource/inter, @fontsource/orbitron (+44 more)
+Nodes (53): dependencies, class-variance-authority, clsx, cmdk, date-fns, embla-carousel-react, @fontsource/inter, @fontsource/orbitron (+45 more)
 
 ### Community 2 - "carousel.tsx"
 Cohesion: 0.07
@@ -117,8 +123,8 @@ Cohesion: 0.13
 Nodes (26): Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Menubar, MenubarCheckboxItem (+18 more)
 
 ### Community 6 - "navigation-menu.tsx"
-Cohesion: 0.11
-Nodes (19): class-variance-authority, @radix-ui/react-navigation-menu, @radix-ui/react-toggle, @radix-ui/react-toggle-group, Badge(), BadgeProps, badgeVariants, NavigationMenu (+11 more)
+Cohesion: 0.14
+Nodes (15): class-variance-authority, @radix-ui/react-toggle, @radix-ui/react-toggle-group, Alert, AlertDescription, AlertTitle, alertVariants, Badge() (+7 more)
 
 ### Community 7 - "command.tsx"
 Cohesion: 0.11
@@ -130,7 +136,7 @@ Nodes (23): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-rea
 
 ### Community 9 - "package.json"
 Cohesion: 0.09
-Nodes (22): name, private, type, version, autoprefixer, date-fns, eslint, @hookform/resolvers (+14 more)
+Nodes (21): name, private, type, version, autoprefixer, date-fns, eslint, @hookform/resolvers (+13 more)
 
 ### Community 10 - "compilerOptions"
 Cohesion: 0.10
@@ -156,24 +162,24 @@ Nodes (11): recharts, ChartConfig, ChartContainer, ChartContext, ChartContextPro
 Cohesion: 0.18
 Nodes (10): @radix-ui/react-context-menu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut() (+2 more)
 
-### Community 16 - "InsurerMarquee.tsx"
-Cohesion: 0.39
-Nodes (6): AssureurBadge(), AssureursGroup(), InsurerMarquee(), assurancesIntro, Assureur, assureurs
+### Community 16 - "PareBrise.tsx"
+Cohesion: 0.15
+Nodes (14): AssureurBadge(), AssureursGroup(), InsurerMarquee(), assurancesIntro, Assureur, assureurs, pareBriseAccroche, PareBriseAvantage (+6 more)
 
 ### Community 17 - "compilerOptions"
 Cohesion: 0.18
 Nodes (10): compilerOptions, allowJs, noImplicitAny, noUnusedLocals, noUnusedParameters, paths, skipLibCheck, strictNullChecks (+2 more)
 
 ### Community 18 - "utils.ts"
-Cohesion: 0.09
-Nodes (16): clsx, @radix-ui/react-checkbox, @radix-ui/react-hover-card, @radix-ui/react-progress, @radix-ui/react-tabs, tailwind-merge, NavLink, NavLinkCompatProps (+8 more)
+Cohesion: 0.08
+Nodes (17): clsx, @radix-ui/react-checkbox, @radix-ui/react-hover-card, @radix-ui/react-radio-group, @radix-ui/react-slider, @radix-ui/react-switch, tailwind-merge, NavLink (+9 more)
 
 ### Community 19 - "Graphify — graphe de connaissances du projet"
 Cohesion: 0.33
 Nodes (5): Graphify — graphe de connaissances du projet, Installation sur ta machine (une seule fois), Reconstruire le graphe après des changements de code, Utilisation au quotidien, Voir le graphe
 
 ### Community 20 - "Mecanique.tsx"
-Cohesion: 0.18
+Cohesion: 0.19
 Nodes (16): findService(), PriceType, Service, serviceCategories, ServiceCategory, DAYS, durLabel(), HEURES (+8 more)
 
 ### Community 21 - "select.tsx"
@@ -197,8 +203,8 @@ Cohesion: 0.29
 Nodes (4): lovable-tagger, vite, @vitejs/plugin-react-swc, vitest
 
 ### Community 26 - "B MATIC — Cahier des charges V2 (évolution du site)"
-Cohesion: 0.12
-Nodes (16): 10. Actions à la charge du propriétaire (hors code), 2. Objectifs, 3. Décisions techniques (actées), 4. Pages & fonctionnalités à livrer, 5.1 Offre pare-brise (à mettre en avant, page dédiée + accueil), 5.2 Assureurs partenaires (à afficher, logos/noms), 5.3 Emplacements photos guidés (ajout véhicule, façon leboncoin), 5.4 Promotions (déjà dans `src/data/services.ts`) (+8 more)
+Cohesion: 0.11
+Nodes (17): 10. Actions à la charge du propriétaire (hors code), 1. Contexte & état actuel, 2. Objectifs, 3. Décisions techniques (actées), 4. Pages & fonctionnalités à livrer, 5.1 Offre pare-brise (à mettre en avant, page dédiée + accueil), 5.2 Assureurs partenaires (à afficher, logos/noms), 5.3 Emplacements photos guidés (ajout véhicule, façon leboncoin) (+9 more)
 
 ### Community 27 - "eslint.config.js"
 Cohesion: 0.33
@@ -213,8 +219,8 @@ Cohesion: 0.40
 Nodes (4): next-themes, sonner, Toaster(), ToasterProps
 
 ### Community 30 - "react"
-Cohesion: 0.12
-Nodes (19): Architecture, Commands, Graphify, Project, react, CookieConsent(), Footer(), Header() (+11 more)
+Cohesion: 0.17
+Nodes (12): Architecture, Commands, Graphify, Project, CookieConsent(), Footer(), Header(), navLinksAfter (+4 more)
 
 ### Community 31 - "scroll-area.tsx"
 Cohesion: 0.67
@@ -228,41 +234,65 @@ Nodes (10): @radix-ui/react-dropdown-menu, DropdownMenuCheckboxItem, DropdownMen
 Cohesion: 0.50
 Nodes (3): react-resizable-panels, ResizableHandle(), ResizablePanelGroup()
 
-### Community 34 - "radio-group.tsx"
-Cohesion: 0.50
-Nodes (3): @radix-ui/react-radio-group, RadioGroup, RadioGroupItem
+### Community 34 - "AnimatedSection"
+Cohesion: 0.18
+Nodes (15): AnimatedSection(), AuroraBackground(), GlowCard(), GlowCardProps, NeonButton(), NeonButtonProps, advantages, APropos() (+7 more)
 
 ### Community 35 - "avatar.tsx"
 Cohesion: 0.40
 Nodes (4): @radix-ui/react-avatar, Avatar, AvatarFallback, AvatarImage
 
-### Community 37 - "alert.tsx"
-Cohesion: 0.50
-Nodes (4): Alert, AlertDescription, AlertTitle, alertVariants
+### Community 37 - "App.tsx"
+Cohesion: 0.19
+Nodes (15): App(), APropos, ConseilDetail, Conseils, Contact, Depannage, Mecanique, MentionsLegales (+7 more)
 
 ### Community 39 - "main.tsx"
 Cohesion: 0.40
 Nodes (3): @fontsource/inter, @fontsource/orbitron, react-dom
 
+### Community 40 - "react-router-dom"
+Cohesion: 0.32
+Nodes (7): react-router-dom, LegalPage(), LegalPageProps, legalInfo, supervisoryAuthority, MentionsLegales(), PolitiqueConfidentialite()
+
+### Community 41 - "navigation-menu.tsx"
+Cohesion: 0.28
+Nodes (8): @radix-ui/react-navigation-menu, NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle, NavigationMenuViewport
+
+### Community 49 - "react"
+Cohesion: 0.36
+Nodes (6): react, AnimatedSectionProps, blobs, canRunAmbientMotion(), isLowEndDevice(), prefersReducedMotion()
+
+### Community 50 - "Reprise.tsx"
+Cohesion: 0.38
+Nodes (5): marques, vehiculesData, carburants, historiqueOptions, mois
+
+### Community 51 - "tabs.tsx"
+Cohesion: 0.40
+Nodes (4): @radix-ui/react-tabs, TabsContent, TabsList, TabsTrigger
+
+### Community 52 - "supabase.ts"
+Cohesion: 0.50
+Nodes (3): @supabase/supabase-js, STORAGE_BUCKETS, supabase
+
 ## Knowledge Gaps
 - **15 isolated node(s):** `@hookform/resolvers`, `date-fns`, `tailwindcss-animate`, `zod`, `@playwright/test` (+10 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 266 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 270 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `react`, `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `cn`, `navigation-menu.tsx`, `command.tsx`, `package.json`, `form.tsx`, `chart.tsx`, `context-menu.tsx`, `utils.ts`, `Mecanique.tsx`, `select.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `input-otp.tsx`, `scroll-area.tsx`, `dropdown-menu.tsx`, `radio-group.tsx`, `avatar.tsx`, `alert.tsx`, `popover.tsx`, `slider.tsx`, `switch.tsx`?**
-  _High betweenness centrality (0.240) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `lucide-react`, `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `cn`, `navigation-menu.tsx`, `command.tsx`, `package.json`, `form.tsx`, `chart.tsx`, `context-menu.tsx`, `utils.ts`, `Mecanique.tsx`, `select.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `input-otp.tsx`, `react`, `scroll-area.tsx`, `dropdown-menu.tsx`, `AnimatedSection`, `avatar.tsx`, `App.tsx`, `popover.tsx`, `react-router-dom`, `navigation-menu.tsx`, `Reprise.tsx`, `tabs.tsx`, `progress.tsx`?**
+  _High betweenness centrality (0.239) - this node is a cross-community bridge._
 - **What connects `@hookform/resolvers`, `date-fns`, `tailwindcss-animate` to the rest of the system?**
   _15 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `react` be split into smaller, more focused modules?**
-  _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
-- **Why does `cn()` connect `cn` to `react`, `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `navigation-menu.tsx`, `command.tsx`, `form.tsx`, `chart.tsx`, `context-menu.tsx`, `utils.ts`, `select.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `input-otp.tsx`, `scroll-area.tsx`, `dropdown-menu.tsx`, `resizable.tsx`, `radio-group.tsx`, `avatar.tsx`, `alert.tsx`, `popover.tsx`, `slider.tsx`, `switch.tsx`?**
-  _High betweenness centrality (0.200) - this node is a cross-community bridge._
 - **Should `dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.038461538461538464 - nodes in this community are weakly interconnected._
-- **Why does `lucide-react` connect `react` to `dropdown-menu.tsx`, `resizable.tsx`, `carousel.tsx`, `radio-group.tsx`, `sidebar.tsx`, `cn`, `navigation-menu.tsx`, `command.tsx`, `hooks/use-toast.ts`, `package.json`, `context-menu.tsx`, `utils.ts`, `Mecanique.tsx`, `select.tsx`, `breadcrumb.tsx`, `input-otp.tsx`, `react`?**
-  _High betweenness centrality (0.128) - this node is a cross-community bridge._
+  _Cohesion score 0.03773584905660377 - nodes in this community are weakly interconnected._
+- **Why does `cn()` connect `cn` to `lucide-react`, `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `navigation-menu.tsx`, `command.tsx`, `form.tsx`, `chart.tsx`, `context-menu.tsx`, `utils.ts`, `select.tsx`, `breadcrumb.tsx`, `drawer.tsx`, `input-otp.tsx`, `scroll-area.tsx`, `dropdown-menu.tsx`, `resizable.tsx`, `avatar.tsx`, `popover.tsx`, `navigation-menu.tsx`, `tabs.tsx`, `progress.tsx`?**
+  _High betweenness centrality (0.196) - this node is a cross-community bridge._
 - **Should `carousel.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.06755260243632337 - nodes in this community are weakly interconnected._
+- **Why does `lucide-react` connect `lucide-react` to `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `cn`, `command.tsx`, `package.json`, `context-menu.tsx`, `PareBrise.tsx`, `utils.ts`, `Mecanique.tsx`, `select.tsx`, `breadcrumb.tsx`, `input-otp.tsx`, `react`, `dropdown-menu.tsx`, `resizable.tsx`, `AnimatedSection`, `react-router-dom`, `navigation-menu.tsx`?**
+  _High betweenness centrality (0.127) - this node is a cross-community bridge._
+- **Should `sidebar.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.05279034690799397 - nodes in this community are weakly interconnected._

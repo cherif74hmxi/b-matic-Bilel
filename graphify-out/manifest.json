@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1792600515.594998,
-    "seen": 1792600856.2501998,
-    "ast_hash": "ae5031bde2cbfdf99c956a03b7d3ef9c",
+    "mtime": 1792616051.6147513,
+    "seen": 1792616732.6365745,
+    "ast_hash": "c65d7b385052f0fce0baf6c1465fdbcd",
     "semantic_hash": ""
   },
   "playwright-fixture.ts": {
@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "src/components/CookieConsent.tsx": {
-    "mtime": 1792029176.6570854,
-    "seen": 1792030689.1637099,
-    "ast_hash": "e4df3bacb9c3dacf9a213415d47973ce",
+    "mtime": 1792601897.508758,
+    "seen": 1792616732.636775,
+    "ast_hash": "46ea32b8b8de585dd3647a9ee4abf012",
     "semantic_hash": ""
   },
   "src/components/Footer.tsx": {
@@ -510,9 +510,9 @@
     "semantic_hash": ""
   },
   "src/vite-env.d.ts": {
-    "mtime": 1792029176.6724546,
-    "seen": 1792030689.1638677,
-    "ast_hash": "0352474ba2918efe13895edbc3780d94",
+    "mtime": 1792616062.6082075,
+    "seen": 1792616732.6399472,
+    "ast_hash": "8fc67744c3d431693763ec3a0f9fdf9e",
     "semantic_hash": ""
   },
   "tailwind.config.ts": {
@@ -575,36 +575,6 @@
     "ast_hash": "b501d7dff3280ac829c321fe854d99d0",
     "semantic_hash": ""
   },
-  "src/assets/bmatic-logo.jpeg": {
-    "mtime": 1792029176.6343808,
-    "seen": 1792030689.1638906,
-    "ast_hash": "7ccf65ca3b874bb6fdaa7a2eab451c2f",
-    "semantic_hash": ""
-  },
-  "src/assets/carte-grise.png": {
-    "mtime": 1792029176.646046,
-    "seen": 1792030689.1638927,
-    "ast_hash": "272543c0271354bbf89acb2ac0259e03",
-    "semantic_hash": ""
-  },
-  "src/assets/hero-bg.jpg": {
-    "mtime": 1792029176.6503787,
-    "seen": 1792030689.163894,
-    "ast_hash": "5c5cb52241cafb18e71d29870afacd90",
-    "semantic_hash": ""
-  },
-  "src/assets/hero-bgg.jpg": {
-    "mtime": 1792029176.6503787,
-    "seen": 1792030689.1638958,
-    "ast_hash": "99482ec596b1b65210c498f2c8a0cab7",
-    "semantic_hash": ""
-  },
-  "src/assets/mechanic-bg.jpg": {
-    "mtime": 1792029176.6503787,
-    "seen": 1792030689.1638973,
-    "ast_hash": "62a83355cf7fd6bc27fb2ece6c4ac354",
-    "semantic_hash": ""
-  },
   "GRAPHIFY.md": {
     "mtime": 1792029176.6169846,
     "seen": 1792030689.1638813,
@@ -630,9 +600,9 @@
     "semantic_hash": ""
   },
   "src/components/MobileActionBar.tsx": {
-    "mtime": 1792598397.570974,
-    "seen": 1792598870.2684553,
-    "ast_hash": "68ded7e47e928b287d32ae592bba50b0",
+    "mtime": 1792601980.7425914,
+    "seen": 1792616732.6370063,
+    "ast_hash": "a621c55c85f33997426755c139e26698",
     "semantic_hash": ""
   },
   "src/data/assurances.ts": {
@@ -701,12 +671,6 @@
     "ast_hash": "a2d222c8e7e6d4cfaa2bcf5a30f27aaa",
     "semantic_hash": ""
   },
-  "src/assets/cadeaux/billets-100.jpg": {
-    "mtime": 1792597669.0753896,
-    "seen": 1792598870.2687426,
-    "ast_hash": "390040e2f507b5abbf6445a56726097d",
-    "semantic_hash": ""
-  },
   "src/assets/cadeaux/nintendo-switch.jpg": {
     "mtime": 1792597669.2073896,
     "seen": 1792598870.268745,
@@ -759,6 +723,12 @@
     "mtime": 1792600482.6434302,
     "seen": 1792600856.2505066,
     "ast_hash": "74adfbf62d2c3397e8f2b5650629a3b0",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase.ts": {
+    "mtime": 1792616062.5347743,
+    "seen": 1792616732.6391935,
+    "ast_hash": "7856925959f5fc43e41579eaf9d8b4d3",
     "semantic_hash": ""
   }
 }
