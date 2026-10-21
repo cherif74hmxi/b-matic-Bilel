@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChunkErrorBoundary from "@/components/ChunkErrorBoundary";
+import PageViewTracker from "@/components/PageViewTracker";
 // Accueil chargé immédiatement (page d'atterrissage → LCP rapide).
 import Index from "./pages/Index";
 
@@ -34,8 +35,27 @@ const RouteFallback = () => <div className="min-h-screen" aria-hidden="true" />;
 
 // Site public : Header / Footer / bannière cookies restent affichés pendant
 // le chargement du chunk de la page.
+// Pages publiques. Seules ces routes sont comptées dans les statistiques :
+// les 404 (robots qui testent /wp-login.php, fautes de frappe…) ne le sont pas.
+const publicRoutes = [
+  { path: "/", element: <Index /> },
+  { path: "/a-propos", element: <APropos /> },
+  { path: "/contact", element: <Contact /> },
+  { path: "/reprise", element: <Reprise /> },
+  { path: "/mecanique", element: <Mecanique /> },
+  { path: "/depannage", element: <Depannage /> },
+  { path: "/pare-brise-assurances", element: <PareBrise /> },
+  { path: "/conseils", element: <Conseils /> },
+  { path: "/conseils/:slug", element: <ConseilDetail /> },
+  { path: "/politique-de-confidentialite", element: <PolitiqueConfidentialite /> },
+  { path: "/mentions-legales", element: <MentionsLegales /> },
+];
+const trackedPaths = publicRoutes.map((r) => r.path);
+
+// PageViewTracker : statistiques sans cookie, site public uniquement (pas /admin).
 const PublicLayout = () => (
   <Layout>
+    <PageViewTracker trackedPaths={trackedPaths} />
     <Suspense fallback={<RouteFallback />}>
       <Outlet />
     </Suspense>
@@ -60,17 +80,9 @@ const App = () => (
               }
             />
             <Route element={<PublicLayout />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/a-propos" element={<APropos />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/reprise" element={<Reprise />} />
-              <Route path="/mecanique" element={<Mecanique />} />
-              <Route path="/depannage" element={<Depannage />} />
-              <Route path="/pare-brise-assurances" element={<PareBrise />} />
-              <Route path="/conseils" element={<Conseils />} />
-              <Route path="/conseils/:slug" element={<ConseilDetail />} />
-              <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
-              <Route path="/mentions-legales" element={<MentionsLegales />} />
+              {publicRoutes.map(({ path, element }) => (
+                <Route key={path} path={path} element={element} />
+              ))}
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

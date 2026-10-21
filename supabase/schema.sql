@@ -3,6 +3,7 @@
 -- ----------------------------------------------------------------------------
 --  À exécuter dans Supabase > SQL Editor (en une fois). Le script est
 --  ré-exécutable : tables « if not exists », policies supprimées puis recréées.
+--  Ensuite, exécuter les fichiers de supabase/migrations/ dans l'ordre de leur nom.
 --
 --  Modèle de sécurité (RLS, cf. docs/PROJET-V2.md §7) :
 --    • visiteurs (anon)   → lecture des véhicules / actus publiés uniquement,
