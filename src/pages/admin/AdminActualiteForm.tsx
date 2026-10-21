@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ImagePlus, Info, Loader2, RefreshCw, Sparkles, Trash2 } from "lucide-react";
+import { ArrowLeft, ImagePlus, Info, Loader2, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import { Field, FormSection } from "@/components/admin/FormParts";
@@ -26,6 +26,8 @@ import {
 import { slugify } from "@/lib/slug";
 import { guardLinkClick, setUnsaved, useLeaveGuard } from "@/lib/unsavedChanges";
 import { stashUploads, takeUploads } from "@/lib/stagedUploads";
+import AiAssistButton from "@/components/admin/AiAssistButton";
+import { AI_LIMITS, useAiCopy } from "@/lib/aiCopy";
 
 // ============================================================================
 //  Ajout / édition d'une actualité (admin)
@@ -228,6 +230,7 @@ const PostForm = ({ post }: { post?: Post }) => {
     watch,
     setValue,
     reset,
+    getValues,
     formState: { errors, isDirty },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: toFormValues(post), mode: "onTouched" });
 
@@ -246,6 +249,26 @@ const PostForm = ({ post }: { post?: Post }) => {
 
   const hasUnsaved = isDirty || stagedCover !== null;
   useLeaveGuard(hasUnsaved);
+
+  // ----- Assistant IA : article rédigé à partir du titre (sujet) et du texte déjà saisi
+  // (titre et contenu verrouillés pendant la rédaction : la réponse les remplace)
+  // Sujet d'origine gardé : un nouvel essai ne repart pas du titre écrit par l'IA.
+  const aiTopic = useRef<{ topic: string; aiTitle: string } | null>(null);
+  const ai = useAiCopy(({ title, description }) => {
+    const aiTitle = title.slice(0, 200);
+    if (aiTopic.current) aiTopic.current.aiTitle = aiTitle;
+    setValue("title", aiTitle, { shouldDirty: true, shouldValidate: true });
+    setValue("content", description.slice(0, 50000), { shouldDirty: true, shouldValidate: true });
+  });
+  const runAi = () => {
+    const title = getValues("title").trim();
+    const draft = getValues("content").trim();
+    if (!title) return void toast.error("Indiquez d'abord le sujet dans le titre.");
+    const topic = aiTopic.current && title === aiTopic.current.aiTitle ? aiTopic.current.topic : title;
+    aiTopic.current = { topic, aiTitle: "" };
+    if (draft && !window.confirm("Remplacer le titre et le contenu par la proposition de l'IA ? Votre texte actuel lui sert de base.")) return;
+    ai.generate({ kind: "post", data: { topic, draft: draft.slice(0, AI_LIMITS.draft) || null } });
+  };
 
   const save = useMutation({
     mutationFn: (values: FormValues) => {
@@ -321,10 +344,10 @@ const PostForm = ({ post }: { post?: Post }) => {
       <div className="grid gap-4">
         <FormSection title="Article">
           <Field id="p-title" label="Titre" required error={errors.title?.message}>
-            <input {...fieldProps("title")} autoComplete="off" className={adminInputClass} />
+            <input {...fieldProps("title")} readOnly={ai.pending} autoComplete="off" className={adminInputClass} />
           </Field>
           <Field id="p-content" label="Contenu" error={errors.content?.message} hint={`${content.length} caractères. Une ligne vide sépare deux paragraphes.`}>
-            <textarea {...fieldProps("content", true)} rows={12} className={adminTextareaClass} />
+            <textarea {...fieldProps("content", true)} readOnly={ai.pending} rows={12} className={adminTextareaClass} />
           </Field>
           <Field
             id="p-excerpt"
@@ -359,10 +382,11 @@ const PostForm = ({ post }: { post?: Post }) => {
               />
             </div>
           </Field>
-          <p className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Sparkles className="w-4 h-4 text-neon-purple shrink-0" aria-hidden="true" />
-            L'assistant IA (titre + contenu) arrive à l'étape suivante.
-          </p>
+          <AiAssistButton
+            onClick={runAi}
+            pending={ai.pending}
+            hint="Écrivez le sujet dans le titre (et éventuellement quelques notes dans le contenu) : l'IA rédige l'article sans rien inventer. Relisez avant d'enregistrer."
+          />
         </FormSection>
 
         <FormSection title="Image de couverture">

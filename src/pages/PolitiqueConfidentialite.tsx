@@ -116,6 +116,16 @@ const PolitiqueConfidentialite = () => {
         <li>
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
+        <li>
+          <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — aide à
+          la rédaction des annonces de véhicules et des actualités, utilisée uniquement par le
+          garage dans son espace d'administration. Seuls les caractéristiques des véhicules
+          (marque, modèle, kilométrage…) et les textes rédigés par le garage pour ses annonces et
+          actualités lui sont transmis ; le garage n'y inclut aucune donnée personnelle. Les
+          données de nos visiteurs et clients (formulaires, statistiques){" "}
+          <strong>ne lui sont jamais envoyées</strong>. Voir leurs conditions :{" "}
+          <a href={legalInfo.aiAssistant.termsUrl} target="_blank" rel="noopener noreferrer">ai.google.dev</a>.
+        </li>
       </ul>
 
       <h2>5. Cookies et stockage local</h2>

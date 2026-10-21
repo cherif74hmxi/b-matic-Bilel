@@ -64,6 +64,15 @@ export const legalInfo = {
     privacyUrl: "https://supabase.com/privacy",
   },
 
+  // Assistant de rédaction de l'espace admin (Edge Function « generate-copy »).
+  // Ne reçoit que les caractéristiques des véhicules et les sujets d'actualités
+  // saisis par le garage : aucune donnée de visiteur ou de client.
+  aiAssistant: {
+    name: "Gemini",
+    company: "Google LLC",
+    termsUrl: "https://ai.google.dev/gemini-api/terms",
+  },
+
   // Durée de conservation des demandes reçues via les formulaires (en années).
   // Une tâche planifiée les supprime automatiquement passé ce délai
   // (supabase/migrations/20261021000002_purge_leads.sql).

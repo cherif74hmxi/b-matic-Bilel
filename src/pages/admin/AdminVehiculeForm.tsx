@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CheckCircle2, Info, Loader2, ScanLine, Sparkles, WandSparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Info, Loader2, ScanLine, WandSparkles } from "lucide-react";
 import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import { Field, FormSection } from "@/components/admin/FormParts";
@@ -13,6 +13,8 @@ import { VehicleActionsMenu, VehicleStatusBadge } from "@/components/admin/Vehic
 import { AdminLoading } from "@/components/admin/RequireAdmin";
 import VehiclePhotos, { StagedVehiclePhotos, type StagedPhoto } from "@/components/admin/VehiclePhotos";
 import { stashUploads } from "@/lib/stagedUploads";
+import AiAssistButton from "@/components/admin/AiAssistButton";
+import { AI_LIMITS, useAiCopy } from "@/lib/aiCopy";
 import { vehiculesData } from "@/data/vehicules";
 import {
   createVehicle,
@@ -206,6 +208,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
     handleSubmit,
     watch,
     getValues,
+    trigger,
     setValue,
     reset,
     formState: { errors, isDirty },
@@ -274,6 +277,36 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
   // (liens internes via setUnsaved/confirmLeave, onglet/rechargement via beforeunload)
   const hasUnsaved = isDirty || staged.length > 0;
   useLeaveGuard(hasUnsaved);
+
+  // ----- Assistant IA : titre + description à partir des caractéristiques saisies
+  // (titre et description verrouillés pendant la rédaction : la réponse les remplace)
+  const ai = useAiCopy(({ title, description }) => {
+    setValue("title", title.slice(0, 200), { shouldDirty: true, shouldValidate: true });
+    setValue("description", description.slice(0, AI_LIMITS.notes), { shouldDirty: true, shouldValidate: true });
+  });
+  const runAi = async () => {
+    const valid = await trigger(["make", "model", "version", "year", "mileage_km", "power_hp", "price_eur"]);
+    if (!valid) return void toast.error("Corrigez d'abord les champs signalés en rouge.");
+    const i = toInput(getValues());
+    if (!i.make || !i.model) return void toast.error("Indiquez au moins la marque et le modèle.");
+    if (i.description && !window.confirm("Remplacer le titre et la description par la proposition de l'IA ? Votre description lui sert de base."))
+      return;
+    ai.generate({
+      kind: "vehicle",
+      data: {
+        make: i.make,
+        model: i.model,
+        version: i.version,
+        year: i.year,
+        mileage_km: i.mileage_km,
+        fuel: i.fuel && FUEL_LABELS[i.fuel],
+        gearbox: i.gearbox && GEARBOX_LABELS[i.gearbox],
+        power_hp: i.power_hp,
+        price_eur: i.price_eur,
+        notes: i.description?.slice(0, AI_LIMITS.notes) ?? null,
+      },
+    });
+  };
 
   // ----- Enregistrement
   const save = useMutation({
@@ -482,7 +515,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             <input {...fieldProps("price_eur")} inputMode="numeric" autoComplete="off" className={adminInputClass} />
           </Field>
           <Field id="v-title" label="Titre de l'annonce" required error={errors.title?.message}>
-            <input {...fieldProps("title")} autoComplete="off" className={adminInputClass} />
+            <input {...fieldProps("title")} readOnly={ai.pending} autoComplete="off" className={adminInputClass} />
           </Field>
           <button type="button" onClick={proposeTitle} className="btn-ghost min-h-[44px] w-full sm:w-auto -mt-1">
             <WandSparkles className="w-4 h-4" aria-hidden="true" />
@@ -514,12 +547,13 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             </div>
           </Field>
           <Field id="v-description" label="Description" error={errors.description?.message}>
-            <textarea {...fieldProps("description")} rows={8} className={adminTextareaClass} />
+            <textarea {...fieldProps("description")} readOnly={ai.pending} rows={8} className={adminTextareaClass} />
           </Field>
-          <p className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Sparkles className="w-4 h-4 text-neon-purple shrink-0" aria-hidden="true" />
-            L'assistant IA (titre + description) arrive à l'étape suivante.
-          </p>
+          <AiAssistButton
+            onClick={() => void runAi()}
+            pending={ai.pending}
+            hint="Rédige le titre et la description à partir des caractéristiques saisies (rien n'est inventé). Relisez avant d'enregistrer."
+          />
         </FormSection>
 
         {isNew && (
