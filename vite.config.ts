@@ -13,6 +13,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  // Encodeur WebP (WebAssembly) : ne pas pré-optimiser, sinon Vite ne trouve
+  // plus le fichier .wasm en développement.
+  optimizeDeps: {
+    exclude: ["@jsquash/webp"],
+  },
+  // Workers en modules ES : le worker d'encodage WebP charge son wasm à la demande.
+  worker: {
+    format: "es",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -59,3 +59,29 @@ describe("slugify", () => {
     expect(slugify("x".repeat(100)).length).toBe(80);
   });
 });
+
+import { insertionIndex } from "@/lib/vehiclePhotos";
+import { fitWithin } from "@/lib/imageOptimize";
+
+describe("insertionIndex (ordre logique des photos)", () => {
+  const photos = (...slots: string[]) => slots.map((slot) => ({ slot }));
+  it("insère selon l'ordre des emplacements guidés", () => {
+    expect(insertionIndex(photos("couverture", "coffre"), "roue")).toBe(1);
+    expect(insertionIndex(photos("couverture", "roue"), "avant_gauche_3_4")).toBe(1);
+    expect(insertionIndex(photos(), "coffre")).toBe(0);
+  });
+  it("« autre » va toujours à la fin", () => {
+    expect(insertionIndex(photos("couverture", "autre", "coffre"), "autre")).toBe(3);
+  });
+  it("après un réordonnancement manuel, s'insère avant la première photo plus « loin »", () => {
+    expect(insertionIndex(photos("coffre", "couverture"), "roue")).toBe(0);
+  });
+});
+
+describe("fitWithin", () => {
+  it("réduit le grand côté, sans jamais agrandir", () => {
+    expect(fitWithin(4032, 3024, 1920)).toEqual({ width: 1920, height: 1440 });
+    expect(fitWithin(3024, 4032, 1920)).toEqual({ width: 1440, height: 1920 });
+    expect(fitWithin(800, 600, 1920)).toEqual({ width: 800, height: 600 });
+  });
+});

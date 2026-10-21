@@ -11,6 +11,7 @@ import { Field, FormSection } from "@/components/admin/FormParts";
 import { adminInputClass, adminSelectClass, adminTextareaClass } from "@/components/admin/formStyles";
 import { VehicleActionsMenu, VehicleStatusBadge } from "@/components/admin/VehicleActions";
 import { AdminLoading } from "@/components/admin/RequireAdmin";
+import VehiclePhotos from "@/components/admin/VehiclePhotos";
 import { vehiculesData } from "@/data/vehicules";
 import {
   createVehicle,
@@ -381,6 +382,19 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             <input {...fieldProps("version")} autoComplete="off" className={adminInputClass} />
           </Field>
         </FormSection>
+
+        {/* ---------- Photos (après le premier enregistrement) ---------- */}
+        {vehicle && (
+          <FormSection title="Photos">
+            {photos.isError ? (
+              <p className="text-sm text-neon-pink">Chargement des photos impossible. Rechargez la page.</p>
+            ) : photos.data ? (
+              <VehiclePhotos vehicleId={vehicle.id} vehicleTitle={vehicle.title} photos={photos.data} />
+            ) : (
+              <div className="h-40 rounded-xl bg-muted/40 animate-pulse" />
+            )}
+          </FormSection>
+        )}
 
         {/* ---------- Caractéristiques ---------- */}
         <FormSection title="Caractéristiques">
