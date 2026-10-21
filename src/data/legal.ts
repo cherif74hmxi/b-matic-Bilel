@@ -31,7 +31,14 @@ export const legalInfo = {
   email: "bmatic63s@gmail.com",
   phone: "+32 4 70 85 35 51",
   phoneHref: "tel:+32470853551",
+  // ⚠️  Numéro WhatsApp À CONFIRMER : incohérence entre un numéro belge (+32)
+  //     et un numéro français (+33 / 06). Tant que `whatsappConfirmed` est à
+  //     false, le bouton WhatsApp (barre d'action mobile) reste masqué.
+  //     Une fois le bon numéro connu : renseigner `whatsapp` au format
+  //     international sans « + » ni espaces (ex. "32470853551") et passer
+  //     `whatsappConfirmed` à true.
   whatsapp: "06 18 04 30 75",
+  whatsappConfirmed: false,
 
   // --- Pays principal d'exploitation -------------------------------------
   // "BE" → autorité : APD / GBA  |  "FR" → autorité : CNIL
