@@ -25,3 +25,8 @@ dist-ssr
 
 # Graphify — cache local régénérable (le graphe lui-même est versionné)
 graphify-out/cache/
+
+# Variables d'environnement (ne jamais committer les vraies valeurs)
+.env
+.env.*
+!.env.example
