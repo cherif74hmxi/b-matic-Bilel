@@ -58,7 +58,7 @@ const intField = (min: number, max: number, message: string) =>
 const schema = z.object({
   vin: z
     .string()
-    .refine((v) => v.trim() === "" || VIN_PATTERN.test(normalizeVin(v)), "VIN invalide : 17 caractères, sans I, O ni Q."),
+    .refine((v) => v.trim() === "" || VIN_PATTERN.test(normalizeVin(v)), "Le VIN doit faire exactement 17 caractères."),
   make: z.string().trim().min(1, "Indiquez la marque.").max(60, "60 caractères maximum."),
   model: z.string().trim().min(1, "Indiquez le modèle.").max(80, "80 caractères maximum."),
   version: z.string().trim().max(120, "120 caractères maximum."),
@@ -127,8 +127,61 @@ const SUGGESTION_LABELS: Record<keyof VinSuggestion, string> = {
 };
 
 type VinState =
-  | { status: "idle" | "loading" | "unknown" | "error" }
-  | { status: "done"; filled: string[]; yearFromVin: boolean };
+  | { status: "idle" | "loading" }
+  | {
+      status: "done";
+      /** Champs vides remplis par le décodage. */
+      filled: string[];
+      /** Le décodage a trouvé au moins une information (même déjà saisie). */
+      found: boolean;
+      /** Données partielles (pas de modèle) : cas fréquent des véhicules européens. */
+      limited: boolean;
+      serviceDown: boolean;
+      /** Année proposée par vPIC mais écartée (peu fiable pour ce VIN). */
+      yearSkipped: boolean;
+    };
+
+/** Résultat du décodage VIN, sans jamais présenter une donnée absente comme trouvée. */
+const VinMessage = ({ state }: { state: Extract<VinState, { status: "done" }> }) => {
+  const { filled, found, limited, serviceDown, yearSkipped } = state;
+  const rest = "Complétez le reste à la main à partir de la carte grise.";
+  const yearNote = yearSkipped ? " L'année n'a pas été reprise : elle n'est pas fiable dans ce VIN (voir la carte grise)." : "";
+  if (!found) {
+    return (
+      <p className="flex gap-2 text-sm rounded-lg border border-border bg-muted/30 p-3">
+        <Info className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" aria-hidden="true" />
+        <span>
+          {serviceDown
+            ? "Service de décodage indisponible pour le moment."
+            : "Aucune information trouvée pour ce VIN (fréquent pour les véhicules européens)."}{" "}
+          Complétez à la main à partir de la carte grise.{yearNote}
+        </span>
+      </p>
+    );
+  }
+  if (filled.length === 0 && !serviceDown) {
+    return (
+      <p className="flex gap-2 text-sm text-muted-foreground">
+        <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+        Les informations trouvées sont déjà remplies : rien n'a été modifié.{yearNote}
+      </p>
+    );
+  }
+  return (
+    <p className="flex gap-2 text-sm rounded-lg border border-neon-cyan/40 bg-neon-cyan/5 p-3">
+      <CheckCircle2 className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" aria-hidden="true" />
+      <span>
+        {filled.length > 0 ? `Pré-rempli depuis le VIN : ${filled.join(", ")}. Vérifiez. ` : "Marque déjà remplie. "}
+        {serviceDown
+          ? `Service de décodage indisponible : seule la marque a été déduite du VIN. ${rest}`
+          : limited
+            ? `Données limitées pour ce VIN (fréquent pour les véhicules européens). ${rest}`
+            : "Complétez si besoin."}
+        {yearNote}
+      </span>
+    </p>
+  );
+};
 
 // ---------------------------------------------------------------------------
 
@@ -179,9 +232,8 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       lastDecoded.current = vin;
       setVinState({ status: "loading" });
 
-      const suggestion = await decodeVin(vin, controller.signal);
+      const { suggestion, serviceDown, yearSkipped } = await decodeVin(vin, controller.signal);
       if (controller.signal.aborted) return;
-      if (suggestion === null) return setVinState({ status: "error" });
 
       const filled: string[] = [];
       for (const [key, value] of Object.entries(suggestion) as [keyof VinSuggestion, string | number][]) {
@@ -190,21 +242,26 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
           filled.push(SUGGESTION_LABELS[key]);
         }
       }
-      if (filled.length === 0) {
-        setVinState(Object.keys(suggestion).length === 0 ? { status: "unknown" } : { status: "done", filled, yearFromVin: false });
-        return;
-      }
-      if (getValues("title").trim() === "") proposeTitle();
-      setVinState({ status: "done", filled, yearFromVin: filled.includes("année") });
+      if (filled.length > 0 && getValues("title").trim() === "") proposeTitle();
+      const found = Object.keys(suggestion).length > 0;
+      setVinState({ status: "done", filled, found, limited: found && !suggestion.model, serviceDown, yearSkipped });
     },
     [getValues, setValue, proposeTitle],
   );
 
   const vinValue = watch("vin");
+  const vinLength = normalizeVin(vinValue ?? "").length;
   useEffect(() => {
-    const vin = normalizeVin(vinValue ?? "");
+    const raw = vinValue ?? "";
+    // O, Q et I n'existent pas dans un VIN : corrigés dans le champ, visiblement.
+    if (/[oqi]/i.test(raw)) {
+      setValue("vin", raw.replace(/[oq]/gi, "0").replace(/i/gi, "1"), { shouldDirty: true });
+      toast.info("Un VIN ne contient jamais O, Q ni I : remplacés par 0 et 1.", { id: "vin-letters" });
+      return;
+    }
+    const vin = normalizeVin(raw);
     if (VIN_PATTERN.test(vin) && vin !== lastDecoded.current) void runDecode(vin);
-  }, [vinValue, runDecode]);
+  }, [vinValue, runDecode, setValue]);
   useEffect(() => () => decodeAbort.current?.abort(), []);
 
   // ----- Avertir avant de quitter avec des modifications non enregistrées
@@ -297,9 +354,10 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             id="v-vin"
             label="Numéro de châssis (VIN)"
             error={errors.vin?.message}
-            hint="17 caractères. Saisissez-le en premier : marque, année… se remplissent automatiquement quand c'est possible."
+            hint={`${vinLength}/17 caractères. Saisissez-le en premier : les informations trouvées remplissent les champs vides.`}
           >
-            <div className="flex gap-2">
+            {/* Mobile : bouton sous le champ, pour que les 17 caractères restent lisibles. */}
+            <div className="flex flex-wrap gap-2">
               <input
                 {...fieldProps("vin")}
                 inputMode="text"
@@ -307,17 +365,17 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
                 autoComplete="off"
                 spellCheck={false}
                 maxLength={40}
-                className={`${adminInputClass} font-mono uppercase tracking-wider`}
+                className={`${adminInputClass} flex-1 basis-60 font-mono uppercase tracking-wider`}
               />
               <button
                 type="button"
                 onClick={() => {
                   const vin = normalizeVin(getValues("vin"));
                   if (VIN_PATTERN.test(vin)) void runDecode(vin);
-                  else toast.error("Saisissez un VIN complet (17 caractères).");
+                  else toast.error(`${vin.length < 17 ? "VIN incomplet" : "VIN trop long"} : ${vin.length}/17 caractères.`);
                 }}
                 disabled={vinState.status === "loading"}
-                className="btn-ghost shrink-0 min-h-[48px] px-4"
+                className="btn-ghost flex-1 sm:flex-none min-h-[48px] px-4"
                 aria-label="Décoder le VIN"
               >
                 {vinState.status === "loading" ? (
@@ -325,39 +383,13 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
                 ) : (
                   <ScanLine className="w-4 h-4" aria-hidden="true" />
                 )}
-                <span className="hidden sm:inline">Décoder</span>
+                Décoder
               </button>
             </div>
           </Field>
 
           <div aria-live="polite">
-            {vinState.status === "done" && vinState.filled.length > 0 && (
-              <p className="flex gap-2 text-sm rounded-lg border border-neon-cyan/40 bg-neon-cyan/5 p-3">
-                <CheckCircle2 className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" aria-hidden="true" />
-                <span>
-                  Pré-rempli depuis le VIN : {vinState.filled.join(", ")}. Vérifiez et complétez.
-                  {vinState.yearFromVin && " L'année déduite du VIN est souvent inexacte pour les véhicules européens."}
-                </span>
-              </p>
-            )}
-            {vinState.status === "done" && vinState.filled.length === 0 && (
-              <p className="flex gap-2 text-sm text-muted-foreground">
-                <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                VIN reconnu, mais les champs concernés sont déjà remplis : rien n'a été modifié.
-              </p>
-            )}
-            {vinState.status === "unknown" && (
-              <p className="flex gap-2 text-sm text-muted-foreground">
-                <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                Ce VIN n'est pas reconnu par la base NHTSA (fréquent pour les véhicules européens). Complétez à la main.
-              </p>
-            )}
-            {vinState.status === "error" && (
-              <p className="flex gap-2 text-sm text-muted-foreground">
-                <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-                Service de décodage indisponible pour le moment. Complétez à la main.
-              </p>
-            )}
+            {vinState.status === "done" && <VinMessage state={vinState} />}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
