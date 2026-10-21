@@ -79,10 +79,6 @@ const PolitiqueConfidentialite = () => {
           <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">formspree.io</a>.
         </li>
         <li>
-          <strong>Google Fonts</strong> (Google) — chargement des polices d'écriture, ce qui
-          peut impliquer la communication de votre adresse IP à Google.
-        </li>
-        <li>
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
       </ul>
@@ -92,8 +88,8 @@ const PolitiqueConfidentialite = () => {
         Ce site n'utilise <strong>aucun cookie publicitaire ni de suivi (tracking)</strong>.
         Nous utilisons uniquement un stockage strictement nécessaire au fonctionnement du site,
         par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
-        Ce stockage ne nécessite pas de consentement. Les polices Google Fonts sont chargées
-        depuis les serveurs de Google (voir section 4).
+        Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
+        localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
       </p>
 
       <h2>6. Sécurité</h2>
