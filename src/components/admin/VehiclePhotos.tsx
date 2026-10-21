@@ -30,6 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import SlotIllustration from "@/components/admin/SlotIllustration";
 import { photoUrl, thumbPath, type VehiclePhoto } from "@/lib/vehicles";
 import {
   deleteVehiclePhoto,
@@ -153,12 +154,15 @@ const SortablePhoto = ({
 /** Tuile « + » : <label> autour d'un <input type=file> (appareil photo ou galerie). */
 const AddTile = ({
   label,
+  slot,
   multiple,
   disabled,
   onFiles,
   dashed = true,
 }: {
   label: string;
+  /** Emplacement guidé : affiche l'illustration de l'angle à photographier. */
+  slot?: Exclude<PhotoSlot, "autre">;
   multiple?: boolean;
   disabled?: boolean;
   onFiles: (files: File[]) => void;
@@ -169,13 +173,19 @@ const AddTile = ({
     <li className="min-w-0">
       <label
         htmlFor={id}
-        className={`${tileClass} flex flex-col items-center justify-center gap-1.5 text-center px-2 cursor-pointer border-2 ${
+        className={`${tileClass} flex flex-col items-center justify-center gap-1.5 text-center px-2 py-2 cursor-pointer border-2 ${
           dashed ? "border-dashed" : ""
         } border-border hover:border-neon-purple/60 text-muted-foreground hover:text-foreground transition-colors ${
           disabled ? "opacity-40 pointer-events-none" : ""
         }`}
       >
-        {multiple ? <ImagePlus className="w-7 h-7" aria-hidden="true" /> : <Camera className="w-7 h-7" aria-hidden="true" />}
+        {slot ? (
+          <SlotIllustration slot={slot} className="w-full max-w-[120px] min-h-0 flex-1" />
+        ) : multiple ? (
+          <ImagePlus className="w-7 h-7" aria-hidden="true" />
+        ) : (
+          <Camera className="w-7 h-7" aria-hidden="true" />
+        )}
         <span className="text-xs leading-tight">{label}</span>
         <input
           id={id}
@@ -381,7 +391,7 @@ const VehiclePhotos = ({
             ))}
 
             {emptySlots.map((slot) => (
-              <AddTile key={slot.id} label={slot.label} disabled={full} onFiles={(files) => addFiles(files.slice(0, 1), slot.id)} />
+              <AddTile key={slot.id} label={slot.label} slot={slot.id} disabled={full} onFiles={(files) => addFiles(files.slice(0, 1), slot.id)} />
             ))}
             <AddTile label="Ajouter d'autres photos" multiple dashed disabled={full} onFiles={(files) => addFiles(files, "autre")} />
           </ul>
