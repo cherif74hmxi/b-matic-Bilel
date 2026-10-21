@@ -3,8 +3,15 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import logo from "@/assets/bmatic-logo.jpeg";
 
-const navLinks = [
+// Liens de 1er niveau affichés AVANT le menu « Services »
+const navLinksBefore = [
   { label: "Accueil", path: "/" },
+  { label: "Pare-brise & Assurances", path: "/pare-brise-assurances" },
+];
+
+// Liens de 1er niveau affichés APRÈS le menu « Services »
+const navLinksAfter = [
+  { label: "FAQ", path: "/faq" },
   { label: "À propos", path: "/a-propos" },
   { label: "Contact", path: "/contact" },
 ];
@@ -53,7 +60,7 @@ const Header = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.slice(0, 1).map((link) => (
+          {navLinksBefore.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -100,7 +107,7 @@ const Header = () => {
             )}
           </div>
 
-          {navLinks.slice(1).map((link) => (
+          {navLinksAfter.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -133,6 +140,9 @@ const Header = () => {
             <Link to="/" onClick={() => handleNavClick("/")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               Accueil
             </Link>
+            <Link to="/pare-brise-assurances" onClick={() => handleNavClick("/pare-brise-assurances")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
+              Pare-brise &amp; Assurances
+            </Link>
 
             <div>
               <button
@@ -156,6 +166,9 @@ const Header = () => {
               )}
             </div>
 
+            <Link to="/faq" onClick={() => handleNavClick("/faq")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
+              FAQ
+            </Link>
             <Link to="/a-propos" onClick={() => handleNavClick("/a-propos")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               À propos
             </Link>

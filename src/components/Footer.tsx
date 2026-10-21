@@ -26,11 +26,13 @@ const Footer = () => {
             <ul className="space-y-2">
               {[
                 { label: "Accueil", path: "/" },
+                { label: "Pare-brise & Assurances", path: "/pare-brise-assurances" },
+                { label: "Mécanique", path: "/mecanique" },
+                { label: "Reprise de véhicule", path: "/reprise" },
+                { label: "Dépannage", path: "/depannage" },
+                { label: "FAQ", path: "/faq" },
                 { label: "À propos", path: "/a-propos" },
                 { label: "Contact", path: "/contact" },
-                { label: "Reprise de véhicule", path: "/reprise" },
-                { label: "Mécanique", path: "/mecanique" },
-                { label: "Dépannage", path: "/depannage" },
               ].map((l) => (
                 <li key={l.path}>
                   <Link to={l.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">

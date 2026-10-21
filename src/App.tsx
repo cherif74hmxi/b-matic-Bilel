@@ -11,6 +11,8 @@ import Contact from "./pages/Contact";
 import Reprise from "./pages/Reprise";
 import Mecanique from "./pages/Mecanique";
 import Depannage from "./pages/Depannage";
+import PareBrise from "./pages/PareBrise";
+import Faq from "./pages/Faq";
 import PolitiqueConfidentialite from "./pages/PolitiqueConfidentialite";
 import MentionsLegales from "./pages/MentionsLegales";
 import NotFound from "./pages/NotFound";
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/reprise" element={<Reprise />} />
             <Route path="/mecanique" element={<Mecanique />} />
             <Route path="/depannage" element={<Depannage />} />
+            <Route path="/pare-brise-assurances" element={<PareBrise />} />
+            <Route path="/faq" element={<Faq />} />
             <Route path="/politique-de-confidentialite" element={<PolitiqueConfidentialite />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="*" element={<NotFound />} />
