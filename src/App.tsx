@@ -66,7 +66,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <Sonner />
+      {/* En haut : en bas, les notifications recouvraient la barre d'onglets mobile de l'admin. */}
+      <Sonner position="top-center" />
       <BrowserRouter>
         <ScrollToTop />
         <Suspense fallback={<RouteFallback />}>

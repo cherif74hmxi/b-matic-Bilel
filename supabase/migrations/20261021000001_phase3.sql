@@ -59,3 +59,16 @@ $$;
 
 revoke all on function public.admin_top_pages(integer, integer) from public, anon;
 grant execute on function public.admin_top_pages(integer, integer) to authenticated;
+
+-- ---------------------------------------------------------------------------
+--  Une annonce visible (publiée ou vendue) doit avoir un prix.
+--  (Vérifié aussi dans l'admin, mais la règle vit ici pour tout client.)
+-- ---------------------------------------------------------------------------
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'vehicles_price_when_listed') then
+    alter table public.vehicles
+      add constraint vehicles_price_when_listed check (status = 'draft' or price_eur is not null);
+  end if;
+end;
+$$;

@@ -13,6 +13,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
 import AdminVehicules from "./AdminVehicules";
+import AdminVehiculeForm from "./AdminVehiculeForm";
 import AdminActualites from "./AdminActualites";
 
 const AdminApp = () => {
@@ -31,6 +32,8 @@ const AdminApp = () => {
         >
           <Route index element={<AdminDashboard />} />
           <Route path="vehicules" element={<AdminVehicules />} />
+          <Route path="vehicules/nouveau" element={<AdminVehiculeForm />} />
+          <Route path="vehicules/:id" element={<AdminVehiculeForm />} />
           <Route path="actualites" element={<AdminActualites />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>

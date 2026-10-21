@@ -3,6 +3,7 @@ import { Car, ExternalLink, LayoutDashboard, LogOut, Newspaper } from "lucide-re
 import { toast } from "sonner";
 import logo from "@/assets/bmatic-logo.webp";
 import { useAdminSession } from "@/hooks/useAdminSession";
+import { guardLinkClick, confirmLeave } from "@/lib/unsavedChanges";
 
 // ============================================================================
 //  AdminLayout — coquille de l'espace admin (mobile-first)
@@ -21,6 +22,7 @@ const AdminLayout = () => {
   const { user, signOut } = useAdminSession();
   // Pas de navigate() ici : RequireAdmin redirige vers /admin/login dès que la session disparaît.
   const handleSignOut = async () => {
+    if (!confirmLeave()) return;
     if (!(await signOut())) {
       toast.error("Déconnexion impossible : vérifiez votre connexion internet puis réessayez.");
     }
@@ -40,13 +42,13 @@ const AdminLayout = () => {
     <div className="min-h-[100dvh] font-body">
       {/* ---------- Barre latérale (≥ md) ---------- */}
       <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-card/60 border-r border-border p-4">
-        <Link to="/admin" className="flex items-center gap-2 px-2 mb-8">
+        <Link to="/admin" className="flex items-center gap-2 px-2 mb-8" onClick={guardLinkClick}>
           <img src={logo} alt="B MATIC" className="h-10 w-auto rounded" />
           <span className="font-heading text-xs uppercase tracking-widest text-gradient-neon">Admin</span>
         </Link>
         <nav aria-label="Navigation admin" className="flex flex-col gap-1">
           {navItems.map(({ to, label, icon: Icon, end }) => (
-            <NavLink key={to} to={to} end={end} className={sideItemClass}>
+            <NavLink key={to} to={to} end={end} className={sideItemClass} onClick={guardLinkClick}>
               <Icon className="w-5 h-5" aria-hidden="true" />
               {label}
             </NavLink>
@@ -80,7 +82,7 @@ const AdminLayout = () => {
         className="md:hidden sticky top-0 z-40 flex items-center justify-between gap-3 px-4 min-h-[56px] bg-background/95 backdrop-blur-xl border-b border-border"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        <Link to="/admin" className="flex items-center gap-2">
+        <Link to="/admin" className="flex items-center gap-2" onClick={guardLinkClick}>
           <img src={logo} alt="B MATIC" className="h-10 w-auto rounded" />
           <span className="font-heading text-[11px] uppercase tracking-widest text-gradient-neon">Admin</span>
         </Link>
@@ -108,7 +110,7 @@ const AdminLayout = () => {
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         {navItems.map(({ to, short, icon: Icon, end }) => (
-          <NavLink key={to} to={to} end={end} className={tabItemClass}>
+          <NavLink key={to} to={to} end={end} className={tabItemClass} onClick={guardLinkClick}>
             <Icon className="w-5 h-5" aria-hidden="true" />
             {short}
           </NavLink>
