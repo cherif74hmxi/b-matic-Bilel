@@ -20,7 +20,7 @@ import {
 // ============================================================================
 //  Tableau de bord admin — KPI
 //  Compteurs et top des pages calculés côté base (fonctions SQL de
-//  supabase/migrations/20261021_phase3.sql) : exacts quel que soit le volume
+//  supabase/migrations/20261021000001_phase3.sql) : exacts quel que soit le volume
 //  (l'API Supabase limite les sélections à 1000 lignes).
 // ============================================================================
 
@@ -139,7 +139,7 @@ const ErrorBox = ({ error, onRetry }: { error: unknown; onRetry: () => void }) =
     <span className="flex items-center gap-2">
       <AlertTriangle className="w-4 h-4 text-neon-pink shrink-0" aria-hidden="true" />
       {isMissingFunction(error)
-        ? "Migration SQL manquante : exécuter supabase/migrations/20261021_phase3.sql dans Supabase."
+        ? "Migration SQL manquante : exécuter supabase/migrations/20261021000001_phase3.sql dans Supabase."
         : "Chargement impossible."}
     </span>
     <button type="button" onClick={onRetry} className="btn-ghost min-h-[44px] px-4">

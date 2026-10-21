@@ -54,6 +54,21 @@ export const legalInfo = {
     website: "[site web de l'hébergeur]",
   },
 
+  // --- Base de données (Supabase) ----------------------------------------
+  // Région : Supabase > Project Settings > General > « Region »
+  // (ex. « Union européenne (Francfort, Allemagne) »).
+  database: {
+    name: "Supabase",
+    company: "Supabase, Inc.",
+    region: "[région du projet Supabase]",
+    privacyUrl: "https://supabase.com/privacy",
+  },
+
+  // Durée de conservation des demandes reçues via les formulaires (en années).
+  // Une tâche planifiée les supprime automatiquement passé ce délai
+  // (supabase/migrations/20261021000002_purge_leads.sql).
+  leadsRetentionYears: 3,
+
   // --- Délégué / contact RGPD -------------------------------------------
   // Adresse e-mail dédiée à l'exercice des droits (peut être l'e-mail général)
   dpoEmail: "bmatic63s@gmail.com",

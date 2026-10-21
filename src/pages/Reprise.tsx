@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import AnimatedSection from "@/components/AnimatedSection";
+import { sendLead } from "@/lib/leads";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import carteGriseImg from "@/assets/carte-grise.webp";
@@ -84,13 +85,41 @@ const Reprise = () => {
     factures.forEach(f => formData.append('factures', f));
 
     try {
-      const response = await fetch("https://formspree.io/f/mlgokojb", {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: formData,
-      });
+      // Double envoi : e-mail avec pièces jointes (Formspree) + espace admin
+      // (Supabase, sans les fichiers).
+      const fileCount = photosVehicule.length + photosCarnet.length + factures.length;
+      const vehicule = (isAutre ? autreMarqueModele : [marque, modele].filter(Boolean).join(" ")).trim();
+      const ok = await sendLead(
+        () =>
+          fetch("https://formspree.io/f/mlgokojb", {
+            method: "POST",
+            headers: { "Accept": "application/json" },
+            body: formData,
+          }),
+        {
+          type: "reprise",
+          name: `${prenom} ${nom}`,
+          email,
+          phone: telephone,
+          details: {
+            "Véhicule": vehicule,
+            "Mise en circulation": [moisVal, annee].filter(Boolean).join("/"),
+            "Kilométrage": km,
+            "Carburant": carburant,
+            "Boîte": boite,
+            "Puissance fiscale": puissanceFiscale,
+            "Puissance DIN": puissanceDin,
+            "Motorisation": motorisation,
+            "Finition": finition,
+            "Historique": historique,
+            "Entretiens": descEntretiens,
+            "Fichiers joints (par e-mail)": fileCount || undefined,
+          },
+        },
+        { hasAttachments: fileCount > 0 },
+      );
 
-      if (response.ok) {
+      if (ok) {
         setFormState({ status: "success", message: "Merci ! Votre demande de reprise a été envoyée avec succès. Nous vous recontacterons rapidement." });
         setTimeout(() => setFormState({ status: "idle", message: "" }), 6000);
       } else {

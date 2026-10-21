@@ -36,6 +36,21 @@ const PolitiqueConfidentialite = () => {
         <li><strong>Demande de reprise de véhicule :</strong> prénom, nom, e-mail, téléphone, caractéristiques et état du véhicule, ainsi que les photos et documents que vous choisissez de joindre (véhicule, carnet d'entretien, factures).</li>
       </ul>
       <p>
+        Les demandes envoyées via ces formulaires nous parviennent par e-mail et sont
+        également enregistrées dans notre espace de gestion sécurisé (hors fichiers joints,
+        transmis uniquement par e-mail), accessible aux seules personnes habilitées.
+      </p>
+      <p>
+        <strong>Statistiques de fréquentation :</strong> nous comptons les pages consultées
+        (adresse de la page, sans paramètres), la date et, à l'arrivée sur le site, le seul nom
+        du site d'origine (par exemple « google.com »). Ces statistiques sont mesurées{" "}
+        <strong>sans cookie</strong>, sans identifiant et sans aucun stockage sur votre
+        appareil ; nous n'enregistrons pas votre adresse IP (comme pour toute connexion à un
+        site, elle est techniquement transmise à nos hébergeurs pour acheminer la requête,
+        mais elle n'est pas associée à ces statistiques). Elles ne permettent pas de vous
+        identifier.
+      </p>
+      <p>
         Nous ne collectons aucune donnée dite « sensible » et ne pratiquons aucun profilage
         ni décision automatisée. Les champs obligatoires sont signalés par un astérisque (*).
       </p>
@@ -49,20 +64,32 @@ const PolitiqueConfidentialite = () => {
           <tr>
             <td>Répondre à une demande de contact</td>
             <td>Votre consentement (art. 6.1.a) et notre intérêt légitime à répondre</td>
-            <td>Jusqu'à 3 ans après le dernier échange</td>
+            <td>{legalInfo.leadsRetentionYears} ans à compter de la demande</td>
           </tr>
           <tr>
             <td>Gérer une prise de rendez-vous</td>
             <td>Mesures précontractuelles / exécution du service (art. 6.1.b)</td>
-            <td>Durée de la relation, puis obligations comptables (jusqu'à 10 ans)</td>
+            <td>
+              Demande : {legalInfo.leadsRetentionYears} ans à compter de la demande. Factures
+              éventuelles : durée imposée par les obligations comptables (jusqu'à 10 ans)
+            </td>
           </tr>
           <tr>
             <td>Établir une offre de reprise de véhicule</td>
             <td>Mesures précontractuelles à votre demande (art. 6.1.b) et consentement</td>
-            <td>Jusqu'à 1 an en l'absence de suite donnée</td>
+            <td>{legalInfo.leadsRetentionYears} ans à compter de la demande</td>
+          </tr>
+          <tr>
+            <td>Mesurer la fréquentation du site</td>
+            <td>Notre intérêt légitime à améliorer le site (art. 6.1.f) — données non identifiantes</td>
+            <td>Données anonymes, conservées à des fins statistiques</td>
           </tr>
         </tbody>
       </table>
+      <p>
+        Passé le délai de {legalInfo.leadsRetentionYears} ans, les demandes enregistrées dans
+        notre espace de gestion sont supprimées automatiquement.
+      </p>
 
       <h2>4. Destinataires et sous-traitants</h2>
       <p>
@@ -79,13 +106,22 @@ const PolitiqueConfidentialite = () => {
           <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener noreferrer">formspree.io</a>.
         </li>
         <li>
+          <strong>{legalInfo.database.name}</strong> ({legalInfo.database.company}) — hébergement
+          de la base de données (demandes reçues, statistiques de fréquentation, contenus du site).
+          Serveurs situés : {legalInfo.database.region}. Ce prestataire est établi aux États-Unis ;
+          tout transfert éventuel hors de l'Union européenne est encadré par des garanties
+          appropriées (clauses contractuelles types). Voir leur politique :{" "}
+          <a href={legalInfo.database.privacyUrl} target="_blank" rel="noopener noreferrer">supabase.com</a>.
+        </li>
+        <li>
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
       </ul>
 
       <h2>5. Cookies et stockage local</h2>
       <p>
-        Ce site n'utilise <strong>aucun cookie publicitaire ni de suivi (tracking)</strong>.
+        Ce site n'utilise <strong>aucun cookie publicitaire ni de suivi (tracking)</strong>, y
+        compris pour la mesure de fréquentation décrite plus haut.
         Nous utilisons uniquement un stockage strictement nécessaire au fonctionnement du site,
         par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
         Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
@@ -94,7 +130,9 @@ const PolitiqueConfidentialite = () => {
 
       <h2>6. Sécurité</h2>
       <p>
-        Les formulaires sont transmis via une connexion chiffrée (HTTPS). Nous mettons en œuvre
+        Les formulaires sont transmis via une connexion chiffrée (HTTPS). L'accès aux demandes
+        enregistrées est réservé aux administrateurs authentifiés et protégé par des règles
+        d'accès au niveau de la base de données. Nous mettons en œuvre
         des mesures techniques et organisationnelles raisonnables pour protéger vos données
         contre tout accès, perte ou divulgation non autorisés.
       </p>

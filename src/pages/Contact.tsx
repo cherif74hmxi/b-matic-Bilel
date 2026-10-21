@@ -5,6 +5,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import { legalInfo } from "@/data/legal";
+import { sendLead } from "@/lib/leads";
 
 const Contact = () => {
   const [form, setForm] = useState({ nom: "", email: "", telephone: "", message: "" });
@@ -19,12 +20,17 @@ const Contact = () => {
     if (!valid) return;
     setFormState({ status: "loading", message: "Envoi en cours..." });
     try {
-      const response = await fetch("https://formspree.io/f/mlgokojb", {
-        method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (!response.ok) throw new Error("server");
+      // Double envoi : e-mail (Formspree) + espace admin (Supabase).
+      const ok = await sendLead(
+        () =>
+          fetch("https://formspree.io/f/mlgokojb", {
+            method: "POST",
+            headers: { Accept: "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+          }),
+        { type: "contact", name: form.nom, email: form.email, phone: form.telephone, message: form.message },
+      );
+      if (!ok) throw new Error("server");
       setForm({ nom: "", email: "", telephone: "", message: "" });
       setConsent(false);
       setFormState({ status: "success", message: "Merci ! Votre message a bien été envoyé. Nous vous répondrons rapidement." });

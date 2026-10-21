@@ -8,6 +8,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import mechanicBg from "@/assets/mechanic-bg.webp";
 import { serviceCategories, findService, type Service } from "@/data/services";
+import { sendLead } from "@/lib/leads";
 
 /* ------------------------------------------------------------------ helpers */
 const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
@@ -136,21 +137,44 @@ const Mecanique = () => {
       carteGrise: file ? file.name : "",
     };
 
-    try {
-      let response: Response;
+    const sendByMail = () => {
       if (file) {
         const fd = new FormData();
         Object.entries(base).forEach(([k, v]) => fd.append(k, v));
         fd.append("carteGriseFichier", file, file.name);
-        response = await fetch("https://formspree.io/f/xlgokywp", { method: "POST", headers: { Accept: "application/json" }, body: fd });
-      } else {
-        response = await fetch("https://formspree.io/f/xlgokywp", {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify(base),
-        });
+        return fetch("https://formspree.io/f/xlgokywp", { method: "POST", headers: { Accept: "application/json" }, body: fd });
       }
-      if (!response.ok) throw new Error("server");
+      return fetch("https://formspree.io/f/xlgokywp", {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(base),
+      });
+    };
+
+    try {
+      // Double envoi : e-mail (Formspree, avec la carte grise) + espace admin
+      // (Supabase, sans le fichier).
+      const ok = await sendLead(
+        sendByMail,
+        {
+          type: "rdv",
+          name: `${prenom} ${nom}`,
+          email,
+          phone: telephone,
+          details: {
+            "Service": base.service,
+            "Catégorie": base.categorie,
+            "Prix": base.prix,
+            "Date": base.date,
+            "Heure": base.heure,
+            "Durée": base.duree,
+            "VIN": base.vin,
+            "Carte grise (par e-mail)": base.carteGrise,
+          },
+        },
+        { hasAttachments: Boolean(file) },
+      );
+      if (!ok) throw new Error("server");
       setSent(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
