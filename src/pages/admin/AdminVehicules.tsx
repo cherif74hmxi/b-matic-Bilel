@@ -5,6 +5,8 @@ import { AlertTriangle, Car, Plus, RefreshCw } from "lucide-react";
 import useSeo from "@/hooks/useSeo";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { VehicleActionsMenu, VehicleStatusBadge } from "@/components/admin/VehicleActions";
+import ViewsCount from "@/components/admin/ViewsCount";
+import { useContentViews, type ContentViews } from "@/lib/contentViews";
 import {
   formatKm,
   formatPrice,
@@ -29,7 +31,7 @@ const coverOf = (v: VehicleListItem) => {
   return cover ? photoUrl(thumbPath(cover.storage_path)) : null;
 };
 
-const VehicleCard = ({ vehicle }: { vehicle: VehicleListItem }) => {
+const VehicleCard = ({ vehicle, views }: { vehicle: VehicleListItem; views: Map<string, ContentViews> | undefined }) => {
   const cover = coverOf(vehicle);
   const specs = [vehicle.year, formatKm(vehicle.mileage_km)].filter(Boolean).join(" · ");
 
@@ -59,6 +61,7 @@ const VehicleCard = ({ vehicle }: { vehicle: VehicleListItem }) => {
             <span className="text-sm font-semibold tabular-nums">{formatPrice(vehicle.price_eur)}</span>
             <VehicleStatusBadge status={vehicle.status} />
           </div>
+          <ViewsCount all={views} id={vehicle.id} isDraft={vehicle.status === "draft"} className="mt-1" />
         </div>
       </Link>
       <VehicleActionsMenu vehicle={vehicle} photoCount={vehicle.vehicle_photos.length} />
@@ -70,6 +73,8 @@ const AdminVehicules = () => {
   useSeo({ title: "Véhicules — Admin B MATIC" });
   const [filter, setFilter] = useState<Filter>("all");
   const vehicles = useQuery({ queryKey: ["admin", "vehicles"], queryFn: listVehicles });
+  // Compteur masqué tant que les vues ne sont pas disponibles (chargement, migration manquante).
+  const views = useContentViews("vehicules");
 
   const all = vehicles.data ?? [];
   const count = (f: Filter) => (f === "all" ? all.length : all.filter((v) => v.status === f).length);
@@ -124,7 +129,7 @@ const AdminVehicules = () => {
       ) : shown.length > 0 ? (
         <ul className="grid gap-3 lg:grid-cols-2">
           {shown.map((v) => (
-            <VehicleCard key={v.id} vehicle={v} />
+            <VehicleCard key={v.id} vehicle={v} views={views.data} />
           ))}
         </ul>
       ) : (

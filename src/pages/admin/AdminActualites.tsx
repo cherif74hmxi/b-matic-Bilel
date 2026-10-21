@@ -6,13 +6,15 @@ import { AlertTriangle, Newspaper, Plus, RefreshCw } from "lucide-react";
 import useSeo from "@/hooks/useSeo";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { PostActionsMenu, PostStatusBadge } from "@/components/admin/PostActions";
+import ViewsCount from "@/components/admin/ViewsCount";
+import { useContentViews, type ContentViews } from "@/lib/contentViews";
 import { listPosts, postImageUrl, type Post } from "@/lib/posts";
 
 // ============================================================================
 //  Liste des actualités (admin)
 // ============================================================================
 
-const PostCard = ({ post }: { post: Post }) => (
+const PostCard = ({ post, views }: { post: Post; views: Map<string, ContentViews> | undefined }) => (
   <li className="min-w-0 flex gap-3 bg-gradient-card border border-border rounded-xl p-3">
     <Link to={`/admin/actualites/${post.id}`} className="flex flex-1 min-w-0 gap-3" aria-label={`Modifier ${post.title}`}>
       <div className="w-24 h-20 sm:w-32 sm:h-24 shrink-0 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
@@ -29,8 +31,9 @@ const PostCard = ({ post }: { post: Post }) => (
             ? `Publiée le ${format(new Date(post.published_at), "d MMM yyyy", { locale: fr })}`
             : `Modifiée le ${format(new Date(post.updated_at), "d MMM yyyy", { locale: fr })}`}
         </p>
-        <div className="mt-1.5">
+        <div className="flex flex-wrap items-center gap-2 mt-1.5">
           <PostStatusBadge status={post.status} />
+          <ViewsCount all={views} id={post.id} isDraft={post.status === "draft"} />
         </div>
       </div>
     </Link>
@@ -41,6 +44,8 @@ const PostCard = ({ post }: { post: Post }) => (
 const AdminActualites = () => {
   useSeo({ title: "Actualités — Admin B MATIC" });
   const posts = useQuery({ queryKey: ["admin", "posts"], queryFn: listPosts });
+  // Compteur masqué tant que les vues ne sont pas disponibles (chargement, migration manquante).
+  const views = useContentViews("actualites");
 
   return (
     <>
@@ -75,7 +80,7 @@ const AdminActualites = () => {
       ) : posts.data && posts.data.length > 0 ? (
         <ul className="grid gap-3 lg:grid-cols-2">
           {posts.data.map((p) => (
-            <PostCard key={p.id} post={p} />
+            <PostCard key={p.id} post={p} views={views.data} />
           ))}
         </ul>
       ) : (
