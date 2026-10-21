@@ -1,5 +1,5 @@
 import { useMemo, useState, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Clock, Check, ChevronRight, ChevronLeft, User, Mail, Phone,
   Car, FileText, Upload, Info, ShieldCheck, CalendarDays,
@@ -43,9 +43,17 @@ const STEPS = ["Service", "Date & heure", "Vos informations", "Confirmation"];
 const Mecanique = () => {
   const [step, setStep] = useState(1);
 
+  // Présélection via ?service=<id> (ex. depuis une promo de l'accueil).
+  const [searchParams] = useSearchParams();
+  const presetId = searchParams.get("service") ?? "";
+  const presetValid = Boolean(presetId && findService(presetId));
+  const presetCatId = presetValid
+    ? serviceCategories.find((c) => c.services.some((s) => s.id === presetId))!.id
+    : serviceCategories[0].id;
+
   // step 1
-  const [catId, setCatId] = useState(serviceCategories[0].id);
-  const [svcId, setSvcId] = useState("");
+  const [catId, setCatId] = useState(presetCatId);
+  const [svcId, setSvcId] = useState(presetValid ? presetId : "");
   const svc = findService(svcId);
 
   // step 2
