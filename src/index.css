@@ -194,37 +194,151 @@
 }
 
 /* --- Fond Aurora néon (accueil) ------------------------------------------- */
-/* --- Fond animé du hero (HeroBackdrop) ----------------------------------- */
-/*  Les traînées s'effacent sous le texte : à gauche sur ordinateur, en haut
-    sur mobile (le texte occupe toute la largeur).                            */
-.hero-backdrop {
-  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.35) 0%, rgb(0 0 0 / 0.55) 45%, #000 75%);
-          mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.35) 0%, rgb(0 0 0 / 0.55) 45%, #000 75%);
+/* --- Route néon du hero (HeroRoad) ---------------------------------------- */
+/*  Plan 3D en CSS : seul le marquage central est animé (transform → GPU).
+    --vp-x / --horizon : point de fuite, mis à jour par HeroRoad.tsx.        */
+.road-scene {
+  --vp-x: 50%;
+  --horizon: 74%;
+  --road-haze: 282 38% 11%;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Lisibilité : la scène s'efface sous le texte (haut sur mobile). */
+  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 40%, #000 68%);
+          mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0.55) 40%, #000 68%);
 }
 @media (min-width: 768px) {
-  .hero-backdrop {
-    -webkit-mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 15%, rgb(0 0 0 / 0.7) 45%, #000 70%);
-            mask-image: linear-gradient(to right, rgb(0 0 0 / 0.3) 15%, rgb(0 0 0 / 0.7) 45%, #000 70%);
+  .road-scene {
+    --vp-x: 68%;
+    --horizon: 58%;
+    /* Ordinateur : texte à gauche → scène atténuée à gauche. */
+    -webkit-mask-image: linear-gradient(to right, rgb(0 0 0 / 0.22) 12%, rgb(0 0 0 / 0.6) 38%, #000 60%);
+            mask-image: linear-gradient(to right, rgb(0 0 0 / 0.22) 12%, rgb(0 0 0 / 0.6) 38%, #000 60%);
   }
 }
-
-/* --- Parallax du visuel du hero (desktop uniquement) ---------------------- */
-/*  100 % CSS via scroll-driven animations (animation-timeline) : AUCUN
-    écouteur de scroll JS. Désactivé sur mobile, sous reduced-motion, et là où
-    la fonctionnalité n'est pas supportée (repli statique propre).           */
-@keyframes parallax-rise {
-  from { transform: translate3d(0, -3%, 0); }
-  to   { transform: translate3d(0, 6%, 0); }
+.road-sky {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--horizon);
+  background: linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(270 30% 6%) 55%, hsl(var(--road-haze)) 100%);
 }
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .parallax-hero {
-      will-change: transform;
-      animation: parallax-rise linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-  }
+/* Halo « soleil » très doux, posé sur l'horizon, + fine ligne d'horizon. */
+.road-sun {
+  position: absolute;
+  left: var(--vp-x);
+  top: var(--horizon);
+  width: min(70vw, 760px);
+  aspect-ratio: 2.4;
+  transform: translate(-50%, -50%);
+  /* Par-dessus la route : la lueur déborde sous l'horizon (reflet, route mouillée). */
+  mix-blend-mode: screen;
+  background: radial-gradient(closest-side, hsl(326 85% 62% / 0.36), hsl(292 70% 50% / 0.14) 45%, transparent 100%);
+}
+.road-sun::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, hsl(270 80% 70% / 0.45) 30%, hsl(326 90% 72% / 0.9) 50%, hsl(200 100% 65% / 0.45) 70%, transparent);
+}
+.road-3d {
+  position: absolute;
+  inset: 0;
+  perspective: 340px;
+  perspective-origin: var(--vp-x) var(--horizon);
+}
+.road-plane {
+  position: absolute;
+  left: var(--vp-x);
+  bottom: 0;
+  width: 150%;
+  height: 3600px;
+  overflow: hidden;
+  transform-origin: 50% 100%;
+  transform: translateX(-50%) rotateX(90deg);
+}
+/* Asphalte : sombre, grain très fin (bruit SVG), accotements plus noirs. */
+.road-asphalt {
+  position: absolute;
+  inset: 0;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(to right, #050508 0%, #0d0c13 28%, #15131d 50%, #0d0c13 72%, #050508 100%);
+}
+/* Route mouillée : reflet du halo dans l'axe, qui s'estompe vers soi. */
+.road-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 42%, hsl(326 85% 62% / 0.16) 50%, transparent 58%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 60%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 0.5) 60%, transparent 100%);
+}
+/* Bandes de rive : fines lignes néon avec un léger halo. */
+.road-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 2px;
+}
+.road-edge--left {
+  left: 27%;
+  background: hsl(285 85% 66% / 0.85);
+  box-shadow: 0 0 18px 3px hsl(285 85% 60% / 0.45);
+}
+.road-edge--right {
+  right: 27%;
+  background: hsl(200 100% 62% / 0.85);
+  box-shadow: 0 0 18px 3px hsl(200 100% 58% / 0.45);
+}
+/* Marquage central : blanc cassé, discret ; défile vers le spectateur. */
+.road-dashes {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 5px;
+  height: calc(100% + 240px);
+  margin-left: -2.5px;
+  background: repeating-linear-gradient(to bottom, hsl(260 30% 92% / 0.55) 0 100px, transparent 100px 240px);
+  will-change: transform;
+  animation: road-dash 1.1s linear infinite;
+}
+@keyframes road-dash {
+  from { transform: translate3d(0, -240px, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+/* Brume à l'horizon (cache le bout de la route) + reflet du halo au sol. */
+.road-fog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--horizon) - 1px);
+  height: 26%;
+  background: linear-gradient(to bottom, hsl(var(--road-haze)) 0%, hsl(var(--road-haze) / 0.7) 18%, transparent 100%);
+}
+.road-fog::after {
+  content: "";
+  position: absolute;
+  left: var(--vp-x);
+  top: 0;
+  width: min(22vw, 220px);
+  height: 160%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, hsl(326 85% 65% / 0.22), transparent 70%);
+}
+.road-car {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: reduce) {
+  .road-dashes { animation: none; }
 }
 
 /* --- Tuile claire des cadeaux pare-brise (pictos néon, voir GiftIllustration) */

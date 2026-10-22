@@ -8,7 +8,7 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import GiftIllustration from "@/components/GiftIllustration";
 import { pareBriseAccueil, pareBriseCadeaux, pareBriseMention, pareBriseRayonKm } from "@/data/parebrise";
-import HeroBackdrop from "@/components/HeroBackdrop";
+import HeroRoad from "@/components/HeroRoad";
 import HomeLatest from "@/components/vehicules/HomeLatest";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
@@ -48,13 +48,12 @@ const Index = () => {
       {/* Mobile : hauteur réduite (svh, sans la barre d'adresse) pour que les
           offres apparaissent dès l'arrivée. */}
       <section className="relative min-h-[78svh] md:min-h-screen flex items-center overflow-hidden">
-        {/* Fond animé léger (canvas) : horizon néon + traînées de lumière. */}
-        <div className="absolute inset-0 parallax-hero">
-          <HeroBackdrop />
-        </div>
+        {/* Fond : route néon de nuit ; la voiture s'éloigne au défilement. */}
+        <HeroRoad />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
-        <div className="container mx-auto px-4 relative z-10 pt-24 pb-10">
+        {/* Mobile : espace réservé sous les boutons pour la route et la voiture. */}
+        <div className="container mx-auto px-4 relative z-10 pt-24 pb-44 md:pb-10">
           <AnimatedSection>
             <div className="max-w-2xl">
               <h1 className="font-heading text-[2.15rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-5 md:mb-6">
@@ -94,7 +93,7 @@ const Index = () => {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <NeonButton to={accueilHero.ctaPrincipal.to}>{accueilHero.ctaPrincipal.label}</NeonButton>
-                <Link to={accueilHero.ctaSecondaire.to} className="btn-ghost animate-glow-pulse border-neon-cyan/50">
+                <Link to={accueilHero.ctaSecondaire.to} className="btn-ghost animate-glow-pulse border-neon-cyan/50 bg-background/70 backdrop-blur-sm">
                   {accueilHero.ctaSecondaire.label} <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
