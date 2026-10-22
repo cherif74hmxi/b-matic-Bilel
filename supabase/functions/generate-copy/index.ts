@@ -35,7 +35,7 @@
 // ============================================================================
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const DEFAULT_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = "gemini-3.6-flash";
 // Modifiable pour passer par un proxy (ou un faux serveur pendant les tests).
 const GEMINI_API_BASE = Deno.env.get("GEMINI_API_BASE") || "https://generativelanguage.googleapis.com";
 const GEMINI_TIMEOUT_MS = 25_000;
