@@ -14,6 +14,7 @@ import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 import { accueilJsonLd } from "@/seo/schema";
 import heroBg from "@/assets/hero-bg.webp";
+import heroBg960 from "@/assets/hero-bg-960.webp";
 import { serviceCategories } from "@/data/services";
 import { legalInfo } from "@/data/legal";
 import {
@@ -52,6 +53,9 @@ const Index = () => {
         <div className="absolute inset-0">
           <img
             src={heroBg}
+            // Mobile : version 960 px (LCP plus rapide). Préchargée par vite-plugin-seo.ts.
+            srcSet={`${heroBg960} 960w, ${heroBg} 1920w`}
+            sizes="100vw"
             alt="Garage automobile futuriste"
             className="parallax-hero w-full h-full object-cover"
             width={1920}

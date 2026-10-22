@@ -101,6 +101,8 @@ const Contact = () => {
                 <input
                   type="text"
                   placeholder="Nom complet *"
+                  aria-label="Nom complet (obligatoire)"
+                  autoComplete="name"
                   className={inputClass}
                   value={form.nom}
                   onChange={(e) => setForm({ ...form, nom: e.target.value })}
@@ -110,6 +112,9 @@ const Contact = () => {
                   <input
                     type="email"
                     placeholder="Adresse e-mail *"
+                    aria-label="Adresse e-mail (obligatoire)"
+                    autoComplete="email"
+                    aria-invalid={Boolean(form.email && !emailValid)}
                     className={inputClass}
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -120,12 +125,15 @@ const Contact = () => {
                 <input
                   type="tel"
                   placeholder="Téléphone"
+                  aria-label="Téléphone"
+                  autoComplete="tel"
                   className={inputClass}
                   value={form.telephone}
                   onChange={(e) => setForm({ ...form, telephone: e.target.value })}
                 />
                 <textarea
                   placeholder="Votre message *"
+                  aria-label="Votre message (obligatoire)"
                   rows={5}
                   className={inputClass}
                   value={form.message}

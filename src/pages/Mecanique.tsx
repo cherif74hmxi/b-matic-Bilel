@@ -415,6 +415,8 @@ const Mecanique = () => {
                         {days.map((c) => c.empty ? <div key={c.key} /> : (
                           <button key={c.key} type="button" disabled={!c.free}
                             onClick={() => { setDate(c.key); setTime(""); }}
+                            aria-label={c.free ? longDate(c.key) : `${longDate(c.key)}, indisponible`}
+                            aria-pressed={c.key === date}
                             className={`py-3 rounded-lg text-sm grid place-items-center transition-all ${
                               c.key === date ? "bg-primary text-primary-foreground font-bold"
                               : c.free ? "bg-input border border-border text-foreground hover:border-primary hover:text-primary"
@@ -471,14 +473,14 @@ const Mecanique = () => {
 
                   <h3 className="font-semibold text-sm mb-3.5">Vos coordonnées</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Prénom *" value={prenom} onChange={(e) => setPrenom(e.target.value)} autoComplete="given-name" /></div>
-                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Nom *" value={nom} onChange={(e) => setNom(e.target.value)} autoComplete="family-name" /></div>
+                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Prénom *" aria-label="Prénom (obligatoire)" value={prenom} onChange={(e) => setPrenom(e.target.value)} autoComplete="given-name" /></div>
+                    <div className="relative"><User className={iconWrap} /><input className={inputClass} placeholder="Nom *" aria-label="Nom (obligatoire)" value={nom} onChange={(e) => setNom(e.target.value)} autoComplete="family-name" /></div>
                     <div className="relative">
-                      <Mail className={iconWrap} /><input type="email" className={inputClass} placeholder="E-mail *" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+                      <Mail className={iconWrap} /><input type="email" className={inputClass} placeholder="E-mail *" aria-label="E-mail (obligatoire)" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
                       {email && !emailValid && <p className="text-destructive text-xs mt-1">Adresse e-mail invalide</p>}
                     </div>
                     <div className="relative">
-                      <Phone className={iconWrap} /><input type="tel" className={inputClass} placeholder="Téléphone *" value={telephone} onChange={(e) => setTelephone(e.target.value)} autoComplete="tel" />
+                      <Phone className={iconWrap} /><input type="tel" className={inputClass} placeholder="Téléphone *" aria-label="Téléphone (obligatoire)" value={telephone} onChange={(e) => setTelephone(e.target.value)} autoComplete="tel" />
                       {telephone && !phoneValid && <p className="text-destructive text-xs mt-1">Numéro invalide</p>}
                     </div>
                   </div>
@@ -496,7 +498,7 @@ const Mecanique = () => {
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-sm">Numéro de châssis (VIN)</div>
                         <div className="text-muted-foreground text-xs mt-0.5">Le VIN comporte généralement 17 caractères.</div>
-                        <input value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} maxLength={20} placeholder="Ex. WBAAL71000CF63146"
+                        <input value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} maxLength={20} placeholder="Ex. WBAAL71000CF63146" aria-label="Numéro de châssis (VIN)" autoComplete="off" spellCheck={false}
                           className="w-full bg-input border border-border rounded-lg px-4 py-3 mt-3 text-foreground placeholder:text-muted-foreground uppercase focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
                         {vin && !vinValid && <p className="text-destructive text-xs mt-1.5">Le VIN doit comporter 15 à 20 caractères (sans I, O ni Q).</p>}
                       </div>

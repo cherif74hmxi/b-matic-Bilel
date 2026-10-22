@@ -59,11 +59,25 @@ export default function seoPrerender({ siteUrl, alias }: { siteUrl: string; alia
       }
 
       const template = await fs.readFile(path.join(outDir, "index.html"), "utf8");
+
+      // Accueil : précharge l'image du hero (élément LCP), sinon découverte
+      // seulement après l'exécution du JavaScript.
+      const assets = await fs.readdir(path.join(outDir, "assets"));
+      const hero = (re: RegExp) => assets.find((f) => re.test(f));
+      const hero960 = hero(/^hero-bg-960-[\w-]+\.webp$/);
+      const hero1920 = hero(/^hero-bg-(?!960-)[\w-]+\.webp$/);
+      const heroPreload =
+        hero960 && hero1920
+          ? `<link rel="preload" as="image" fetchpriority="high" imagesrcset="/assets/${hero960} 960w, /assets/${hero1920} 1920w" imagesizes="100vw" />`
+          : "";
+
       for (const page of pages) {
         const file = page.path === "/" ? "index.html" : `${page.path.slice(1)}.html`;
         const target = path.join(outDir, file);
+        let html = injectHead(template, page.meta);
+        if (page.path === "/" && heroPreload) html = html.replace("<!--/seo-->", () => `${heroPreload}\n    <!--/seo-->`);
         await fs.mkdir(path.dirname(target), { recursive: true });
-        await fs.writeFile(target, injectHead(template, page.meta));
+        await fs.writeFile(target, html);
       }
 
       // robots.txt : tout est autorisé. L'admin n'est PAS bloqué ici : ses pages
