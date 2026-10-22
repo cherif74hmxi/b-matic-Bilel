@@ -2,13 +2,14 @@ import { Shield, Eye, Heart } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import mechanicBg from "@/assets/mechanic-bg.webp";
+import { horaires } from "@/data/horaires";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 
 const advantages = [
   { icon: Shield, title: "Professionnalisme", desc: "Une équipe qualifiée et expérimentée, dédiée à l'excellence automobile depuis des années." },
   { icon: Eye, title: "Transparence", desc: "Des tarifs clairs et honnêtes, sans surprise. Nous vous expliquons chaque intervention." },
-  { icon: Heart, title: "Service client", desc: "Votre satisfaction est notre priorité. Disponibles 24h/24 pour répondre à vos besoins." },
+  { icon: Heart, title: "Service client", desc: `Votre satisfaction est notre priorité. Centre ouvert ${horaires.centre.texte} ; dépannage 24h/24 pour les urgences.` },
 ];
 
 const APropos = () => {
@@ -21,7 +22,7 @@ const APropos = () => {
             <span className="text-gradient-neon">À propos</span> <span className="text-foreground">de B MATIC</span>
           </h1>
           <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12 text-lg leading-relaxed">
-            B MATIC est un garage automobile spécialisé dans la reprise de véhicules, l'entretien mécanique et le dépannage. Notre mission : offrir un service irréprochable, transparent et accessible à tous, 24 heures sur 24.
+            B MATIC est un garage automobile spécialisé dans la reprise de véhicules, l'entretien mécanique et le dépannage. Notre mission : offrir un service irréprochable, transparent et accessible à tous. Centre ouvert {horaires.centre.detail} ; dépannage 24h/24.
           </p>
         </AnimatedSection>
 

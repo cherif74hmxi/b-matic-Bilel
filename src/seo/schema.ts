@@ -7,6 +7,7 @@
 //  articles) y font référence au lieu de le répéter.
 // ============================================================================
 import { legalInfo } from "@/data/legal";
+import { horaires } from "@/data/horaires";
 import { pareBriseFaq, pareBriseLieu, pareBriseRayonKm, pareBriseSeo } from "@/data/parebrise";
 import { faqItems } from "@/data/faq";
 import { conseils, conseilTexte, type Conseil } from "@/data/conseils";
@@ -29,7 +30,11 @@ const adresse = () => ({
   addressCountry: legalInfo.addressParts.country,
 });
 
-/** Le garage : centre ouvert 7j/7 de 10h à 19h (le dépannage 24h/24 est un service à part). */
+/**
+ * Le garage : centre ouvert 7j/7 de 10h à 19h (src/data/horaires.ts).
+ * Le dépannage 24h/24 est un service distinct (depannageJsonLd), jamais
+ * mélangé aux horaires d'ouverture du centre.
+ */
 export const garageJsonLd = () => ({
   "@type": "AutoRepair",
   "@id": garageId(),
@@ -44,7 +49,12 @@ export const garageJsonLd = () => ({
   address: adresse(),
   areaServed: { "@type": "City", name: "Liège" },
   openingHoursSpecification: [
-    { "@type": "OpeningHoursSpecification", dayOfWeek: TOUS_LES_JOURS, opens: "10:00", closes: "19:00" },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: TOUS_LES_JOURS,
+      opens: horaires.centre.ouverture,
+      closes: horaires.centre.fermeture,
+    },
   ],
 });
 

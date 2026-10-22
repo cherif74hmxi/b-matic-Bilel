@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin } from "lucide-react";
 import logo from "@/assets/bmatic-logo.webp";
 import { legalInfo } from "@/data/legal";
+import { horairesResume } from "@/data/horaires";
 
 const Footer = () => {
   const openCookieSettings = () => window.dispatchEvent(new Event("open-cookie-consent"));
@@ -17,7 +18,9 @@ const Footer = () => {
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Achat · Mécanique · Dépannage<br />
-              Votre garage automobile de confiance, ouvert 24h/24.
+              Votre garage automobile de confiance à Ans.
+              <br />
+              {horairesResume}.
             </p>
           </div>
 

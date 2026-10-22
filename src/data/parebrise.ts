@@ -11,13 +11,10 @@
 //  choisis par le champ `illustration` — pas de photos produits ni de logos.
 // ============================================================================
 import { legalInfo } from "@/data/legal";
+import { horaires } from "@/data/horaires";
 
-/** Horaires du centre (repris dans les textes et les données structurées). */
-export const pareBriseHoraires = {
-  texte: "7j/7, 10h–19h",
-  /** Version longue (centre, FAQ). */
-  detail: "7j/7, de 10h à 19h, dimanche compris",
-};
+/** Horaires du centre (source : src/data/horaires.ts). */
+export const pareBriseHoraires = horaires.centre;
 
 /** Rayon d'intervention autour de Liège (km). */
 export const pareBriseRayonKm = 70;
