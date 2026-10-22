@@ -8,13 +8,11 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import GiftIllustration from "@/components/GiftIllustration";
 import { pareBriseAccueil, pareBriseCadeaux, pareBriseMention, pareBriseRayonKm } from "@/data/parebrise";
-import AuroraBackground from "@/components/AuroraBackground";
+import HeroBackdrop from "@/components/HeroBackdrop";
 import HomeLatest from "@/components/vehicules/HomeLatest";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 import { accueilJsonLd } from "@/seo/schema";
-import heroBg from "@/assets/hero-bg.webp";
-import heroBg960 from "@/assets/hero-bg-960.webp";
 import { serviceCategories } from "@/data/services";
 import { legalInfo } from "@/data/legal";
 import {
@@ -50,23 +48,11 @@ const Index = () => {
       {/* Mobile : hauteur réduite (svh, sans la barre d'adresse) pour que les
           offres apparaissent dès l'arrivée. */}
       <section className="relative min-h-[78svh] md:min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroBg}
-            // Mobile : version 960 px (LCP plus rapide). Préchargée par vite-plugin-seo.ts.
-            srcSet={`${heroBg960} 960w, ${heroBg} 1920w`}
-            sizes="100vw"
-            alt="Garage automobile futuriste"
-            className="parallax-hero w-full h-full object-cover"
-            width={1920}
-            height={1080}
-            fetchPriority="high"
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-          <AuroraBackground />
+        {/* Fond animé léger (canvas) : horizon néon + traînées de lumière. */}
+        <div className="absolute inset-0 parallax-hero">
+          <HeroBackdrop />
         </div>
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10 pt-24 pb-10">
           <AnimatedSection>
