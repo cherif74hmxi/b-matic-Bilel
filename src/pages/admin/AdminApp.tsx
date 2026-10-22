@@ -16,6 +16,7 @@ import AdminVehicules from "./AdminVehicules";
 import AdminVehiculeForm from "./AdminVehiculeForm";
 import AdminActualites from "./AdminActualites";
 import AdminActualiteForm from "./AdminActualiteForm";
+import AdminAgenda from "./AdminAgenda";
 
 const AdminApp = () => {
   useNoIndex();
@@ -35,6 +36,7 @@ const AdminApp = () => {
           <Route path="vehicules" element={<AdminVehicules />} />
           <Route path="vehicules/nouveau" element={<AdminVehiculeForm />} />
           <Route path="vehicules/:id" element={<AdminVehiculeForm />} />
+          <Route path="agenda" element={<AdminAgenda />} />
           <Route path="actualites" element={<AdminActualites />} />
           <Route path="actualites/nouvelle" element={<AdminActualiteForm />} />
           <Route path="actualites/:id" element={<AdminActualiteForm />} />

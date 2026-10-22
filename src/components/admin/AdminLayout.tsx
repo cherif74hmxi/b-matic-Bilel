@@ -1,5 +1,5 @@
 import { NavLink, Link, Outlet } from "react-router-dom";
-import { Car, ExternalLink, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
+import { CalendarDays, Car, ExternalLink, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
 import { toast } from "sonner";
 import logo from "@/assets/bmatic-logo.webp";
 import { useAdminSession } from "@/hooks/useAdminSession";
@@ -14,6 +14,7 @@ import { guardLinkClick, confirmLeave } from "@/lib/unsavedChanges";
 
 const navItems = [
   { to: "/admin", label: "Tableau de bord", short: "Accueil", icon: LayoutDashboard, end: true },
+  { to: "/admin/agenda", label: "Agenda", short: "Agenda", icon: CalendarDays, end: false },
   { to: "/admin/vehicules", label: "Véhicules", short: "Véhicules", icon: Car, end: false },
   { to: "/admin/actualites", label: "Actualités", short: "Actus", icon: Newspaper, end: false },
 ];
@@ -34,7 +35,7 @@ const AdminLayout = () => {
     }`;
 
   const tabItemClass = ({ isActive }: { isActive: boolean }) =>
-    `flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] px-1 text-[11px] font-heading uppercase tracking-wider transition-colors ${
+    `flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] px-0.5 text-[10px] font-heading uppercase tracking-wide transition-colors ${
       isActive ? "text-neon-cyan" : "text-muted-foreground"
     }`;
 

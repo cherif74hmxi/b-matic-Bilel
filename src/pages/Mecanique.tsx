@@ -1,4 +1,4 @@
-import { useMemo, useState, FormEvent } from "react";
+import { useEffect, useMemo, useState, FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Clock, Check, ChevronRight, ChevronLeft, User, Mail, Phone,
@@ -9,13 +9,15 @@ import GlowCard from "@/components/GlowCard";
 import mechanicBg from "@/assets/mechanic-bg.webp";
 import { serviceCategories, findService, type Service } from "@/data/services";
 import { sendLead } from "@/lib/leads";
+import { rdvHeures, rdvRegles, rdvTextes } from "@/data/rdv";
+import { addDays, bookRdv, brusselsNow, fetchTakenSlots, isSlotInWindow, slotKey } from "@/lib/rdv";
 
 /* ------------------------------------------------------------------ helpers */
 const MONTHS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const DAYS = ["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
-const HEURES = Array.from({ length: 11 }, (_, i) => `${(i + 8).toString().padStart(2, "0")}:00`); // 08:00 → 18:00
 
 const pad = (n: number) => (n < 10 ? "0" : "") + n;
+const heureLabel = (h: number) => `${pad(h)}:00`;
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const money = (n: number) => "€" + n.toLocaleString("fr-BE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -61,6 +63,13 @@ const Mecanique = () => {
   const [month, setMonth] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); });
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
+  // Créneaux occupés du mois affiché (clés slotKey). null = agenda injoignable :
+  // la demande part quand même, avec un créneau « à confirmer ».
+  const [taken, setTaken] = useState<Set<string> | null>(new Set());
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsVersion, setSlotsVersion] = useState(0);
+  const [booked, setBooked] = useState(true);
+  const [mailWarning, setMailWarning] = useState(false);
 
   // step 3
   const [prenom, setPrenom] = useState("");
@@ -88,16 +97,36 @@ const Mecanique = () => {
     const y = month.getFullYear(), m = month.getMonth();
     const lead = (new Date(y, m, 1).getDay() + 6) % 7; // lundi = 0
     const total = new Date(y, m + 1, 0).getDate();
-    const today = new Date(); today.setHours(0, 0, 0, 0);
     const cells: { key: string; day: number; free: boolean; empty?: boolean }[] = [];
     for (let i = 0; i < lead; i++) cells.push({ key: `e${i}`, day: 0, free: false, empty: true });
     for (let i = 1; i <= total; i++) {
-      const d = new Date(y, m, i);
-      const free = d >= today && d.getDay() !== 0; // fermé le dimanche, pas de date passée
-      cells.push({ key: ymd(d), day: i, free });
+      const key = ymd(new Date(y, m, i));
+      // Ouvert 7j/7 : un jour est libre s'il lui reste au moins un créneau réservable.
+      const free = rdvHeures.some((h) => isSlotInWindow(key, h) && !taken?.has(slotKey(key, h)));
+      cells.push({ key, day: i, free });
     }
     return cells;
+  }, [month, taken]);
+
+  const canNext = useMemo(() => {
+    const last = addDays(brusselsNow().date, rdvRegles.horizonJours);
+    return ymd(new Date(month.getFullYear(), month.getMonth() + 1, 1)) <= last;
   }, [month]);
+
+  // Chargement des créneaux occupés du mois affiché (à l'étape 2).
+  useEffect(() => {
+    if (step !== 2) return;
+    let cancelled = false;
+    const from = ymd(new Date(month.getFullYear(), month.getMonth(), 1));
+    const to = ymd(new Date(month.getFullYear(), month.getMonth() + 1, 0));
+    setSlotsLoading(true);
+    fetchTakenSlots(from, to).then((set) => {
+      if (cancelled) return;
+      setTaken(set);
+      setSlotsLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [step, month, slotsVersion]);
 
   const canPrev = useMemo(() => {
     const cur = new Date(); cur.setDate(1); cur.setHours(0, 0, 0, 0);
@@ -151,30 +180,53 @@ const Mecanique = () => {
       });
     };
 
+    const details: Record<string, string> = {
+      "Service": base.service,
+      "Catégorie": base.categorie,
+      "Prix": base.prix,
+      "Date": base.date,
+      "Heure": base.heure,
+      "Durée": base.duree,
+      "VIN": base.vin,
+      "Carte grise (par e-mail)": base.carteGrise,
+    };
+
+    // 1. Réservation du créneau (et enregistrement de la demande) dans l'agenda.
+    const result = await bookRdv({
+      date, hour: parseInt(time, 10), name: `${prenom} ${nom}`, email, phone: telephone, details,
+    });
+
+    if (result === "taken" || result === "invalid") {
+      setTime("");
+      setSlotsVersion((v) => v + 1);
+      goto(2);
+      setFormState({ status: "error", message: result === "taken" ? rdvTextes.creneauPris : rdvTextes.creneauInvalide });
+      return;
+    }
+    if (result === "limit") {
+      setFormState({ status: "error", message: rdvTextes.limite });
+      return;
+    }
+
     try {
-      // Double envoi : e-mail (Formspree, avec la carte grise) + espace admin
-      // (Supabase, sans le fichier).
-      const ok = await sendLead(
-        sendByMail,
-        {
-          type: "rdv",
-          name: `${prenom} ${nom}`,
-          email,
-          phone: telephone,
-          details: {
-            "Service": base.service,
-            "Catégorie": base.categorie,
-            "Prix": base.prix,
-            "Date": base.date,
-            "Heure": base.heure,
-            "Durée": base.duree,
-            "VIN": base.vin,
-            "Carte grise (par e-mail)": base.carteGrise,
-          },
-        },
-        { hasAttachments: Boolean(file) },
-      );
-      if (!ok) throw new Error("server");
+      if (result === "ok") {
+        // 2. Créneau réservé : e-mail de notification (avec la carte grise).
+        //    Un échec ici n'annule pas le rendez-vous, déjà dans l'espace admin.
+        base.creneau = "Réservé dans l'agenda";
+        const mailOk = await sendByMail().then((r) => r.ok, () => false);
+        setMailWarning(!mailOk && Boolean(file));
+        setBooked(true);
+      } else {
+        // Agenda injoignable : double envoi classique, créneau à confirmer.
+        base.creneau = "À CONFIRMER (agenda en ligne indisponible)";
+        const ok = await sendLead(
+          sendByMail,
+          { type: "rdv", name: `${prenom} ${nom}`, email, phone: telephone, details: { ...details, "Créneau": base.creneau } },
+          { hasAttachments: Boolean(file) },
+        );
+        if (!ok) throw new Error("server");
+        setBooked(false);
+      }
       setSent(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
@@ -234,8 +286,8 @@ const Mecanique = () => {
               <div className="flex items-center gap-3">
                 <Clock className="w-8 h-8 text-neon-cyan" />
                 <div>
-                  <p className="font-heading text-lg font-bold text-foreground">Ouvert 24h/24</p>
-                  <p className="text-muted-foreground text-sm">Votre garage est disponible à tout moment pour vous assister.</p>
+                  <p className="font-heading text-lg font-bold text-foreground">{rdvTextes.bandeauTitre}</p>
+                  <p className="text-muted-foreground text-sm">{rdvTextes.bandeauTexte}</p>
                 </div>
               </div>
             </div>
@@ -340,11 +392,13 @@ const Mecanique = () => {
                         <div className="font-semibold capitalize">{MONTHS[month.getMonth()]} {month.getFullYear()}</div>
                         <div className="flex gap-1.5">
                           <button type="button" disabled={!canPrev} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
-                            className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-foreground enabled:hover:border-primary enabled:hover:text-primary disabled:opacity-30 transition-colors">
+                            aria-label="Mois précédent"
+                            className="w-11 h-11 md:w-8 md:h-8 rounded-lg border border-border grid place-items-center text-muted-foreground enabled:hover:border-primary enabled:hover:text-primary disabled:opacity-30 transition-colors">
                             <ChevronLeft className="w-4 h-4" />
                           </button>
-                          <button type="button" onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
-                            className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-foreground hover:border-primary hover:text-primary transition-colors">
+                          <button type="button" disabled={!canNext} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                            aria-label="Mois suivant"
+                            className="w-11 h-11 md:w-8 md:h-8 rounded-lg border border-border grid place-items-center text-muted-foreground enabled:hover:border-primary enabled:hover:text-primary disabled:opacity-30 transition-colors">
                             <ChevronRight className="w-4 h-4" />
                           </button>
                         </div>
@@ -371,15 +425,27 @@ const Mecanique = () => {
                     {/* slots */}
                     <div>
                       <div className="font-semibold mb-3.5">{date ? `Horaires du ${longDate(date)}` : "Horaires disponibles"}</div>
+                      {taken === null && (
+                        <p className="text-xs text-muted-foreground bg-muted/50 rounded-lg p-3 mb-3.5">{rdvTextes.agendaIndisponible}</p>
+                      )}
                       {date ? (
-                        <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2.5">
-                          {HEURES.map((h) => (
-                            <button key={h} type="button" onClick={() => setTime(h)}
-                              className={`py-3 rounded-lg border text-sm font-medium transition-all ${
-                                h === time ? "bg-primary border-primary text-primary-foreground font-bold" : "bg-input border-border hover:border-primary hover:text-primary"}`}>
-                              {h}
-                            </button>
-                          ))}
+                        <div className={`grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2.5 transition-opacity ${slotsLoading ? "opacity-50" : ""}`} aria-busy={slotsLoading}>
+                          {rdvHeures.map((h) => {
+                            const label = heureLabel(h);
+                            const pris = Boolean(taken?.has(slotKey(date, h)));
+                            const dispo = !pris && isSlotInWindow(date, h);
+                            return (
+                              <button key={h} type="button" disabled={!dispo || slotsLoading} onClick={() => setTime(label)}
+                                aria-pressed={label === time}
+                                aria-label={pris ? `${label}, déjà réservé` : !dispo ? `${label}, indisponible` : label}
+                                className={`py-3 rounded-lg border text-sm font-medium transition-all ${
+                                  label === time ? "bg-primary border-primary text-primary-foreground font-bold"
+                                  : dispo ? "bg-input border-border hover:border-primary hover:text-primary"
+                                  : "border-border/40 text-muted-foreground/40 line-through cursor-not-allowed"}`}>
+                                {label}
+                              </button>
+                            );
+                          })}
                         </div>
                       ) : (
                         <p className="text-muted-foreground text-sm py-6 text-center">Sélectionnez d'abord une date dans le calendrier.</p>
@@ -512,11 +578,18 @@ const Mecanique = () => {
                 <div className="text-center py-6 animate-fade-in">
                   <div className="w-16 h-16 rounded-full bg-green-500/15 text-green-400 grid place-items-center mx-auto mb-5"><Check className="w-8 h-8" /></div>
                   <div className="font-heading text-2xl font-bold mb-2">
-                    {svc?.priceType === "devis" ? "Demande bien reçue" : "Rendez-vous confirmé"}
+                    {booked ? "Rendez-vous réservé" : "Demande bien reçue"}
                   </div>
                   <p className="text-muted-foreground max-w-md mx-auto mb-7 leading-relaxed">
-                    Merci {prenom}. Votre demande est enregistrée. Nous vous recontactons rapidement pour confirmer votre rendez-vous.
+                    {booked
+                      ? <>Merci {prenom}. Votre créneau du {longDate(date)} à {time} est réservé pour vous. Nous vous contactons si un détail doit être précisé.</>
+                      : <>Merci {prenom}. Votre demande est enregistrée. Nous vous recontactons rapidement pour confirmer le créneau.</>}
                   </p>
+                  {mailWarning && (
+                    <p className="text-sm text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 max-w-md mx-auto mb-6">
+                      Votre carte grise n'a pas pu être transmise. Pensez à l'apporter le jour du rendez-vous.
+                    </p>
+                  )}
                   <div className="text-left max-w-xl mx-auto">{recap()}</div>
                 </div>
               )}
