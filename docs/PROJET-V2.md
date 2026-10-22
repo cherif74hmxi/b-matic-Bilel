@@ -113,6 +113,11 @@ Réutiliser la catégorie "Promotions" : Entretien 149 € · Plaquettes 99 € 
 Les mettre en avant sur l'accueil.
 
 ## 6. Améliorations UX
+- **Reprise refaite (fait)** : écran de choix « Scanner ma carte grise (~30 s, recommandé) » /
+  « Remplir à la main (~2-3 min) » ; scan Gemini via l'Edge Function `generate-copy` (action
+  `registration`, publique sous quotas en base : migration `scan_quota`, IP hachée 24 h) ; champs
+  techniques uniquement, photo non conservée ; photos du véhicule guidées (facultatives) ;
+  envoi Formspree + `leads`. Module réutilisé dans l'admin (`RegistrationScanner`).
 - **Formulaire de reprise** : le simplifier (il est jugé trop long). Idées : moins d'étapes,
   **pré-remplissage VIN** (NHTSA), **ajout de photos façon leboncoin**, validation en temps réel,
   **100% mobile-first**. Garder l'envoi des demandes (Formspree ou table Supabase).

@@ -183,3 +183,30 @@ export async function optimizeImage(file: Blob): Promise<OptimizedImage> {
     throw error;
   }
 }
+
+// ---------------------------------------------------------------------------
+//  Réduction en JPEG (scan de carte grise, photos jointes aux e-mails)
+// ---------------------------------------------------------------------------
+
+/**
+ * Réduit une photo (grand côté ≤ `maxEdge`) et la réencode en JPEG : format lu
+ * partout (Gemini, messageries) et bien plus léger qu'une photo de téléphone.
+ * Lève UnsupportedImageError si le navigateur ne sait pas lire le fichier (HEIC…).
+ */
+export async function toJpeg(file: Blob, maxEdge: number, quality = 0.85): Promise<Blob> {
+  const decoded = await decode(file);
+  try {
+    const size = fitWithin(decoded.width, decoded.height, maxEdge);
+    const { canvas, ctx } = canvasOf(size.width, size.height);
+    // Fond blanc : les PNG transparents ne deviennent pas noirs en JPEG.
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, size.width, size.height);
+    const reduced = resize(decoded.source, decoded.width, decoded.height, size.width, size.height);
+    ctx.drawImage(reduced.canvas, 0, 0);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    if (!blob) throw new UnsupportedImageError("Conversion de l'image impossible.");
+    return blob;
+  } finally {
+    decoded.release();
+  }
+}

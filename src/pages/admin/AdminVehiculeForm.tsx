@@ -32,6 +32,8 @@ import {
   type VehicleInput,
 } from "@/lib/vehicles";
 import { decodeVin, normalizeVin, VIN_PATTERN, type VinSuggestion } from "@/lib/vin";
+import { SCAN_ENABLED, type RegistrationScan } from "@/lib/registrationScan";
+import RegistrationScanner from "@/components/RegistrationScanner";
 import { guardLinkClick, setUnsaved, useLeaveGuard } from "@/lib/unsavedChanges";
 
 // ============================================================================
@@ -129,7 +131,8 @@ const toInput = (f: FormValues): VehicleInput => {
   };
 };
 
-const SUGGESTION_LABELS: Record<keyof VinSuggestion, string> = {
+const SUGGESTION_LABELS: Record<keyof VinSuggestion | "vin", string> = {
+  vin: "VIN",
   make: "marque",
   model: "modèle",
   year: "année",
@@ -256,6 +259,22 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
     if (proposal) setValue("title", proposal.slice(0, 200), { shouldDirty: true, shouldValidate: true });
   }, [getValues, setValue]);
 
+  /** Remplit les champs encore vides (décodage VIN, scan de carte grise) ; renvoie leurs libellés. */
+  const fillEmpty = useCallback(
+    (values: Partial<Record<keyof VinSuggestion | "vin", string | number | undefined>>) => {
+      const filled: string[] = [];
+      for (const [key, value] of Object.entries(values) as [keyof typeof values, string | number | undefined][]) {
+        if (value !== undefined && value !== "" && getValues(key) === "") {
+          setValue(key, String(value) as never, { shouldDirty: true, shouldValidate: true });
+          filled.push(SUGGESTION_LABELS[key]);
+        }
+      }
+      if (filled.length > 0 && getValues("title").trim() === "") proposeTitle();
+      return filled;
+    },
+    [getValues, setValue, proposeTitle],
+  );
+
   const runDecode = useCallback(
     async (vin: string) => {
       decodeAbort.current?.abort();
@@ -267,18 +286,11 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       const { suggestion, serviceDown, yearSkipped } = await decodeVin(vin, controller.signal);
       if (controller.signal.aborted) return;
 
-      const filled: string[] = [];
-      for (const [key, value] of Object.entries(suggestion) as [keyof VinSuggestion, string | number][]) {
-        if (getValues(key) === "") {
-          setValue(key, String(value) as never, { shouldDirty: true, shouldValidate: true });
-          filled.push(SUGGESTION_LABELS[key]);
-        }
-      }
-      if (filled.length > 0 && getValues("title").trim() === "") proposeTitle();
+      const filled = fillEmpty(suggestion);
       const found = Object.keys(suggestion).length > 0;
       setVinState({ status: "done", filled, found, limited: found && !suggestion.model, serviceDown, yearSkipped });
     },
-    [getValues, setValue, proposeTitle],
+    [fillEmpty],
   );
 
   const vinValue = watch("vin");
@@ -295,6 +307,23 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
     if (VIN_PATTERN.test(vin) && vin !== lastDecoded.current) void runDecode(vin);
   }, [vinValue, runDecode, setValue]);
   useEffect(() => () => decodeAbort.current?.abort(), []);
+
+  // ----- Scan de la carte grise (même module que le formulaire de reprise) :
+  // ne remplit que les champs vides, comme le décodage VIN.
+  const [scanOpen, setScanOpen] = useState(false);
+  const applyScan = (scan: RegistrationScan) => {
+    const filled = fillEmpty({
+      vin: scan.vin,
+      make: scan.make,
+      model: scan.model,
+      version: scan.version,
+      year: scan.year,
+      fuel: scan.fuel,
+      power_hp: scan.powerHp,
+    });
+    toast.success(filled.length > 0 ? `Carte grise lue : ${filled.join(", ")}.` : "Carte grise lue : les champs étaient déjà remplis.");
+    setScanOpen(false);
+  };
 
   // ----- Avertir avant de quitter avec des modifications non enregistrées
   // (liens internes via setUnsaved/confirmLeave, onglet/rechargement via beforeunload)
@@ -447,6 +476,19 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       <div className="grid gap-4">
         {/* ---------- Identification ---------- */}
         <FormSection title="Identification">
+          {SCAN_ENABLED && (
+            <div>
+              <button type="button" onClick={() => setScanOpen((o) => !o)} aria-expanded={scanOpen} className="btn-ghost min-h-[44px] w-full sm:w-auto">
+                <ScanLine className="w-4 h-4" aria-hidden="true" /> {scanOpen ? "Fermer le scan" : "Scanner la carte grise"}
+              </button>
+              {scanOpen && (
+                <div className="mt-4 rounded-xl border border-border p-4">
+                  <p className="text-xs text-muted-foreground mb-3">Remplit uniquement les champs encore vides.</p>
+                  <RegistrationScanner onResult={applyScan} />
+                </div>
+              )}
+            </div>
+          )}
           <Field
             id="v-vin"
             label="Numéro de châssis (VIN)"

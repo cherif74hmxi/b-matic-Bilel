@@ -35,7 +35,21 @@ const PolitiqueConfidentialite = () => {
       <ul>
         <li><strong>Formulaire de contact :</strong> nom, adresse e-mail, numéro de téléphone et contenu de votre message.</li>
         <li><strong>Prise de rendez-vous (mécanique / detailing) :</strong> prénom, nom, e-mail, téléphone, prestation choisie, date et heure souhaitées, et informations sur votre véhicule (numéro de châssis / VIN ou photo de la carte grise).</li>
-        <li><strong>Demande de reprise de véhicule :</strong> prénom, nom, e-mail, téléphone, caractéristiques et état du véhicule, ainsi que les photos et documents que vous choisissez de joindre (véhicule, carnet d'entretien, factures).</li>
+        <li><strong>Demande de reprise de véhicule :</strong> nom, téléphone, e-mail (facultatif), caractéristiques et état du véhicule, ainsi que les photos du véhicule que vous choisissez de joindre.</li>
+        <li>
+          <strong>Scan de la carte grise (facultatif, formulaire de reprise) :</strong> si vous choisissez
+          cette option, la photo de votre carte grise est transmise à notre assistant de lecture
+          ({legalInfo.aiAssistant.name}, voir § 4) uniquement pour en lire les{" "}
+          <strong>caractéristiques techniques du véhicule</strong> (marque, modèle, version, date de
+          première immatriculation, carburant, puissance, cylindrée, numéro de châssis). Les
+          informations sur le titulaire (nom, adresse) ne sont ni demandées ni enregistrées. La
+          photo n'est <strong>pas conservée</strong> : elle est traitée le temps de la lecture puis
+          oubliée ; seuls les champs que vous validez dans le formulaire nous sont envoyés.
+          Pour éviter les abus, chaque lecture est comptée à partir d'une{" "}
+          <strong>empreinte non réversible de votre adresse IP</strong> (hachage avec une clé
+          secrète qui change chaque jour), effacée au bout de 24 heures ; l'adresse IP elle-même
+          n'est jamais enregistrée.
+        </li>
       </ul>
       <p>
         Les demandes envoyées via ces formulaires nous parviennent par e-mail et sont
@@ -82,6 +96,11 @@ const PolitiqueConfidentialite = () => {
             <td>{legalInfo.leadsRetentionYears} ans à compter de la demande</td>
           </tr>
           <tr>
+            <td>Lire la carte grise (scan facultatif) et limiter les abus de ce service</td>
+            <td>Votre demande (mesures précontractuelles, art. 6.1.b) ; intérêt légitime à protéger le service (art. 6.1.f) pour l'empreinte d'IP</td>
+            <td>Photo : non conservée (traitement immédiat). Empreinte d'IP : 24 heures</td>
+          </tr>
+          <tr>
             <td>Mesurer la fréquentation du site</td>
             <td>Notre intérêt légitime à améliorer le site (art. 6.1.f) — données non identifiantes</td>
             <td>Données anonymes, conservées à des fins statistiques</td>
@@ -119,13 +138,16 @@ const PolitiqueConfidentialite = () => {
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
         <li>
-          <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — aide à
-          la rédaction des annonces de véhicules et des actualités, utilisée uniquement par le
-          garage dans son espace d'administration. Seuls les caractéristiques des véhicules
-          (marque, modèle, kilométrage…) et les textes rédigés par le garage pour ses annonces et
-          actualités lui sont transmis ; le garage n'y inclut aucune donnée personnelle. Les
-          données de nos visiteurs et clients (formulaires, statistiques){" "}
-          <strong>ne lui sont jamais envoyées</strong>. Voir leurs conditions :{" "}
+          <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
+          d'intelligence artificielle utilisé pour deux usages : (1) l'aide à la rédaction des
+          annonces et actualités, dans l'espace d'administration du garage (seuls les
+          caractéristiques des véhicules et les textes du garage lui sont transmis) ; (2) la{" "}
+          <strong>lecture de la carte grise</strong>, uniquement si vous choisissez le scan dans le
+          formulaire de reprise : la photo lui est transmise pour en extraire les seules
+          caractéristiques techniques du véhicule, sans conservation de notre part. Vos coordonnées
+          et les autres données des formulaires{" "}
+          <strong>ne lui sont jamais envoyées</strong>. Ce prestataire est établi aux États-Unis
+          (transferts encadrés par des garanties appropriées). Voir leurs conditions :{" "}
           <a href={legalInfo.aiAssistant.termsUrl} target="_blank" rel="noopener noreferrer">ai.google.dev</a>.
         </li>
       </ul>
