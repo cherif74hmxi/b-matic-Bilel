@@ -175,11 +175,11 @@ const Index = () => {
                 la suivante visibles. À partir de md : grille de 3. */}
             <AnimatedSection>
               <ul
-                className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory -mx-4 px-4 md:mx-auto md:px-0 pb-2 md:pb-0"
+                className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 md:max-w-5xl overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-px-4 -mx-4 px-4 md:mx-auto md:px-0 pb-2 md:pb-0"
                 aria-label="Promotions"
               >
                 {promotions.map((p) => (
-                  <li key={p.id} className="snap-center shrink-0 w-[82%] sm:w-[55%] md:w-auto">
+                  <li key={p.id} className="snap-start shrink-0 w-[85%] sm:w-[55%] md:w-auto">
                     <div className="h-full flex flex-col bg-gradient-card rounded-xl p-5 md:p-6 border border-neon-pink/40 hover:shadow-[0_0_35px_hsl(320_80%_55%/0.25)] transition-all duration-500 md:hover:-translate-y-1">
                       <div className="flex items-center justify-between gap-3 mb-4">
                         <Sparkles className="w-7 h-7 text-neon-pink" aria-hidden="true" />
