@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src/components/Footer.tsx": {
-    "mtime": 1792636881.2957554,
-    "seen": 1792637285.129645,
-    "ast_hash": "8ef400c3a8a87d347823c0a6e97acb11",
+    "mtime": 1792648701.7478828,
+    "seen": 1792653548.5309906,
+    "ast_hash": "79cf26b8d91a7396b2ad08918925eb33",
     "semantic_hash": ""
   },
   "src/components/GlowCard.tsx": {
@@ -444,15 +444,15 @@
     "semantic_hash": ""
   },
   "src/pages/APropos.tsx": {
-    "mtime": 1792647374.641847,
-    "seen": 1792647475.729405,
-    "ast_hash": "2f8cb03834841387a52ffc551563ffba",
+    "mtime": 1792648701.7408118,
+    "seen": 1792653548.535694,
+    "ast_hash": "980c20f3a6d02d5ec14c6ac75dd6b23a",
     "semantic_hash": ""
   },
   "src/pages/Contact.tsx": {
-    "mtime": 1792647374.6456385,
-    "seen": 1792647475.7294514,
-    "ast_hash": "d91f753b78d0977c29a2de0f8f6e4e0d",
+    "mtime": 1792647842.1676955,
+    "seen": 1792653548.5358129,
+    "ast_hash": "2f5e956bc9d6a23af89b220b845f06a3",
     "semantic_hash": ""
   },
   "src/pages/Depannage.tsx": {
@@ -462,15 +462,15 @@
     "semantic_hash": ""
   },
   "src/pages/Index.tsx": {
-    "mtime": 1792647374.6464016,
-    "seen": 1792647475.7294562,
-    "ast_hash": "6a4eb436b2db31712104534200f81ca3",
+    "mtime": 1792653402.0337963,
+    "seen": 1792653548.535843,
+    "ast_hash": "131f206a13a6598cef41e9768c010d64",
     "semantic_hash": ""
   },
   "src/pages/Mecanique.tsx": {
-    "mtime": 1792647374.6473176,
-    "seen": 1792647475.729458,
-    "ast_hash": "47582b465fadb10334a83275d59eedda",
+    "mtime": 1792647842.1692545,
+    "seen": 1792653548.5358443,
+    "ast_hash": "0e0caa602a0141d2b3ac0a0626ee1e5e",
     "semantic_hash": ""
   },
   "src/pages/MentionsLegales.tsx": {
@@ -621,12 +621,6 @@
     "mtime": 1792647374.6489544,
     "seen": 1792647475.7294638,
     "ast_hash": "652606c5548e0ad36b761082f716bc75",
-    "semantic_hash": ""
-  },
-  "src/components/AuroraBackground.tsx": {
-    "mtime": 1792600219.663106,
-    "seen": 1792600856.2502258,
-    "ast_hash": "572422936b436022366a5ff2faf0f745",
     "semantic_hash": ""
   },
   "src/components/InsurerMarquee.tsx": {
@@ -948,9 +942,9 @@
     "semantic_hash": ""
   },
   "src/data/parebrise.ts": {
-    "mtime": 1792647374.6399024,
-    "seen": 1792647475.7282202,
-    "ast_hash": "45d48b5cf9dc002b073e7ac2158d94ea",
+    "mtime": 1792648701.7286716,
+    "seen": 1792653548.5342374,
+    "ast_hash": "71f0e56ce5e1f1dc1404f36593a21f16",
     "semantic_hash": ""
   },
   "src/components/RegistrationScanner.tsx": {
@@ -1128,9 +1122,9 @@
     "semantic_hash": ""
   },
   "src/data/accueil.ts": {
-    "mtime": 1792645608.2820337,
-    "seen": 1792647475.727858,
-    "ast_hash": "6925069be3a99b70d05c88a7dc630eca",
+    "mtime": 1792648701.7367008,
+    "seen": 1792653548.533962,
+    "ast_hash": "a1b1a85167ec1ea7f86dd6398d27c869",
     "semantic_hash": ""
   },
   "src/data/rdv.ts": {
@@ -1170,9 +1164,9 @@
     "semantic_hash": ""
   },
   "src/seo/schema.ts": {
-    "mtime": 1792646873.8591418,
-    "seen": 1792647475.7298794,
-    "ast_hash": "4862e25707f92fc0e3ad1fd2339e5a4a",
+    "mtime": 1792648701.7311966,
+    "seen": 1792653548.5365107,
+    "ast_hash": "e59d3ea4a0eae5aa8eace083f10f79d9",
     "semantic_hash": ""
   },
   "src/test/rdv.test.ts": {
@@ -1188,9 +1182,9 @@
     "semantic_hash": ""
   },
   "vite-plugin-seo.ts": {
-    "mtime": 1792647013.2266757,
-    "seen": 1792647475.7304597,
-    "ast_hash": "f0da21a5916ae81e35385cdddefc13ad",
+    "mtime": 1792648981.9237015,
+    "seen": 1792653548.5372455,
+    "ast_hash": "995c11fa1cd62bdbffa46ed20f16b423",
     "semantic_hash": ""
   },
   "public/logo.png": {
@@ -1203,6 +1197,24 @@
     "mtime": 1792646746.0999098,
     "seen": 1792647475.7306178,
     "ast_hash": "d50dfd7bec3a97579e618eab2bcce897",
+    "semantic_hash": ""
+  },
+  "src/components/HeroGarage.tsx": {
+    "mtime": 1792653517.1592317,
+    "seen": 1792653548.5311215,
+    "ast_hash": "3a69697ad503b03279267a2281f7cc31",
+    "semantic_hash": ""
+  },
+  "src/data/horaires.ts": {
+    "mtime": 1792648699.8246324,
+    "seen": 1792653548.5341513,
+    "ast_hash": "bff5fdfa643f2e202ff12e9a594daad9",
+    "semantic_hash": ""
+  },
+  "public/hero-car.png": {
+    "mtime": 1792652760.0726671,
+    "seen": 1792653548.537418,
+    "ast_hash": "98b16ff730f0b911482acc422bea4d87",
     "semantic_hash": ""
   }
 }
