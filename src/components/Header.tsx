@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import logo from "@/assets/bmatic-logo.webp";
+import { legalInfo } from "@/data/legal";
 
 // Liens de 1er niveau affichés AVANT le menu « Services »
 const navLinksBefore = [
@@ -120,9 +121,9 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <a href="tel:+32470853551" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <a href={legalInfo.phoneHref} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <Phone className="w-4 h-4" />
-            +32 4 70 85 35 51
+            {legalInfo.phone}
           </a>
         </div>
 
@@ -175,9 +176,9 @@ const Header = () => {
             <Link to="/contact" onClick={() => handleNavClick("/contact")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               Contact
             </Link>
-            <a href="tel:+32470853551" className="flex items-center gap-2 text-sm text-muted-foreground py-2">
+            <a href={legalInfo.phoneHref} className="flex items-center gap-2 text-sm text-muted-foreground py-2">
               <Phone className="w-4 h-4" />
-              +32 4 70 85 35 51
+              {legalInfo.phone}
             </a>
           </nav>
         </div>

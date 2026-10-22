@@ -10,8 +10,9 @@ const MentionsLegales = () => {
       <ul>
         <li><strong>{legalInfo.companyName}</strong>{legalInfo.legalForm && ` — ${legalInfo.legalForm}`}</li>
         {legalInfo.capital && <li>Capital social : {legalInfo.capital}</li>}
-        <li>Adresse : {legalInfo.address}</li>
-        <li>Numéro d'entreprise : {legalInfo.registration}</li>
+        <li>Siège social : {legalInfo.registeredOffice}</li>
+        <li>Atelier et contact : {legalInfo.address}</li>
+        <li>Numéro d'entreprise (BCE) : {legalInfo.registration}</li>
         <li>N° de TVA : {legalInfo.vat}</li>
         <li>E-mail : <a href={`mailto:${legalInfo.email}`}>{legalInfo.email}</a></li>
         <li>Téléphone : <a href={legalInfo.phoneHref}>{legalInfo.phone}</a></li>

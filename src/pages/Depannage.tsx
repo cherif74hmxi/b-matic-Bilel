@@ -1,6 +1,7 @@
 import { Phone, MapPin, Clock, Truck } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import NeonButton from "@/components/NeonButton";
+import { legalInfo } from "@/data/legal";
 
 const Depannage = () => {
   return (
@@ -59,9 +60,9 @@ const Depannage = () => {
           </div>
 
           <AnimatedSection delay={0.5}>
-            <a href="tel:+32470853551" className="inline-flex items-center justify-center bg-gradient-btn text-primary-foreground font-heading text-xs uppercase tracking-wider px-8 py-4 rounded-full hover:opacity-90 hover:shadow-[0_0_25px_hsl(270_80%_60%/0.5)] transition-all duration-300 text-lg">
+            <a href={legalInfo.phoneHref} className="inline-flex items-center justify-center bg-gradient-btn text-primary-foreground font-heading text-xs uppercase tracking-wider px-8 py-4 rounded-full hover:opacity-90 hover:shadow-[0_0_25px_hsl(270_80%_60%/0.5)] transition-all duration-300 text-lg">
               <Phone className="w-5 h-5 mr-2" />
-              Appelez-nous : +32 4 70 85 35 51
+              Appelez-nous : {legalInfo.phone}
             </a>
           </AnimatedSection>
         </div>

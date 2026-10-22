@@ -1,35 +1,42 @@
 // ============================================================================
 //  B MATIC — Informations légales centralisées (RGPD / mentions légales)
 // ----------------------------------------------------------------------------
-//  ⚠️  À COMPLÉTER PAR L'EXPLOITANT
-//  Les champs entre crochets « [ ... ] » doivent être renseignés avec les
-//  informations réelles de l'entreprise. Ils sont obligatoires pour que les
-//  mentions légales et la politique de confidentialité soient valables.
 //  Tout est regroupé ici : il suffit de modifier ce fichier, les pages se
-//  mettent à jour automatiquement.
+//  mettent à jour automatiquement. Les champs entre crochets « [ ... ] »
+//  restent à compléter (hébergeur au déploiement, région Supabase).
 // ============================================================================
 
 export const legalInfo = {
   // --- Identité de l'entreprise ------------------------------------------
   siteName: "B MATIC",
-  // Dénomination sociale complète (ex. « B MATIC SRL »)
-  companyName: "B MATIC",
-  // Forme juridique (ex. SRL, SASU, entreprise individuelle, indépendant…)
-  legalForm: "[forme juridique — ex. SRL / SASU / indépendant]",
+  // Dénomination sociale complète
+  companyName: "BM Matic SRL",
+  // Forme juridique
+  legalForm: "SRL (société à responsabilité limitée)",
   // Capital social, si société (sinon laisser vide "")
   capital: "",
-  // Adresse complète du siège / de l'atelier
-  address: "[adresse complète — n°, rue, code postal, ville, pays]",
-  // Numéro d'entreprise : BCE (Belgique) ou SIREN/SIRET (France)
-  registration: "[n° d'entreprise BCE / SIREN / SIRET]",
-  // Numéro de TVA intracommunautaire (ex. BE0123.456.789 / FR12345678901)
-  vat: "[n° de TVA intracommunautaire]",
-  // Responsable de la publication du site (nom du gérant / dirigeant)
-  publicationDirector: "[nom du responsable de la publication]",
+  // Adresse de l'ATELIER / contact (affichée partout : contact, pied de page, SEO local)
+  address: "Avenue de l'Énergie 25 HALL D4, 4432 Ans, Belgique",
+  // Adresse découpée pour les données structurées (SEO local)
+  addressParts: {
+    street: "Avenue de l'Énergie 25 HALL D4",
+    postalCode: "4432",
+    city: "Ans",
+    region: "Liège",
+    country: "BE",
+  },
+  // SIÈGE SOCIAL (mentions légales uniquement)
+  registeredOffice: "Valerius De Saedeleerstraat 93, 9300 Aalst, Belgique",
+  // Numéro d'entreprise (BCE)
+  registration: "0649.498.637",
+  // Numéro de TVA
+  vat: "BE 0649.498.637",
+  // Responsable de la publication du site
+  publicationDirector: "Jamal et Rachid Cherfaoui (gérants)",
 
   // --- Contact -----------------------------------------------------------
   email: "bmatic63s@gmail.com",
-  phone: "+32 4 70 85 35 51",
+  phone: "+32 470 85 35 51",
   phoneHref: "tel:+32470853551",
   // --- WhatsApp (numéro belge confirmé) ----------------------------------
   //  Source unique pour tout le site (page Contact, barre d'action mobile…).
@@ -48,10 +55,10 @@ export const legalInfo = {
 
   // --- Hébergeur du site -------------------------------------------------
   host: {
-    name: "[nom de l'hébergeur]",
-    company: "[société de l'hébergeur]",
-    address: "[adresse de l'hébergeur]",
-    website: "[site web de l'hébergeur]",
+    name: "Vercel",
+    company: "Vercel Inc.",
+    address: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+    website: "https://vercel.com",
   },
 
   // --- Base de données (Supabase) ----------------------------------------

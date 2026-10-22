@@ -356,8 +356,8 @@ const Reprise = () => {
                     {email && !emailValid && <p className="text-destructive text-xs mt-1">Format d'e-mail invalide</p>}
                   </div>
                   <div>
-                    <label className={labelClass}>Téléphone * <span className="text-muted-foreground text-xs">(ex: +33 6 12 34 56 78)</span></label>
-                    <input type="tel" className={inputClass} placeholder="+33" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
+                    <label className={labelClass}>Téléphone * <span className="text-muted-foreground text-xs">(ex. +32 470 12 34 56)</span></label>
+                    <input type="tel" className={inputClass} placeholder="+32" value={telephone} onChange={(e) => setTelephone(e.target.value)} required />
                     {telephone && !phoneValid && <p className="text-destructive text-xs mt-1">Le numéro doit commencer par + suivi de l'indicatif pays</p>}
                   </div>
                   <label className="flex items-start gap-2 cursor-pointer pt-2">
