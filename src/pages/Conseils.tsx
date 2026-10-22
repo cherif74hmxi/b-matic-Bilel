@@ -11,10 +11,10 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import useSeo from "@/hooks/useSeo";
-import { conseils } from "@/data/conseils";
+import { absoluteUrl } from "@/lib/site";
+import { conseils, tempsDeLecture } from "@/data/conseils";
 import { faqItems, type FaqCategorie } from "@/data/faq";
 
-const SITE_URL = "https://www.bmatic.be";
 
 const Conseils = () => {
   // Questions fréquentes regroupées par catégorie (ordre d'apparition conservé).
@@ -41,7 +41,7 @@ const Conseils = () => {
             "@type": "ListItem",
             position: i + 1,
             name: c.titre,
-            url: `${SITE_URL}/conseils/${c.slug}`,
+            url: absoluteUrl(`/conseils/${c.slug}`),
           })),
         },
         {
@@ -58,9 +58,9 @@ const Conseils = () => {
   );
 
   useSeo({
-    title: "Conseils auto — B MATIC",
+    title: "Conseils auto : entretien, pare-brise, pneus, panne | B MATIC",
     description:
-      "Nos conseils pratiques : entretien, pare-brise et assurance, préparation hivernale, pneus, reprise de véhicule et dépannage. Les bons réflexes pour votre voiture.",
+      "Conseils auto pratiques par B MATIC (Ans, Liège) : pare-brise et assurance, entretien, voyants du tableau de bord, hiver, pneus, panne et vente de voiture en Belgique.",
     jsonLd,
   });
 
@@ -75,7 +75,7 @@ const Conseils = () => {
               <span className="text-gradient-neon">Nos conseils auto</span>
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-              Entretien, pare-brise, hiver, pneus, reprise, dépannage… des articles pratiques
+              Entretien, pare-brise, voyants, hiver, pneus, panne, reprise… des articles pratiques
               pour prendre soin de votre véhicule et rouler l'esprit tranquille.
             </p>
           </div>
@@ -97,10 +97,13 @@ const Conseils = () => {
                     />
                   ) : (
                     <div className="w-full aspect-[16/10] bg-gradient-neon grid place-items-center">
-                      <c.icon className="w-12 h-12 text-primary-foreground" />
+                      <c.icon className="w-12 h-12 text-primary-foreground" aria-hidden="true" />
                     </div>
                   )}
                   <div className="flex flex-col flex-1 p-6">
+                    <span className="text-neon-cyan text-xs font-heading uppercase tracking-widest mb-2">
+                      {c.categorie} · {tempsDeLecture(c)} min
+                    </span>
                     <h2 className="font-heading text-lg font-bold mb-2 text-foreground">
                       {c.titre}
                     </h2>
