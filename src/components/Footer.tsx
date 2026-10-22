@@ -30,6 +30,8 @@ const Footer = () => {
                 { label: "Mécanique", path: "/mecanique" },
                 { label: "Reprise de véhicule", path: "/reprise" },
                 { label: "Dépannage", path: "/depannage" },
+                { label: "Véhicules d'occasion", path: "/vehicules" },
+                { label: "Actualités", path: "/actualites" },
                 { label: "Conseils", path: "/conseils" },
                 { label: "À propos", path: "/a-propos" },
                 { label: "Contact", path: "/contact" },
@@ -77,7 +79,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-neon-purple shrink-0" />
-                <a href={`mailto:${legalInfo.email}`} className="hover:text-foreground transition-colors">{legalInfo.email}</a>
+                <a href={`mailto:${legalInfo.email}`} className="min-w-0 break-all hover:text-foreground transition-colors">{legalInfo.email}</a>
               </li>
             </ul>
           </div>

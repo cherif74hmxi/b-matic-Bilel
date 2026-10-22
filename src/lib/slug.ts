@@ -23,8 +23,7 @@ export function withSuffix(root: string, n: number): string {
   return `${root.slice(0, SLUG_MAX - suffix.length).replace(/-+$/g, "")}${suffix}`;
 }
 
-/** Chemin de la miniature associée à une image (même nom + « _thumb »). */
-export const thumbPath = (storagePath: string) => storagePath.replace(/\.webp$/, "_thumb.webp");
+export { thumbPath } from "@/lib/contentModel";
 
 /**
  * Renvoie `root`, ou `root-2`, `root-3`… si le slug est déjà pris par une autre

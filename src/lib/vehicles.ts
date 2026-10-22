@@ -4,52 +4,10 @@
 // ============================================================================
 import { supabase, STORAGE_BUCKETS } from "@/lib/supabase";
 import { thumbPath, withFreeSlug } from "@/lib/slug";
+import type { Vehicle, VehicleStatus } from "@/lib/contentModel";
 
-export type VehicleStatus = "draft" | "published" | "sold";
-export type Fuel = "essence" | "diesel" | "hybride" | "hybride_rechargeable" | "electrique" | "gpl" | "autre";
-export type Gearbox = "manuelle" | "automatique";
-
-export const VEHICLE_STATUS_LABELS: Record<VehicleStatus, string> = {
-  draft: "Brouillon",
-  published: "Publié",
-  sold: "Vendu",
-};
-
-export const FUEL_LABELS: Record<Fuel, string> = {
-  essence: "Essence",
-  diesel: "Diesel",
-  hybride: "Hybride",
-  hybride_rechargeable: "Hybride rechargeable",
-  electrique: "Électrique",
-  gpl: "GPL",
-  autre: "Autre",
-};
-
-export const GEARBOX_LABELS: Record<Gearbox, string> = {
-  manuelle: "Manuelle",
-  automatique: "Automatique",
-};
-
-export interface Vehicle {
-  id: string;
-  slug: string;
-  status: VehicleStatus;
-  title: string;
-  vin: string | null;
-  make: string;
-  model: string;
-  version: string | null;
-  year: number | null;
-  mileage_km: number | null;
-  fuel: Fuel | null;
-  gearbox: Gearbox | null;
-  power_hp: number | null;
-  price_eur: number | null;
-  description: string | null;
-  published_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export type { VehicleStatus, Fuel, Gearbox, Vehicle } from "@/lib/contentModel";
+export { VEHICLE_STATUS_LABELS, FUEL_LABELS, GEARBOX_LABELS, formatPrice, formatKm } from "@/lib/contentModel";
 
 export type VehicleInput = Omit<Vehicle, "id" | "status" | "published_at" | "created_at" | "updated_at">;
 
@@ -60,13 +18,8 @@ export interface VehicleListItem extends Vehicle {
 
 export { slugify, thumbPath } from "@/lib/slug";
 
-export const photoUrl = (storagePath: string) =>
-  supabase.storage.from(STORAGE_BUCKETS.vehiclePhotos).getPublicUrl(storagePath).data.publicUrl;
-
-export const formatPrice = (price: number | null) =>
-  price === null ? "Prix à définir" : new Intl.NumberFormat("fr-BE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(price);
-
-export const formatKm = (km: number | null) => (km === null ? null : `${new Intl.NumberFormat("fr-BE").format(km)} km`);
+// Same URL as the public site (a single implementation, with no supabase-js).
+export { photoUrl } from "@/lib/publicContent";
 
 /** Conditions pour publier une annonce. Renvoie un message, ou null si OK. */
 export function publishBlocker(vehicle: Pick<Vehicle, "price_eur">, photoCount: number | undefined): string | null {

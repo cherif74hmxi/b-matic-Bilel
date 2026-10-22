@@ -198,7 +198,12 @@ revoke all on public.admins, public.vehicles, public.vehicle_photos,
   from anon, authenticated;
 
 -- Visiteurs
-grant select on public.vehicles, public.vehicle_photos, public.posts to anon;
+grant select on public.vehicle_photos, public.posts to anon;
+-- Véhicules : toutes les colonnes SAUF le VIN (jamais exposé aux visiteurs).
+grant select (id, slug, status, title, make, model, version, year, mileage_km,
+                fuel, gearbox, power_hp, price_eur, description,
+                published_at, created_at, updated_at)
+  on public.vehicles to anon;
 grant insert (path, referrer) on public.page_views to anon;
 grant insert (type, name, email, phone, message, details, consent)
   on public.leads to anon;

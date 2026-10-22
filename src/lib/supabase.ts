@@ -25,8 +25,4 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
   },
 });
 
-// Buckets Storage créés par supabase/schema.sql
-export const STORAGE_BUCKETS = {
-  vehiclePhotos: "vehicle-photos",
-  postImages: "post-images",
-} as const;
+export { STORAGE_BUCKETS } from "@/lib/contentModel";

@@ -9,6 +9,7 @@ import NeonButton from "@/components/NeonButton";
 import GiftIllustration from "@/components/GiftIllustration";
 import { pareBriseAccueil, pareBriseCadeaux, pareBriseRayonKm } from "@/data/parebrise";
 import AuroraBackground from "@/components/AuroraBackground";
+import HomeLatest from "@/components/vehicules/HomeLatest";
 import useSeo from "@/hooks/useSeo";
 import heroBg from "@/assets/hero-bg.webp";
 import { serviceCategories } from "@/data/services";
@@ -209,6 +210,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* =========================== Derniers véhicules + actualités (si existants) */}
+      <HomeLatest />
 
       {/* ======================================== Pourquoi B MATIC + Conseils */}
       <section className="py-16 md:py-24 bg-card/30">

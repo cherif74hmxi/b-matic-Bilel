@@ -6,40 +6,17 @@
 import { supabase, STORAGE_BUCKETS } from "@/lib/supabase";
 import { optimizeImage } from "@/lib/imageOptimize";
 import { slugify, thumbPath as thumbOf, withFreeSlug } from "@/lib/slug";
+import type { Post, PostStatus } from "@/lib/contentModel";
 
-export type PostStatus = "draft" | "published";
-
-export const POST_STATUS_LABELS: Record<PostStatus, string> = {
-  draft: "Brouillon",
-  published: "Publiée",
-};
-
-export interface Post {
-  id: string;
-  slug: string;
-  status: PostStatus;
-  title: string;
-  excerpt: string | null;
-  content: string;
-  cover_path: string | null;
-  published_at: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export type { PostStatus, Post } from "@/lib/contentModel";
+export { POST_STATUS_LABELS, autoExcerpt } from "@/lib/contentModel";
 
 export type PostInput = Pick<Post, "slug" | "title" | "excerpt" | "content">;
 
 const bucket = () => supabase.storage.from(STORAGE_BUCKETS.postImages);
 
-export const postImageUrl = (path: string, thumb = false) => bucket().getPublicUrl(thumb ? thumbOf(path) : path).data.publicUrl;
-
-/** Extrait automatique : début du contenu, coupé proprement (~160 caractères). */
-export function autoExcerpt(content: string, max = 160): string {
-  const text = content.replace(/\s+/g, " ").trim();
-  if (text.length <= max) return text;
-  const cut = text.slice(0, max);
-  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max * 0.6)).trimEnd()}…`;
-}
+// Same URL as the public site (a single implementation, with no supabase-js).
+export { postCoverUrl as postImageUrl } from "@/lib/publicContent";
 
 /** Conditions pour publier une actualité. */
 export function postPublishBlocker(post: Pick<Post, "content" | "title">): string | null {

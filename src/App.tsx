@@ -21,6 +21,10 @@ const Depannage = lazy(() => import("./pages/Depannage"));
 const PareBrise = lazy(() => import("./pages/PareBrise"));
 const Conseils = lazy(() => import("./pages/Conseils"));
 const ConseilDetail = lazy(() => import("./pages/ConseilDetail"));
+const Vehicules = lazy(() => import("./pages/Vehicules"));
+const VehiculeDetail = lazy(() => import("./pages/VehiculeDetail"));
+const Actualites = lazy(() => import("./pages/Actualites"));
+const ActualiteDetail = lazy(() => import("./pages/ActualiteDetail"));
 const PolitiqueConfidentialite = lazy(() => import("./pages/PolitiqueConfidentialite"));
 const MentionsLegales = lazy(() => import("./pages/MentionsLegales"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -47,6 +51,10 @@ const publicRoutes = [
   { path: "/pare-brise", element: <PareBrise /> },
   { path: "/conseils", element: <Conseils /> },
   { path: "/conseils/:slug", element: <ConseilDetail /> },
+  { path: "/vehicules", element: <Vehicules /> },
+  { path: "/vehicules/:slug", element: <VehiculeDetail /> },
+  { path: "/actualites", element: <Actualites /> },
+  { path: "/actualites/:slug", element: <ActualiteDetail /> },
   { path: "/politique-de-confidentialite", element: <PolitiqueConfidentialite /> },
   { path: "/mentions-legales", element: <MentionsLegales /> },
 ];
