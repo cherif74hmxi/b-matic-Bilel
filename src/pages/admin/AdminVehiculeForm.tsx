@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, CheckCircle2, Info, Loader2, ScanLine, WandSparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Info, Loader2, Pencil, ScanLine, WandSparkles } from "lucide-react";
 import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import { Field, FormSection } from "@/components/admin/FormParts";
@@ -13,7 +13,8 @@ import { VehicleActionsMenu, VehicleStatusBadge } from "@/components/admin/Vehic
 import { AdminLoading } from "@/components/admin/RequireAdmin";
 import VehiclePhotos, { StagedVehiclePhotos, type StagedPhoto } from "@/components/admin/VehiclePhotos";
 import { stashUploads } from "@/lib/stagedUploads";
-import AiAssistButton from "@/components/admin/AiAssistButton";
+import AiAssistButton, { SlugSuggestion } from "@/components/admin/AiAssistButton";
+import SaveBar from "@/components/admin/SaveBar";
 import { AI_LIMITS, useAiCopy } from "@/lib/aiCopy";
 import { vehiculesData } from "@/data/vehicules";
 import {
@@ -22,6 +23,7 @@ import {
   GEARBOX_LABELS,
   getVehicle,
   listVehiclePhotos,
+  publishBlocker,
   slugify,
   updateVehicle,
   type Fuel,
@@ -59,9 +61,8 @@ const intField = (min: number, max: number, message: string) =>
   }, message);
 
 const schema = z.object({
-  vin: z
-    .string()
-    .refine((v) => v.trim() === "" || VIN_PATTERN.test(normalizeVin(v)), "Le VIN doit faire exactement 17 caractères."),
+  // Jamais bloquant : un VIN incomplet n'empêche pas d'enregistrer (il n'est simplement pas gardé).
+  vin: z.string(),
   make: z.string().trim().min(1, "Indiquez la marque.").max(60, "60 caractères maximum."),
   model: z.string().trim().min(1, "Indiquez le modèle.").max(80, "80 caractères maximum."),
   version: z.string().trim().max(120, "120 caractères maximum."),
@@ -71,7 +72,8 @@ const schema = z.object({
   gearbox: z.union([z.literal(""), z.enum(GEARBOXES as [Gearbox, ...Gearbox[]])]),
   power_hp: intField(1, 2000, "Puissance invalide : nombre entier en ch."),
   price_eur: intField(0, 10_000_000, "Prix invalide : nombre entier en euros, sans point ni centimes."),
-  title: z.string().trim().min(1, "Indiquez un titre.").max(200, "200 caractères maximum."),
+  // Facultatif : généré depuis marque / modèle / version s'il est vide.
+  title: z.string().trim().max(200, "200 caractères maximum."),
   slug: z
     .string()
     .trim()
@@ -100,10 +102,18 @@ const toFormValues = (v?: Vehicle): FormValues => ({
   description: str(v?.description),
 });
 
+/** Titre par défaut : « Marque Modèle Version ». */
+const autoTitle = (f: Pick<FormValues, "make" | "model" | "version">) =>
+  [f.make, f.model, f.version].map((s) => s.trim()).filter(Boolean).join(" ").slice(0, 200);
+
+/** Adresse par défaut : marque-modèle-année (SEO). */
+const autoSlug = (f: Pick<FormValues, "make" | "model" | "year">) => slugify([f.make, f.model, f.year].map((s) => s.trim()).filter(Boolean).join(" "));
+
 const toInput = (f: FormValues): VehicleInput => {
   const text = (s: string) => s.trim() || null;
+  const vin = normalizeVin(f.vin);
   return {
-    vin: f.vin.trim() ? normalizeVin(f.vin) : null,
+    vin: VIN_PATTERN.test(vin) ? vin : null,
     make: f.make.trim(),
     model: f.model.trim(),
     version: text(f.version),
@@ -113,8 +123,8 @@ const toInput = (f: FormValues): VehicleInput => {
     gearbox: f.gearbox || null,
     power_hp: toInt(f.power_hp),
     price_eur: toInt(f.price_eur),
-    title: f.title.trim(),
-    slug: f.slug.trim() || slugify(f.title),
+    title: f.title.trim() || autoTitle(f),
+    slug: f.slug.trim() || autoSlug(f),
     description: text(f.description),
   };
 };
@@ -214,12 +224,25 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
     formState: { errors, isDirty },
   } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: toFormValues(vehicle), mode: "onTouched" });
 
-  // ----- Slug : suit le titre tant qu'il n'a pas été modifié à la main (création seulement)
-  const slugTouched = useRef(!isNew);
-  const title = watch("title");
+  // ----- Adresse : marque-modèle-année tant qu'elle n'a pas été modifiée à la main
+  // (brouillons uniquement). Après la première publication elle est figée : la
+  // changer reste possible (bouton dédié), une redirection est alors créée en base.
+  // Brouillon existant dont l'adresse a été choisie à la main : on ne l'écrase pas.
+  const slugTouched = useRef(Boolean(vehicle && (vehicle.published_at || vehicle.slug !== autoSlug(toFormValues(vehicle)))));
+  const [slugUnlocked, setSlugUnlocked] = useState(false);
+  const slugLocked = Boolean(vehicle?.published_at) && !slugUnlocked;
+  const [makeW, modelW, yearW] = watch(["make", "model", "year"]);
   useEffect(() => {
-    if (!slugTouched.current) setValue("slug", slugify(title ?? ""), { shouldDirty: true });
-  }, [title, setValue]);
+    if (!slugTouched.current) setValue("slug", autoSlug({ make: makeW ?? "", model: modelW ?? "", year: yearW ?? "" }), { shouldDirty: true });
+  }, [makeW, modelW, yearW, setValue]);
+  const unlockSlug = () => {
+    if (
+      window.confirm(
+        "Cette annonce a déjà été publiée : son adresse est figée pour ne pas casser les liens partagés. La changer quand même ? (l'ancienne adresse redirigera vers la nouvelle)",
+      )
+    )
+      setSlugUnlocked(true);
+  };
 
   // ----- Décodage VIN (NHTSA vPIC) : remplit uniquement les champs vides
   const [vinState, setVinState] = useState<VinState>({ status: "idle" });
@@ -280,7 +303,9 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
 
   // ----- Assistant IA : titre + description à partir des caractéristiques saisies
   // (titre et description verrouillés pendant la rédaction : la réponse les remplace)
-  const ai = useAiCopy(({ title, description }) => {
+  const [aiSlug, setAiSlug] = useState<string | null>(null);
+  const ai = useAiCopy(({ title, description, slug }) => {
+    setAiSlug(slug && slug !== getValues("slug") ? slug : null);
     setValue("title", title.slice(0, 200), { shouldDirty: true, shouldValidate: true });
     setValue("description", description.slice(0, AI_LIMITS.notes), { shouldDirty: true, shouldValidate: true });
   });
@@ -310,11 +335,18 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
 
   // ----- Enregistrement
   const save = useMutation({
-    mutationFn: (values: FormValues) => {
+    mutationFn: ({ values, publish }: { values: FormValues; publish: boolean }) => {
       const input = toInput(values);
-      return vehicle ? updateVehicle(vehicle.id, input) : createVehicle(input);
+      // VIN saisi mais incomplet : on garde celui déjà enregistré plutôt que de l'effacer.
+      if (vehicle && input.vin === null && normalizeVin(values.vin)) input.vin = vehicle.vin;
+      // Nouveau : publié après l'envoi des photos (ou tout de suite s'il n'y en a pas à envoyer).
+      if (!vehicle) return createVehicle(input).then((v) => (publish && stagedRef.current.length === 0 ? updateVehicle(v.id, { status: "published" }) : v));
+      const { slug, ...rest } = input;
+      // Adresse inchangée : pas de vérification d'unicité (et pas de redirection inutile).
+      const patch = slug === vehicle.slug ? rest : input;
+      return updateVehicle(vehicle.id, publish ? { ...patch, status: "published" } : patch);
     },
-    onSuccess: (saved) => {
+    onSuccess: (saved, { publish }) => {
       queryClient.setQueryData(["admin", "vehicle", saved.id], saved);
       void queryClient.invalidateQueries({ queryKey: ["admin", "vehicles"] });
       void queryClient.invalidateQueries({ queryKey: ["admin", "kpis"] });
@@ -322,30 +354,58 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       if (isNew) {
         // Les photos en attente partent avec la page d'édition (envoi automatique).
         const files = stagedRef.current.map(({ file, slot }) => ({ file, slot }));
-        stashUploads(saved.id, files);
+        stashUploads(saved.id, files, publish);
         // Nouveau véhicule = aucune photo en base : la galerie s'affiche (et envoie) sans attendre de requête.
         queryClient.setQueryData(["admin", "vehicle-photos", saved.id], []);
-        toast.success(files.length > 0 ? "Brouillon enregistré. Envoi des photos…" : "Brouillon enregistré.");
+        toast.success(
+          publish ? "Véhicule enregistré. Envoi des photos, puis mise en ligne…" : files.length > 0 ? "Brouillon enregistré. Envoi des photos…" : "Brouillon enregistré.",
+        );
         setUnsaved(false);
         navigate(`/admin/vehicules/${saved.id}`, { replace: true });
       } else {
-        toast.success("Modifications enregistrées.");
+        setSlugUnlocked(false);
+        toast.success(publish ? "Annonce publiée sur le site." : "Modifications enregistrées.");
       }
     },
     onError: () => toast.error("Enregistrement impossible. Vérifiez votre connexion et réessayez."),
   });
 
-  const onSubmit = (values: FormValues) => {
-    if (vehicle && vehicle.status !== "draft" && toInt(values.price_eur) === null) {
-      toast.error("Une annonce en ligne doit avoir un prix.");
-      return;
+  // Publication automatique d'un nouveau véhicule, une fois ses photos envoyées.
+  const publishAfterUpload = useCallback(() => {
+    if (!vehicle) return;
+    updateVehicle(vehicle.id, { status: "published" })
+      .then((saved) => {
+        queryClient.setQueryData<Vehicle>(["admin", "vehicle", saved.id], (old) => (old ? { ...old, status: saved.status, published_at: saved.published_at } : saved));
+        void queryClient.invalidateQueries({ queryKey: ["admin", "vehicles"] });
+        void queryClient.invalidateQueries({ queryKey: ["admin", "kpis"] });
+        toast.success("Photos envoyées : annonce publiée sur le site.");
+      })
+      .catch(() => toast.error("Photos envoyées, mais la mise en ligne a échoué. Utilisez « Publier »."));
+  }, [vehicle, queryClient]);
+
+  const onSubmit = (values: FormValues, publish: boolean) => {
+    const raw = normalizeVin(values.vin);
+    if (raw && !VIN_PATTERN.test(raw))
+      toast.info(
+        vehicle?.vin
+          ? "VIN incomplet : le VIN déjà enregistré est conservé (17 caractères, carte grise case E)."
+          : "VIN incomplet : il n'est pas enregistré (17 caractères, carte grise case E).",
+      );
+    // Publication : prix + au moins une photo. Annonce déjà en ligne : le prix suffit
+    // (une annonce vendue n'est pas vérifiée, elle n'est plus « à vendre »).
+    if (publish || vehicle?.status === "published") {
+      const photoCount = !publish ? Infinity : vehicle ? photos.data?.length : stagedRef.current.length;
+      const blocker = publishBlocker({ price_eur: toInt(values.price_eur) }, photoCount);
+      if (blocker) return void toast.error(blocker);
     }
-    save.mutate(values);
+    save.mutate({ values, publish });
   };
+  const pendingAction = save.isPending ? (save.variables?.publish ? "publish" : "draft") : null;
+  const canPublish = !vehicle || vehicle.status === "draft";
 
   const make = watch("make");
   const models = vehiculesData[Object.keys(vehiculesData).find((m) => m.toLowerCase() === (make ?? "").trim().toLowerCase()) ?? ""] ?? [];
-  const HINTED: (keyof FormValues)[] = ["vin", "version", "price_eur", "slug"];
+  const HINTED: (keyof FormValues)[] = ["vin", "version", "price_eur", "title", "slug"];
   const fieldProps = (name: keyof FormValues) => ({
     id: `v-${name}`,
     "aria-invalid": errors[name] ? true : undefined,
@@ -354,7 +414,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="pb-28 md:pb-0">
+    <form onSubmit={handleSubmit((values) => onSubmit(values, false))} noValidate className="pb-28 md:pb-0">
       {/* ---------- En-tête ---------- */}
       <Link to="/admin/vehicules" onClick={guardLinkClick} className="inline-flex items-center gap-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground mb-2">
         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
@@ -391,7 +451,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             id="v-vin"
             label="Numéro de châssis (VIN)"
             error={errors.vin?.message}
-            hint={`${vinLength}/17 caractères. Saisissez-le en premier : les informations trouvées remplissent les champs vides.`}
+            hint={`${vinLength}/17 — Le VIN fait toujours 17 caractères (carte grise, case E) — le décodage est optionnel.`}
           >
             {/* Mobile : bouton sous le champ, pour que les 17 caractères restent lisibles. */}
             <div className="flex flex-wrap gap-2">
@@ -467,7 +527,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
                 </button>
               </div>
             ) : photos.data ? (
-              <VehiclePhotos vehicleId={vehicle.id} vehicleTitle={vehicle.title} photos={photos.data} />
+              <VehiclePhotos vehicleId={vehicle.id} vehicleTitle={vehicle.title} photos={photos.data} onBatchPublish={publishAfterUpload} />
             ) : (
               <div className="h-40 rounded-xl bg-muted/40 animate-pulse" />
             )}
@@ -514,7 +574,7 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
           <Field id="v-price_eur" label="Prix (€)" error={errors.price_eur?.message} hint="Obligatoire pour publier.">
             <input {...fieldProps("price_eur")} inputMode="numeric" autoComplete="off" className={adminInputClass} />
           </Field>
-          <Field id="v-title" label="Titre de l'annonce" required error={errors.title?.message}>
+          <Field id="v-title" label="Titre de l'annonce" error={errors.title?.message} hint="Laissé vide : « Marque Modèle Version ».">
             <input {...fieldProps("title")} readOnly={ai.pending} autoComplete="off" className={adminInputClass} />
           </Field>
           <button type="button" onClick={proposeTitle} className="btn-ghost min-h-[44px] w-full sm:w-auto -mt-1">
@@ -526,9 +586,11 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
             label="Adresse de la page"
             error={errors.slug?.message}
             hint={
-              vehicle?.status === "published"
-                ? "Attention : changer l'adresse d'une annonce en ligne casse les liens déjà partagés."
-                : "Générée depuis le titre. Si elle existe déjà, un numéro est ajouté."
+              slugLocked
+                ? "Adresse figée depuis la publication (les liens partagés restent valables)."
+                : vehicle?.published_at
+                  ? "L'ancienne adresse redirigera vers la nouvelle."
+                  : "Générée depuis marque, modèle et année. Modifiable jusqu'à la publication."
             }
           >
             <div className="flex items-center rounded-lg border border-border bg-input focus-within:ring-2 focus-within:ring-primary/50">
@@ -539,13 +601,31 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
                   slugTouched.current = true;
                   void register("slug").onChange(e);
                 }}
+                readOnly={slugLocked}
                 autoCapitalize="none"
                 autoComplete="off"
                 spellCheck={false}
-                className="flex-1 min-w-0 min-h-[48px] bg-transparent pr-4 pl-1 text-base font-mono focus:outline-none"
+                className={`flex-1 min-w-0 min-h-[48px] bg-transparent pr-4 pl-1 text-base font-mono focus:outline-none ${slugLocked ? "text-muted-foreground" : ""}`}
               />
             </div>
           </Field>
+          {!slugLocked && aiSlug && (
+            <SlugSuggestion
+              prefix="/vehicules/"
+              slug={aiSlug}
+              onUse={() => {
+                slugTouched.current = true;
+                setValue("slug", aiSlug, { shouldDirty: true, shouldValidate: true });
+                setAiSlug(null);
+              }}
+            />
+          )}
+          {slugLocked && (
+            <button type="button" onClick={unlockSlug} className="btn-ghost min-h-[44px] w-full sm:w-auto -mt-1">
+              <Pencil className="w-4 h-4" aria-hidden="true" />
+              Modifier l'adresse
+            </button>
+          )}
           <Field id="v-description" label="Description" error={errors.description?.message}>
             <textarea {...fieldProps("description")} readOnly={ai.pending} rows={8} className={adminTextareaClass} />
           </Field>
@@ -565,17 +645,13 @@ const VehicleForm = ({ vehicle }: { vehicle?: Vehicle }) => {
       </div>
 
       {/* ---------- Barre d'enregistrement (fixe au-dessus des onglets sur mobile) ---------- */}
-      <div className="fixed md:sticky inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] md:bottom-4 z-30 mt-6 border-t md:border border-border bg-background/95 backdrop-blur-xl px-4 py-3 md:rounded-xl md:px-4">
-        <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
-          <span className="text-xs text-muted-foreground hidden sm:block">
-            {hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}
-          </span>
-          <button type="submit" disabled={save.isPending || (!isNew && !isDirty)} className="btn-main min-h-[48px] w-full sm:w-auto">
-            {save.isPending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
-            {isNew ? "Enregistrer le brouillon" : "Enregistrer"}
-          </button>
-        </div>
-      </div>
+      <SaveBar
+        status={hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}
+        pending={pendingAction}
+        canPublish={canPublish}
+        saveDisabled={!isNew && !isDirty}
+        onPublish={() => void handleSubmit((values) => onSubmit(values, true))()}
+      />
     </form>
   );
 };

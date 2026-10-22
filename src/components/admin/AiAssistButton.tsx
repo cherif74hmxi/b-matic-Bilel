@@ -21,4 +21,17 @@ const AiAssistButton = ({ onClick, pending, hint }: { onClick: () => void; pendi
   </div>
 );
 
+/** Adresse proposée par l'IA : simple suggestion, appliquée seulement sur demande. */
+export const SlugSuggestion = ({ prefix, slug, onUse }: { prefix: string; slug: string; onUse: () => void }) => (
+  <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground -mt-1">
+    <Sparkles className="w-3.5 h-3.5 text-neon-purple shrink-0" aria-hidden="true" />
+    <span className="min-w-0 break-all">
+      Adresse proposée par l'IA : <span className="font-mono text-foreground">{prefix}{slug}</span>
+    </span>
+    <button type="button" onClick={onUse} className="underline min-h-[44px] px-1 text-neon-cyan">
+      Utiliser
+    </button>
+  </p>
+);
+
 export default AiAssistButton;

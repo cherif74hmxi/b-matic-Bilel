@@ -62,9 +62,9 @@ export async function getPost(id: string): Promise<Post> {
   return data as Post;
 }
 
-export async function createPost(input: PostInput): Promise<Post> {
+export async function createPost(input: PostInput, status: PostStatus = "draft"): Promise<Post> {
   return withFreeSlug("posts", slugify(input.slug || input.title) || "actualite", undefined, async (slug) => {
-    const { data, error } = await supabase.from("posts").insert({ ...input, slug }).select().single();
+    const { data, error } = await supabase.from("posts").insert({ ...input, slug, status }).select().single();
     if (error) throw error;
     return data as Post;
   });

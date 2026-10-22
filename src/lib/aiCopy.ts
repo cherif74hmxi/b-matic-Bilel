@@ -8,6 +8,7 @@ import { FunctionsHttpError } from "@supabase/supabase-js";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { slugify } from "@/lib/slug";
 
 export const AI_ENABLED = import.meta.env.VITE_AI_ENABLED === "true";
 
@@ -41,6 +42,8 @@ export type CopyRequest = { kind: "vehicle"; data: Nullable<VehicleCopyInput> } 
 export interface GeneratedCopy {
   title: string;
   description: string;
+  /** Suggestion d'adresse (l'adresse automatique reste la valeur par défaut). */
+  slug?: string;
 }
 
 /** Supprime les champs vides (null, undefined, "") avant l'envoi. */
@@ -65,7 +68,8 @@ export async function generateCopy(request: CopyRequest): Promise<GeneratedCopy>
     throw new Error(message);
   }
   if (!data?.title || !data.description) throw new Error("Réponse de l'assistant incomplète. Réessayez.");
-  return data;
+  // L'adresse proposée repasse par la règle du site (la fonction en garde une copie côté Deno).
+  return { ...data, slug: data.slug ? slugify(data.slug) || undefined : undefined };
 }
 
 /** Appel de l'assistant avec messages (succès / erreur) communs aux formulaires admin. */

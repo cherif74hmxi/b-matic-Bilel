@@ -2,7 +2,7 @@
 //  Edge Function « generate-copy » — rédaction assistée (Gemini) pour l'admin
 // ----------------------------------------------------------------------------
 //  POST { kind: "vehicle", data: { make, model, … } }  ou  { kind: "post", data: { topic, draft } }
-//  → 200 { title, description }
+//  → 200 { title, description, slug? }  (slug = simple suggestion d'adresse)
 //
 //  Sécurité :
 //   · la clé GEMINI_API_KEY est un SECRET Supabase (jamais envoyée au navigateur) ;
@@ -157,6 +157,7 @@ function buildPrompt(input: Input): string {
 
 Rédige l'annonce d'un véhicule d'occasion à vendre.
 - "title" : titre court (60 caractères maximum), sous la forme « Marque Modèle Version », sans prix ni année.
+- "slug" : adresse web courte pour l'annonce (minuscules sans accents, chiffres et tirets, 80 caractères maximum), ex. « volkswagen-golf-1-6-tdi-2017 ».
 - "description" : 3 à 5 courts paragraphes séparés par une ligne vide (900 caractères maximum). Présente le véhicule, ses caractéristiques fournies, puis invite à contacter le garage pour un essai.
 
 Caractéristiques fournies :
@@ -167,6 +168,7 @@ ${facts}`;
 
 Rédige une actualité (article court) pour le site du garage.
 - "title" : titre clair (80 caractères maximum).
+- "slug" : adresse web courte de l'article (minuscules sans accents, chiffres et tirets, 80 caractères maximum).
 - "description" : le texte de l'article, 3 à 6 paragraphes séparés par une ligne vide (2500 caractères maximum).
 
 Sujet : ${d.topic}
@@ -176,7 +178,21 @@ ${d.draft ? `Notes / brouillon du garage (à reformuler, sans rien ajouter d'inv
 // ---------------------------------------------------------------------------
 //  Appel Gemini (sortie JSON structurée)
 // ---------------------------------------------------------------------------
-async function callGemini(prompt: string): Promise<{ title: string; description: string }> {
+/** Suggestion d'adresse nettoyée (copie de slugify, src/lib/slug.ts — le front la renormalise), ou undefined. */
+function cleanSlug(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  const slug = raw
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)
+    .replace(/-+$/g, "");
+  return slug || undefined;
+}
+
+async function callGemini(prompt: string): Promise<{ title: string; description: string; slug?: string }> {
   const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) throw new Error("GEMINI_API_KEY manquante");
   const model = Deno.env.get("GEMINI_MODEL") || DEFAULT_MODEL;
@@ -194,7 +210,7 @@ async function callGemini(prompt: string): Promise<{ title: string; description:
         responseMimeType: "application/json",
         responseSchema: {
           type: "OBJECT",
-          properties: { title: { type: "STRING" }, description: { type: "STRING" } },
+          properties: { title: { type: "STRING" }, description: { type: "STRING" }, slug: { type: "STRING" } },
           required: ["title", "description"],
         },
       },
@@ -205,9 +221,9 @@ async function callGemini(prompt: string): Promise<{ title: string; description:
   const candidate = json?.candidates?.[0];
   const text: string | undefined = candidate?.content?.parts?.find((p: { text?: string; thought?: boolean }) => p.text && !p.thought)?.text;
   if (!text) throw new Error(`Réponse Gemini vide (${candidate?.finishReason ?? json?.promptFeedback?.blockReason ?? "?"})`);
-  const out = JSON.parse(text) as { title?: unknown; description?: unknown };
+  const out = JSON.parse(text) as { title?: unknown; description?: unknown; slug?: unknown };
   if (typeof out.title !== "string" || typeof out.description !== "string") throw new Error("Réponse Gemini mal formée");
-  return { title: out.title.trim().slice(0, 200), description: out.description.trim().slice(0, 10_000) };
+  return { title: out.title.trim().slice(0, 200), description: out.description.trim().slice(0, 10_000), slug: cleanSlug(out.slug) };
 }
 
 // ---------------------------------------------------------------------------

@@ -214,10 +214,13 @@ const VehiclePhotos = ({
   vehicleId,
   vehicleTitle,
   photos,
+  onBatchPublish,
 }: {
   vehicleId: string;
   vehicleTitle: string;
   photos: VehiclePhoto[];
+  /** « Publier » demandé à la création : appelé quand toutes les photos du lot sont envoyées. */
+  onBatchPublish?: () => void;
 }) => {
   const queryClient = useQueryClient();
   const queryKey = ["admin", "vehicle-photos", vehicleId];
@@ -235,8 +238,9 @@ const VehiclePhotos = ({
   const current = () => queryClient.getQueryData<VehiclePhoto[]>(queryKey) ?? photos;
 
   // ----- Envoi : une photo à la fois (mémoire limitée sur téléphone)
+  // Renvoie une promesse : true si la photo est enregistrée, false en cas d'échec.
   const upload = (file: File, slot: PhotoSlot, key: string) => {
-    queue.current = queue.current.then(async () => {
+    const done = queue.current.then(async () => {
       setPending((p) => p.map((x) => (x.key === key ? { ...x, error: undefined } : x)));
       try {
         // Le cache est la référence pendant la file d'envoi (pas de rechargement
@@ -250,14 +254,18 @@ const VehiclePhotos = ({
         } else {
           refresh();
         }
+        return true;
       } catch (error) {
         const message =
           error instanceof UnsupportedImageError
             ? "Format non pris en charge (HEIC ?). Utilisez une photo JPEG ou PNG."
             : "Envoi impossible. Vérifiez la connexion et réessayez.";
         setPending((p) => p.map((x) => (x.key === key ? { ...x, error: message } : x)));
+        return false;
       }
     });
+    queue.current = done.then(() => undefined);
+    return done;
   };
 
   // L'erreur est effacée tout de suite : un second clic ne relance pas un doublon.
@@ -281,12 +289,21 @@ const VehiclePhotos = ({
   };
 
   // Photos choisies avant le premier enregistrement : envoyées dès l'ouverture.
+  // Si « Publier » a été demandé, l'annonce passe en ligne une fois TOUT le lot envoyé.
+  const onBatchPublishRef = useRef(onBatchPublish);
+  onBatchPublishRef.current = onBatchPublish;
   useEffect(() => {
-    for (const { file, slot } of takeUploads<PhotoSlot>(vehicleId)) {
+    const { files, publish } = takeUploads<PhotoSlot>(vehicleId);
+    const results = files.map(({ file, slot }) => {
       const key = crypto.randomUUID();
       setPending((p) => [...p, { key, slot, name: file.name, file }]);
-      upload(file, slot, key);
-    }
+      return upload(file, slot, key);
+    });
+    if (!publish || results.length === 0) return;
+    void Promise.all(results).then((ok) => {
+      if (ok.every(Boolean)) onBatchPublishRef.current?.();
+      else toast.error("Des photos n'ont pas pu être envoyées : l'annonce reste en brouillon. Réessayez l'envoi, puis publiez.");
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- une seule reprise, au montage
   }, [vehicleId]);
 

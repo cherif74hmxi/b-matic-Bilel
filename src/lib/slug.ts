@@ -26,13 +26,25 @@ export function withSuffix(root: string, n: number): string {
 /** Chemin de la miniature associée à une image (même nom + « _thumb »). */
 export const thumbPath = (storagePath: string) => storagePath.replace(/\.webp$/, "_thumb.webp");
 
-/** Renvoie `root`, ou `root-2`, `root-3`… si le slug est déjà pris par une autre ligne de `table`. */
+/**
+ * Renvoie `root`, ou `root-2`, `root-3`… si le slug est déjà pris par une autre
+ * ligne de `table`, ou réservé comme ancienne adresse (redirection) d'une autre fiche.
+ */
 async function uniqueSlug(table: "vehicles" | "posts", root: string, excludeId?: string): Promise<string> {
   // Préfixe raccourci : couvre aussi les variantes tronquées par withSuffix.
   const prefix = root.slice(0, SLUG_MAX - 4);
-  const { data, error } = await supabase.from(table).select("id, slug").like("slug", `${prefix}%`);
-  if (error) throw error;
-  const taken = new Set((data as { id: string; slug: string }[]).filter((r) => r.id !== excludeId).map((r) => r.slug));
+  const kind = table === "vehicles" ? "vehicules" : "actualites";
+  const [rows, redirects] = await Promise.all([
+    supabase.from(table).select("id, slug").like("slug", `${prefix}%`),
+    supabase.from("slug_redirects").select("target_id, old_slug").eq("kind", kind).like("old_slug", `${prefix}%`),
+  ]);
+  if (rows.error) throw rows.error;
+  // Table absente (migration pas encore exécutée) : on ignore les redirections.
+  const reserved = redirects.error ? [] : (redirects.data as { target_id: string; old_slug: string }[]);
+  const taken = new Set([
+    ...(rows.data as { id: string; slug: string }[]).filter((r) => r.id !== excludeId).map((r) => r.slug),
+    ...reserved.filter((r) => r.target_id !== excludeId).map((r) => r.old_slug),
+  ]);
   if (!taken.has(root)) return root;
   for (let i = 2; ; i++) if (!taken.has(withSuffix(root, i))) return withSuffix(root, i);
 }

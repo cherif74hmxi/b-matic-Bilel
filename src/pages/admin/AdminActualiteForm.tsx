@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ImagePlus, Info, Loader2, RefreshCw, Trash2 } from "lucide-react";
+import { ArrowLeft, ImagePlus, Info, Loader2, Pencil, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import { Field, FormSection } from "@/components/admin/FormParts";
@@ -15,6 +15,7 @@ import { canDecodeImage, UnsupportedImageError } from "@/lib/imageOptimize";
 import {
   autoExcerpt,
   createPost,
+  postPublishBlocker,
   getPost,
   postImageUrl,
   removePostCover,
@@ -26,7 +27,8 @@ import {
 import { slugify } from "@/lib/slug";
 import { guardLinkClick, setUnsaved, useLeaveGuard } from "@/lib/unsavedChanges";
 import { stashUploads, takeUploads } from "@/lib/stagedUploads";
-import AiAssistButton from "@/components/admin/AiAssistButton";
+import AiAssistButton, { SlugSuggestion } from "@/components/admin/AiAssistButton";
+import SaveBar from "@/components/admin/SaveBar";
 import { AI_LIMITS, useAiCopy } from "@/lib/aiCopy";
 
 // ============================================================================
@@ -178,7 +180,7 @@ const CoverImage = ({ post }: { post: Post }) => {
   // Image choisie avant le premier enregistrement : envoyée dès l'ouverture.
   const { mutate: replaceCover } = replace;
   useEffect(() => {
-    const [staged] = takeUploads(post.id);
+    const [staged] = takeUploads(post.id).files;
     if (staged) replaceCover(staged.file);
   }, [post.id, replaceCover]);
 
@@ -240,12 +242,24 @@ const PostForm = ({ post }: { post?: Post }) => {
   const stagedCoverRef = useRef(stagedCover);
   stagedCoverRef.current = stagedCover;
 
-  // Slug : suit le titre tant qu'il n'a pas été modifié (création seulement).
-  const slugTouched = useRef(!isNew);
+  // Adresse : suit le titre tant qu'elle n'a pas été modifiée à la main (avant
+  // publication). Après la première publication elle est figée ; la changer reste
+  // possible (bouton dédié), une redirection est alors créée en base.
+  const slugTouched = useRef(Boolean(post?.published_at) || (post !== undefined && post.slug !== slugify(post.title)));
+  const [slugUnlocked, setSlugUnlocked] = useState(false);
+  const slugLocked = Boolean(post?.published_at) && !slugUnlocked;
   const title = watch("title");
   useEffect(() => {
     if (!slugTouched.current) setValue("slug", slugify(title ?? ""), { shouldDirty: true });
   }, [title, setValue]);
+  const unlockSlug = () => {
+    if (
+      window.confirm(
+        "Cette actualité a déjà été publiée : son adresse est figée pour ne pas casser les liens partagés. La changer quand même ? (l'ancienne adresse redirigera vers la nouvelle)",
+      )
+    )
+      setSlugUnlocked(true);
+  };
 
   const hasUnsaved = isDirty || stagedCover !== null;
   useLeaveGuard(hasUnsaved);
@@ -254,7 +268,9 @@ const PostForm = ({ post }: { post?: Post }) => {
   // (titre et contenu verrouillés pendant la rédaction : la réponse les remplace)
   // Sujet d'origine gardé : un nouvel essai ne repart pas du titre écrit par l'IA.
   const aiTopic = useRef<{ topic: string; aiTitle: string } | null>(null);
-  const ai = useAiCopy(({ title, description }) => {
+  const [aiSlug, setAiSlug] = useState<string | null>(null);
+  const ai = useAiCopy(({ title, description, slug }) => {
+    setAiSlug(slug && slug !== getValues("slug") ? slug : null);
     const aiTitle = title.slice(0, 200);
     if (aiTopic.current) aiTopic.current.aiTitle = aiTitle;
     setValue("title", aiTitle, { shouldDirty: true, shouldValidate: true });
@@ -271,14 +287,15 @@ const PostForm = ({ post }: { post?: Post }) => {
   };
 
   const save = useMutation({
-    mutationFn: (values: FormValues) => {
+    mutationFn: ({ values, publish }: { values: FormValues; publish: boolean }) => {
       const input = toInput(values, post);
-      if (!post) return createPost(input);
+      if (!post) return createPost(input, publish ? "published" : "draft");
       // Adresse inchangée → pas de vérification d'unicité inutile.
       const { slug, ...rest } = input;
-      return updatePost(post.id, slug === post.slug ? rest : input);
+      const patch = slug === post.slug ? rest : input;
+      return updatePost(post.id, publish ? { ...patch, status: "published" } : patch);
     },
-    onSuccess: (saved) => {
+    onSuccess: (saved, { publish }) => {
       // L'image peut avoir changé pendant l'enregistrement : on garde celle du cache.
       queryClient.setQueryData<Post>(["admin", "post", saved.id], (old) => (old ? { ...saved, cover_path: old.cover_path } : saved));
       void queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
@@ -287,23 +304,29 @@ const PostForm = ({ post }: { post?: Post }) => {
       if (isNew) {
         const cover = stagedCoverRef.current;
         if (cover) stashUploads(saved.id, [{ file: cover, slot: "cover" }]);
-        toast.success(cover ? "Brouillon enregistré. Envoi de l'image…" : "Brouillon enregistré.");
+        toast.success(
+          publish ? (cover ? "Actualité publiée. Envoi de l'image…" : "Actualité publiée sur le site.") : cover ? "Brouillon enregistré. Envoi de l'image…" : "Brouillon enregistré.",
+        );
         setUnsaved(false);
         navigate(`/admin/actualites/${saved.id}`, { replace: true });
       } else {
-        toast.success("Modifications enregistrées.");
+        setSlugUnlocked(false);
+        toast.success(publish ? "Actualité publiée sur le site." : "Modifications enregistrées.");
       }
     },
     onError: () => toast.error("Enregistrement impossible. Vérifiez votre connexion et réessayez."),
   });
 
-  const onSubmit = (values: FormValues) => {
-    if (post?.status === "published" && values.content.trim().length < 50) {
-      toast.error("Une actualité en ligne doit garder un contenu d'au moins 50 caractères.");
-      return;
+  const onSubmit = (values: FormValues, publish: boolean) => {
+    if (publish) {
+      const blocker = postPublishBlocker({ title: values.title ?? "", content: values.content ?? "" });
+      if (blocker) return void toast.error(blocker);
+    } else if (post?.status === "published" && values.content.trim().length < 50) {
+      return void toast.error("Une actualité en ligne doit garder un contenu d'au moins 50 caractères.");
     }
-    save.mutate(values);
+    save.mutate({ values, publish });
   };
+  const pendingAction = save.isPending ? (save.variables?.publish ? "publish" : "draft") : null;
 
   const fieldProps = (name: keyof FormValues, hinted = false) => ({
     id: `p-${name}`,
@@ -314,7 +337,7 @@ const PostForm = ({ post }: { post?: Post }) => {
   const content = watch("content") ?? "";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="pb-28 md:pb-0">
+    <form onSubmit={handleSubmit((values) => onSubmit(values, false))} noValidate className="pb-28 md:pb-0">
       <Link to="/admin/actualites" onClick={guardLinkClick} className="inline-flex items-center gap-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground mb-2">
         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
         Actualités
@@ -362,9 +385,11 @@ const PostForm = ({ post }: { post?: Post }) => {
             label="Adresse de la page"
             error={errors.slug?.message}
             hint={
-              post?.status === "published"
-                ? "Attention : changer l'adresse d'une actualité en ligne casse les liens déjà partagés."
-                : "Générée depuis le titre. Si elle existe déjà, un numéro est ajouté."
+              slugLocked
+                ? "Adresse figée depuis la publication (les liens partagés restent valables)."
+                : post?.published_at
+                  ? "L'ancienne adresse redirigera vers la nouvelle."
+                  : "Générée depuis le titre. Modifiable jusqu'à la publication."
             }
           >
             <div className="flex items-center rounded-lg border border-border bg-input focus-within:ring-2 focus-within:ring-primary/50">
@@ -375,13 +400,31 @@ const PostForm = ({ post }: { post?: Post }) => {
                   slugTouched.current = true;
                   void register("slug").onChange(e);
                 }}
+                readOnly={slugLocked}
                 autoCapitalize="none"
                 autoComplete="off"
                 spellCheck={false}
-                className="flex-1 min-w-0 min-h-[48px] bg-transparent pr-4 pl-1 text-base font-mono focus:outline-none"
+                className={`flex-1 min-w-0 min-h-[48px] bg-transparent pr-4 pl-1 text-base font-mono focus:outline-none ${slugLocked ? "text-muted-foreground" : ""}`}
               />
             </div>
           </Field>
+          {!slugLocked && aiSlug && (
+            <SlugSuggestion
+              prefix="/actualites/"
+              slug={aiSlug}
+              onUse={() => {
+                slugTouched.current = true;
+                setValue("slug", aiSlug, { shouldDirty: true, shouldValidate: true });
+                setAiSlug(null);
+              }}
+            />
+          )}
+          {slugLocked && (
+            <button type="button" onClick={unlockSlug} className="btn-ghost min-h-[44px] w-full sm:w-auto -mt-1">
+              <Pencil className="w-4 h-4" aria-hidden="true" />
+              Modifier l'adresse
+            </button>
+          )}
           <AiAssistButton
             onClick={runAi}
             pending={ai.pending}
@@ -395,20 +438,18 @@ const PostForm = ({ post }: { post?: Post }) => {
         {!post && (
           <p className="flex gap-2 text-sm text-muted-foreground px-1">
             <Info className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
-            L'actualité est enregistrée en brouillon (invisible sur le site) avec son image. Vous pourrez ensuite la publier.
+            « Brouillon » la garde invisible sur le site ; « Publier » l'enregistre et la met en ligne directement.
           </p>
         )}
       </div>
 
-      <div className="fixed md:sticky inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] md:bottom-4 z-30 mt-6 border-t md:border border-border bg-background/95 backdrop-blur-xl px-4 py-3 md:rounded-xl md:px-4">
-        <div className="flex items-center justify-between gap-3 max-w-5xl mx-auto">
-          <span className="text-xs text-muted-foreground hidden sm:block">{hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}</span>
-          <button type="submit" disabled={save.isPending || (!isNew && !isDirty)} className="btn-main min-h-[48px] w-full sm:w-auto">
-            {save.isPending && <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />}
-            {isNew ? "Enregistrer le brouillon" : "Enregistrer"}
-          </button>
-        </div>
-      </div>
+      <SaveBar
+        status={hasUnsaved ? "Modifications non enregistrées" : "Tout est enregistré"}
+        pending={pendingAction}
+        canPublish={!post || post.status === "draft"}
+        saveDisabled={!isNew && !isDirty}
+        onPublish={() => void handleSubmit((values) => onSubmit(values, true))()}
+      />
     </form>
   );
 };

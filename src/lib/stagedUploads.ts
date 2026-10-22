@@ -13,15 +13,21 @@ export interface StagedFile<Slot extends string = string> {
   slot: Slot;
 }
 
-const store = new Map<string, StagedFile[]>();
-
-export function stashUploads(id: string, files: StagedFile[]) {
-  if (files.length > 0) store.set(id, files);
+export interface StagedBatch<Slot extends string = string> {
+  files: StagedFile<Slot>[];
+  /** « Publier » demandé à la création : mettre en ligne une fois les envois réussis. */
+  publish: boolean;
 }
 
-/** Renvoie les fichiers en attente pour `id` et les retire (une seule reprise). */
-export function takeUploads<Slot extends string>(id: string): StagedFile<Slot>[] {
-  const files = (store.get(id) ?? []) as StagedFile<Slot>[];
+const store = new Map<string, StagedBatch>();
+
+export function stashUploads(id: string, files: StagedFile[], publish = false) {
+  if (files.length > 0) store.set(id, { files, publish });
+}
+
+/** Renvoie le lot en attente pour `id` et le retire (une seule reprise). */
+export function takeUploads<Slot extends string>(id: string): StagedBatch<Slot> {
+  const batch = (store.get(id) ?? { files: [], publish: false }) as StagedBatch<Slot>;
   store.delete(id);
-  return files;
+  return batch;
 }
