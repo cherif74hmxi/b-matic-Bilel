@@ -52,8 +52,9 @@
 ### Public (visiteurs)
 - **Accueil** repensé (inspiration sparkauto, DA B MATIC) : hero, services, mise en avant
   **promotions** et **offre pare-brise**, preuve sociale, CTA RDV/contact. Mobile-first.
-- **Pare-brise & Assurances** (nouvelle page dédiée, voir §5). Section cadeaux en **images**
-  (`src/assets/cadeaux/`) et **carrousel défilant** des assureurs (badges texte, structure
+- **Pare-brise & Assurances** (page `/pare-brise`, ancienne adresse `/pare-brise-assurances` redirigée, voir §5).
+  Contenu dans `src/data/parebrise.ts`, cadeaux en **illustrations maison** (`GiftIllustration`, pas de
+  photos produits ni de logos) et **carrousel défilant** des assureurs (badges texte, structure
   prête à recevoir des logos via `src/data/assurances.ts`).
 - **Conseils** (nouvelle page `/conseils`, inspiration `sparkauto.be/conseils`) : **grille d'articles**
   (vignette + titre + extrait) + **pages détail** `/conseils/:slug` avec données structurées **`Article`**.
@@ -80,20 +81,27 @@
 
 ## 5. Contenus spécifiques
 
-### 5.1 Offre pare-brise (à mettre en avant, page dédiée + accueil)
-- Accroche : **« Votre pare-brise. Votre cadeau. »**
-- Remplacement **avec prise en charge bris de glace** → **0 € à payer** avec l'assurance auto (selon contrat/franchise/accord assureur).
-- **Cadeaux** selon remplacement effectué : **PlayStation 5**, **Nintendo Switch**, **Trottinette électrique**, **jusqu'à 300 € offerts**.
-- Avantages : **Intervention sur place** · **Dossier assurance pris en charge** · **Lavage offert**.
-- CTA téléphone : **0470 85 35 51**.
-- Mentions légales de l'offre (obligatoires, en petits caractères) :
-  *« Cadeau au montant offert selon le remplacement effectué et la prise en charge bris de glace. »*
-  *« Selon votre contrat, la franchise éventuelle et l'accord de votre assureur. »*
+### 5.1 Offre pare-brise (page `/pare-brise` + bloc sur l'accueil)
+- Contenu **entièrement** dans `src/data/parebrise.ts` (la page ne fait que l'afficher).
+  Données structurées **Service + FAQPage** ; mot-clé cible **« remplacement pare-brise Liège »**.
+- Accroche : **« Votre pare-brise remplacé. Franchise offerte + jusqu'à 300 € ou un cadeau. »**
+- Sous-titre : Liège et **jusqu'à 70 km autour** · 0 € à avancer · Toutes assurances · 7j/7.
+- **Cadeaux** (le client en choisit UN) : Jusqu'à 300 € · GTA 6 + FC 27 · Nintendo Switch 2 · iPad ·
+  Trottinette électrique · Jusqu'à 4 pneus · Air Fryer Ninja · Aspirateur Tineco
+  (illustrations maison, sans photos produits ni logos).
+- Compris : franchise offerte · 0 € à avancer · toutes assurances · jusqu'à 300 € ou un cadeau · ouvert 7j/7 (10h–19h).
+- Au centre (Ans, 7j/7 10h–19h) **ou** à domicile/au travail. Zone : Liège, Ans, Herstal, Seraing, Flémalle,
+  Saint-Nicolas, Grâce-Hollogne, Visé, Verviers, Huy, Waremme (+70 km autour de Liège).
+- Qualité : vitrages **conformes à la norme européenne 43R**, capteurs compris, pose garantie.
+- Liberté de choix du réparateur ; FAQ de 8 questions (schema FAQPage).
+- CTA : « Réserver mon créneau » / « Obtenir mon devis et mon cadeau » → `/mecanique` + téléphone **+32 470 85 35 51**.
+- Mention légale (petits caractères) :
+  *« Devis écrit remis avant toute intervention. La prise en charge dépend de votre contrat et de l'accord de votre assureur. Cadeau ou montant selon le remplacement effectué et la prise en charge bris de glace. »*
 
-### 5.2 Assureurs partenaires (à afficher, logos/noms)
-Ethias · P&V (PV) Assurances · Belfius Assurance · BNP Paribas Fortis Assurance · CBC Assurance · KBC Assurance
-— **et d'autres assureurs** (laisser une liste facilement extensible dans un fichier de données).
-> À CONFIRMER / COMPLÉTER par le proprio (ex. AXA, Baloise, AG…).
+### 5.2 Assureurs partenaires (carrousel, liste dans `src/data/assurances.ts`)
+Ethias · P&V Assurances · Belfius Assurance · BNP Paribas Fortis Assurance · CBC Assurance · KBC Assurance
+— **et toutes les autres assurances** (liste facilement extensible).
+> À COMPLÉTER par le proprio si besoin (ex. AXA, Baloise, AG…).
 
 ### 5.3 Emplacements photos guidés (ajout véhicule, façon leboncoin)
 Photo de couverture · 3/4 avant gauche · 3/4 arrière droit · Intérieur conducteur · Intérieur passager ·
@@ -136,7 +144,7 @@ Les mettre en avant sur l'accueil.
   1. Accueil repensé (inspiration sparkauto, DA B MATIC, mise en avant promos + pare-brise).
      **Condensé** (5 sections, ~5 CTA clés), fond d'ambiance **Aurora néon** (CSS léger) et CTA
      « Offre pare-brise » **scintillant**. Toute animation respecte **`prefers-reduced-motion`**.
-  2. Page **Pare-brise & Assurances** (§5.1, §5.2) : cadeaux en images + carrousel assureurs.
+  2. Page **Pare-brise & Assurances** (§5.1, §5.2) : cadeaux en illustrations maison + carrousel assureurs.
   3. Page **Conseils** (`/conseils` + `/conseils/:slug`, schema `Article`) **remplaçant la FAQ** ;
      bloc Questions fréquentes conservé en bas avec schema **FAQPage** (§4).
   4. **Mobile-first** sur l'ensemble. Barre d'action mobile : **WhatsApp** (numéro belge

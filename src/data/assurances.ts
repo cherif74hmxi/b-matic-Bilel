@@ -28,7 +28,7 @@ export interface Assureur {
 /** Assureurs partenaires. Ordre = ordre d'affichage dans le carrousel. */
 export const assureurs: Assureur[] = [
   { nom: "Ethias" },
-  { nom: "P&V (PV) Assurances" },
+  { nom: "P&V Assurances" },
   { nom: "Belfius Assurance" },
   { nom: "BNP Paribas Fortis Assurance" },
   { nom: "CBC Assurance" },

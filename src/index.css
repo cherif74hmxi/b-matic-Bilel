@@ -38,6 +38,9 @@
     --neon-purple: 270 80% 60%;
     --neon-pink: 320 80% 55%;
     --neon-cyan: 185 100% 50%;
+    /* Tuile claire des cadeaux pare-brise (fond + texte) */
+    --gift-tile: 260 45% 96%;
+    --gift-tile-ink: 250 35% 14%;
 
     --gradient-neon: linear-gradient(135deg, hsl(270 80% 60%), hsl(320 80% 55%), hsl(200 100% 55%));
     --gradient-card: linear-gradient(160deg, hsl(240 18% 10%), hsl(260 25% 12%));
@@ -228,6 +231,41 @@
   }
 }
 
+/* --- Tuile claire des cadeaux pare-brise (pictos néon, voir GiftIllustration) */
+.gift-tile {
+  background: hsl(var(--gift-tile));
+  color: hsl(var(--gift-tile-ink));
+  box-shadow: 0 0 24px hsl(270 80% 60% / 0.18);
+}
+
+/* --- Bouton « sparkle » (CTA pare-brise) ----------------------------------- */
+/*  Reflet lumineux qui balaie le bouton toutes les ~3 s + halo qui respire.
+    transform/opacity uniquement ; figé sous reduced-motion (bloc ci-dessous). */
+@keyframes sparkle-sweep {
+  0%, 60% { transform: translateX(-120%) skewX(-20deg); }
+  100%    { transform: translateX(220%) skewX(-20deg); }
+}
+@keyframes sparkle-glow {
+  0%, 100% { box-shadow: 0 0 12px hsl(270 80% 60% / 0.35); }
+  50%      { box-shadow: 0 0 26px hsl(320 85% 60% / 0.6); }
+}
+.btn-sparkle {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  animation: sparkle-glow 3.2s ease-in-out infinite;
+}
+.btn-sparkle::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.55), transparent);
+  pointer-events: none;
+  z-index: -1;
+  animation: sparkle-sweep 3.2s ease-in-out infinite;
+}
+
 /* --- Respect de prefers-reduced-motion (transverse) ----------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -251,4 +289,5 @@
     animation: none;
   }
   .insurer-marquee__dup { display: none; }
+  .btn-sparkle::after { display: none; }
 }

@@ -26,7 +26,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {[
                 { label: "Accueil", path: "/" },
-                { label: "Pare-brise & Assurances", path: "/pare-brise-assurances" },
+                { label: "Pare-brise & Assurances", path: "/pare-brise" },
                 { label: "Mécanique", path: "/mecanique" },
                 { label: "Reprise de véhicule", path: "/reprise" },
                 { label: "Dépannage", path: "/depannage" },

@@ -9,7 +9,7 @@
 //    useSeo({
 //      title: "Pare-brise & Assurances — B MATIC",
 //      description: "Remplacement de pare-brise pris en charge par votre assurance…",
-//      canonical: "https://www.bmatic.be/pare-brise-assurances", // facultatif
+//      canonical: "https://www.bmatic.be/pare-brise", // facultatif
 //      jsonLd: { "@context": "https://schema.org", "@type": "FAQPage", … },     // facultatif
 //    });
 //

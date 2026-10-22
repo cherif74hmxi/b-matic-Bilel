@@ -13,6 +13,7 @@
 //  ➜ Pour modifier la FAQ : éditer le tableau ci-dessous. Garder des réponses
 //    en texte simple (le rendu et le JSON-LD n'acceptent pas de HTML riche).
 // ============================================================================
+import { pareBriseCadeaux, pareBriseRayonKm } from "@/data/parebrise";
 
 export type FaqCategorie =
   | "Pare-brise & assurance"
@@ -47,7 +48,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Pare-brise & assurance",
     question: "Quel cadeau vais-je recevoir pour le remplacement de mon pare-brise ?",
     reponse:
-      "Selon le remplacement effectué, un cadeau vous est offert : PlayStation 5, Nintendo Switch, trottinette électrique ou jusqu'à 300 € offerts. La correspondance exacte entre le cadeau et le type de remplacement est à confirmer avec le garage (À CONFIRMER).",
+      `Pour tout pare-brise remplacé, la franchise est offerte et vous choisissez un cadeau : ${pareBriseCadeaux.map((c) => c.nom).join(", ")}. Détails sur la page Pare-brise.`,
   },
   {
     categorie: "Pare-brise & assurance",
@@ -87,7 +88,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Zone & intervention",
     question: "Intervenez-vous à domicile ou sur mon lieu de travail ?",
     reponse:
-      "Pour le remplacement de pare-brise, une intervention sur place est possible. La zone géographique couverte est à confirmer avec le garage (À CONFIRMER).",
+      `Pour le remplacement de pare-brise, oui : à domicile ou au travail, à Liège et jusqu'à ${pareBriseRayonKm} km autour. Nous pouvons aussi venir chercher votre voiture et vous la ramener.`,
   },
   {
     categorie: "Zone & intervention",

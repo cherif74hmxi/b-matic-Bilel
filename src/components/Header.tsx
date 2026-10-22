@@ -7,7 +7,7 @@ import { legalInfo } from "@/data/legal";
 // Liens de 1er niveau affichés AVANT le menu « Services »
 const navLinksBefore = [
   { label: "Accueil", path: "/" },
-  { label: "Pare-brise & Assurances", path: "/pare-brise-assurances" },
+  { label: "Pare-brise & Assurances", path: "/pare-brise" },
 ];
 
 // Liens de 1er niveau affichés APRÈS le menu « Services »
@@ -141,7 +141,7 @@ const Header = () => {
             <Link to="/" onClick={() => handleNavClick("/")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               Accueil
             </Link>
-            <Link to="/pare-brise-assurances" onClick={() => handleNavClick("/pare-brise-assurances")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
+            <Link to="/pare-brise" onClick={() => handleNavClick("/pare-brise")} className="font-body text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors py-2">
               Pare-brise &amp; Assurances
             </Link>
 

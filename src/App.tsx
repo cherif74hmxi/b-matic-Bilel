@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -44,7 +44,7 @@ const publicRoutes = [
   { path: "/reprise", element: <Reprise /> },
   { path: "/mecanique", element: <Mecanique /> },
   { path: "/depannage", element: <Depannage /> },
-  { path: "/pare-brise-assurances", element: <PareBrise /> },
+  { path: "/pare-brise", element: <PareBrise /> },
   { path: "/conseils", element: <Conseils /> },
   { path: "/conseils/:slug", element: <ConseilDetail /> },
   { path: "/politique-de-confidentialite", element: <PolitiqueConfidentialite /> },
@@ -84,6 +84,8 @@ const App = () => (
               {publicRoutes.map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />
               ))}
+              {/* Ancienne adresse de la page pare-brise (liens déjà partagés). */}
+              <Route path="/pare-brise-assurances" element={<Navigate to="/pare-brise" replace />} />
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import {
   Car, Wrench, Truck, ShieldCheck, Clock, Sparkles, HandCoins,
-  ArrowRight, Check, Lightbulb,
+  ArrowRight, Lightbulb,
 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
+import GiftIllustration from "@/components/GiftIllustration";
+import { pareBriseAccueil, pareBriseCadeaux, pareBriseRayonKm } from "@/data/parebrise";
 import AuroraBackground from "@/components/AuroraBackground";
 import useSeo from "@/hooks/useSeo";
 import heroBg from "@/assets/hero-bg.webp";
@@ -45,7 +47,7 @@ const services = [
 const engagements = [
   { icon: Clock, title: "Ouvert 24h/24", desc: "Un garage disponible à tout moment, dépannage 7j/7." },
   { icon: ShieldCheck, title: "Dossier assurance pris en charge", desc: "Pour le pare-brise, nous gérons les démarches avec votre assureur." },
-  { icon: Car, title: "Intervention sur place", desc: "Pour le remplacement de pare-brise, nous nous déplaçons (zone à confirmer)." },
+  { icon: Car, title: "Intervention sur place", desc: `Pour le pare-brise, nous venons chez vous ou au travail, à Liège et jusqu'à ${pareBriseRayonKm} km autour.` },
   { icon: HandCoins, title: "Reprise toutes marques", desc: "Estimation rapide et paiement sur place, sans mauvaise surprise." },
 ];
 
@@ -92,7 +94,7 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <NeonButton to="/mecanique">Prendre rendez-vous</NeonButton>
                 <Link
-                  to="/pare-brise-assurances"
+                  to="/pare-brise"
                   className="btn-ghost animate-glow-pulse border-neon-cyan/50"
                 >
                   Offre pare-brise <ArrowRight className="w-4 h-4" />
@@ -146,29 +148,25 @@ const Index = () => {
       <section className="py-8 md:py-12">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <div className="max-w-5xl mx-auto bg-gradient-card border-glow rounded-2xl p-8 md:p-12 glow-card">
-              <div className="grid md:grid-cols-[1.4fr_1fr] gap-8 items-center">
+            <div className="max-w-5xl mx-auto bg-gradient-card border-glow rounded-2xl p-6 sm:p-8 md:p-12 glow-card">
+              <div className="grid md:grid-cols-[1.3fr_1fr] gap-8 items-center">
                 <div>
                   <span className="inline-block text-neon-cyan text-xs font-heading uppercase tracking-widest mb-3">
-                    Votre pare-brise. Votre cadeau.
+                    {pareBriseAccueil.surtitre}
                   </span>
                   <h2 className="font-heading text-2xl md:text-3xl font-bold mb-4 leading-tight">
-                    Pare-brise <span className="text-gradient-neon">0 €</span> avec votre assurance,
-                    et un cadeau offert
+                    <span className="text-gradient-neon">{pareBriseAccueil.titre}</span>
                   </h2>
-                  <p className="text-muted-foreground leading-relaxed mb-6">
-                    Remplacement pris en charge par la garantie bris de glace, intervention sur
-                    place, dossier assurance géré de A à Z et lavage offert.
-                  </p>
-                  <NeonButton to="/pare-brise-assurances">Découvrir l'offre</NeonButton>
+                  <p className="text-muted-foreground leading-relaxed mb-6">{pareBriseAccueil.texte}</p>
+                  <Link to={pareBriseAccueil.cta.to} className="btn-main btn-sparkle min-h-[48px] w-full sm:w-auto">
+                    <Sparkles className="w-4 h-4" aria-hidden="true" /> {pareBriseAccueil.cta.label}
+                  </Link>
                 </div>
-                <ul className="space-y-3">
-                  {["0 € à payer avec l'assurance", "Cadeau offert selon le remplacement", "Intervention sur place", "Dossier assurance pris en charge"].map((t) => (
-                    <li key={t} className="flex items-start gap-3 text-sm">
-                      <span className="shrink-0 w-6 h-6 rounded-full bg-primary/15 text-neon-cyan grid place-items-center mt-0.5">
-                        <Check className="w-3.5 h-3.5" />
-                      </span>
-                      <span className="text-foreground">{t}</span>
+                <ul className="grid grid-cols-4 gap-2" aria-label="Cadeaux au choix">
+                  {pareBriseCadeaux.map((c) => (
+                    <li key={c.nom} className="gift-tile aspect-square rounded-xl grid place-items-center p-1.5" title={c.nom}>
+                      <GiftIllustration name={c.illustration} className="w-full h-full max-w-14" />
+                      <span className="sr-only">{c.nom}</span>
                     </li>
                   ))}
                 </ul>
