@@ -11,7 +11,7 @@
     { "source": "/sitemap-annonces.xml", "destination": "/api/sitemap-annonces" },
     { "source": "/vehicules/:slug", "destination": "/api/share?kind=vehicle&slug=:slug" },
     { "source": "/actualites/:slug", "destination": "/api/share?kind=post&slug=:slug" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/" }
   ],
   "headers": [
     {
