@@ -256,7 +256,8 @@
   left: var(--vp-x);
   bottom: 0;
   width: 150%;
-  height: 3600px;
+  /* Assez long pour atteindre la brume de l'horizon, pas plus (mémoire GPU). */
+  height: 3000px;
   overflow: hidden;
   transform-origin: 50% 100%;
   transform: translateX(-50%) rotateX(90deg);
@@ -318,7 +319,7 @@
   right: 0;
   top: calc(var(--horizon) - 1px);
   height: 26%;
-  background: linear-gradient(to bottom, hsl(var(--road-haze)) 0%, hsl(var(--road-haze) / 0.7) 18%, transparent 100%);
+  background: linear-gradient(to bottom, hsl(var(--road-haze)) 0%, hsl(var(--road-haze) / 0.92) 16%, hsl(var(--road-haze) / 0.5) 34%, transparent 100%);
 }
 .road-fog::after {
   content: "";
@@ -336,6 +337,28 @@
   top: 0;
   transform-origin: 50% 100%;
   will-change: transform, opacity;
+}
+/* Ombre au sol + reflet des feux sur la route mouillée (valables pour toute image). */
+.road-car::before,
+.road-car::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.road-car::before {
+  bottom: -6%;
+  width: 112%;
+  height: 22%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.75), transparent);
+  z-index: -1;
+}
+.road-car::after {
+  top: 100%;
+  width: 80%;
+  height: 45%;
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, hsl(340 90% 60% / 0.18), transparent 70%);
 }
 @media (prefers-reduced-motion: reduce) {
   .road-dashes { animation: none; }
