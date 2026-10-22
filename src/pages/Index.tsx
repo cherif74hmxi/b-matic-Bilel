@@ -8,7 +8,7 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import GiftIllustration from "@/components/GiftIllustration";
 import { pareBriseAccueil, pareBriseCadeaux, pareBriseMention, pareBriseRayonKm } from "@/data/parebrise";
-import HeroGarage from "@/components/HeroGarage";
+import HeroBackground from "@/components/HeroBackground";
 import HomeLatest from "@/components/vehicules/HomeLatest";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
@@ -48,12 +48,10 @@ const Index = () => {
       {/* Mobile : hauteur réduite (svh, sans la barre d'adresse) pour que les
           offres apparaissent dès l'arrivée. */}
       <section className="relative min-h-[78svh] md:min-h-screen flex items-center overflow-hidden">
-        {/* Fond : garage néon ; la voiture y rentre au défilement. */}
-        <HeroGarage />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+        {/* Fond : photo de l'atelier, assombrie pour la lisibilité. */}
+        <HeroBackground />
 
-        {/* Mobile : espace réservé sous les boutons pour le garage et la voiture. */}
-        <div className="container mx-auto px-4 relative z-10 pt-24 pb-44 md:pb-10">
+        <div className="container mx-auto px-4 relative z-10 pt-24 pb-12 md:pb-10">
           <AnimatedSection>
             <div className="max-w-2xl">
               <h1 className="font-heading text-[2.15rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-5 md:mb-6">
