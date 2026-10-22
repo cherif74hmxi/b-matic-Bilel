@@ -8,6 +8,7 @@ import Layout from "@/components/Layout";
 import ScrollToTop from "@/components/ScrollToTop";
 import ChunkErrorBoundary from "@/components/ChunkErrorBoundary";
 import PageViewTracker from "@/components/PageViewTracker";
+import ContactClickTracker from "@/components/ContactClickTracker";
 // Accueil chargé immédiatement (page d'atterrissage → LCP rapide).
 import Index from "./pages/Index";
 
@@ -60,10 +61,12 @@ const publicRoutes = [
 ];
 const trackedPaths = publicRoutes.map((r) => r.path);
 
-// PageViewTracker : statistiques sans cookie, site public uniquement (pas /admin).
+// PageViewTracker / ContactClickTracker : statistiques sans cookie, site public
+// uniquement (pas /admin).
 const PublicLayout = () => (
   <Layout>
     <PageViewTracker trackedPaths={trackedPaths} />
+    <ContactClickTracker />
     <Suspense fallback={<RouteFallback />}>
       <Outlet />
     </Suspense>

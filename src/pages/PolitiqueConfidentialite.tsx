@@ -59,7 +59,9 @@ const PolitiqueConfidentialite = () => {
       <p>
         <strong>Statistiques de fréquentation :</strong> nous comptons les pages consultées
         (adresse de la page, sans paramètres), la date et, à l'arrivée sur le site, le seul nom
-        du site d'origine (par exemple « google.com »). Ces statistiques sont mesurées{" "}
+        du site d'origine (par exemple « google.com »). Nous comptons aussi les clics sur nos
+        boutons de contact (WhatsApp, téléphone, e-mail, prise de rendez-vous) : seuls le type
+        de bouton, la page et la date sont notés. Ces statistiques sont mesurées{" "}
         <strong>sans cookie</strong>, sans identifiant et sans aucun stockage sur votre
         appareil ; nous n'enregistrons pas votre adresse IP (comme pour toute connexion à un
         site, elle est techniquement transmise à nos hébergeurs pour acheminer la requête,
