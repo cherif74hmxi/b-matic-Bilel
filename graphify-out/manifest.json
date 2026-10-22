@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "src/App.tsx": {
-    "mtime": 1792629055.2390902,
-    "seen": 1792629313.9696796,
-    "ast_hash": "e6da6f81f8aabed647cbdcd3fdb3a5cd",
+    "mtime": 1792636184.6463263,
+    "seen": 1792637285.1292925,
+    "ast_hash": "b776983eac950fd006d1170c623eaeb5",
     "semantic_hash": ""
   },
   "src/components/AnimatedSection.tsx": {
@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src/components/Footer.tsx": {
-    "mtime": 1792629061.6102095,
-    "seen": 1792629313.9698873,
-    "ast_hash": "60d3b9cf28f72bd4ca3a9c022db4baf6",
+    "mtime": 1792636881.2957554,
+    "seen": 1792637285.129645,
+    "ast_hash": "8ef400c3a8a87d347823c0a6e97acb11",
     "semantic_hash": ""
   },
   "src/components/GlowCard.tsx": {
@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "src/components/Header.tsx": {
-    "mtime": 1792629061.6093297,
-    "seen": 1792629313.9700453,
-    "ast_hash": "38f06daf493e51a4e9b689088f9a508c",
+    "mtime": 1792637250.8214211,
+    "seen": 1792637285.129751,
+    "ast_hash": "2f4e84eb735a110552b60cb1cdaac5b5",
     "semantic_hash": ""
   },
   "src/components/Layout.tsx": {
@@ -462,9 +462,9 @@
     "semantic_hash": ""
   },
   "src/pages/Index.tsx": {
-    "mtime": 1792629277.6677704,
-    "seen": 1792629313.9738803,
-    "ast_hash": "ccb7e29fbde47eb064acaa5e4536bb81",
+    "mtime": 1792636352.181525,
+    "seen": 1792637285.1355557,
+    "ast_hash": "f23a0f595c990de103aa4d8eaea26cf6",
     "semantic_hash": ""
   },
   "src/pages/Mecanique.tsx": {
@@ -696,9 +696,9 @@
     "semantic_hash": ""
   },
   "src/lib/supabase.ts": {
-    "mtime": 1792616062.5347743,
-    "seen": 1792616732.6391935,
-    "ast_hash": "7856925959f5fc43e41579eaf9d8b4d3",
+    "mtime": 1792636263.6886754,
+    "seen": 1792637285.1344805,
+    "ast_hash": "a7dd24df21427685e77a8eb9f63dd4ea",
     "semantic_hash": ""
   },
   "src/components/ChunkErrorBoundary.tsx": {
@@ -816,9 +816,9 @@
     "semantic_hash": ""
   },
   "src/lib/posts.ts": {
-    "mtime": 1792628544.1492245,
-    "seen": 1792629313.9733753,
-    "ast_hash": "f50502cfb4f7b6e2d98bd341a16cbccc",
+    "mtime": 1792637144.3718824,
+    "seen": 1792637285.134139,
+    "ast_hash": "84224433b0d24a8c03cc87a5035bc963",
     "semantic_hash": ""
   },
   "src/lib/publicInsert.ts": {
@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "src/lib/slug.ts": {
-    "mtime": 1792628873.52711,
-    "seen": 1792629313.9734185,
-    "ast_hash": "c9cb31efb7f748cb68d7ef595598221d",
+    "mtime": 1792636263.6863172,
+    "seen": 1792637285.134261,
+    "ast_hash": "2417126c0ffa7a10f2dd5bf2f288245d",
     "semantic_hash": ""
   },
   "src/lib/stagedUploads.ts": {
@@ -852,9 +852,9 @@
     "semantic_hash": ""
   },
   "src/lib/vehicles.ts": {
-    "mtime": 1792621139.9127655,
-    "seen": 1792625230.0128899,
-    "ast_hash": "3ed2aa856948228280c118334cdc84bd",
+    "mtime": 1792637144.3709738,
+    "seen": 1792637285.1349285,
+    "ast_hash": "e11e13ad9b4621c0dd72cf8618c97530",
     "semantic_hash": ""
   },
   "src/lib/vin.ts": {
@@ -981,6 +981,90 @@
     "mtime": 1792634757.593058,
     "seen": 1792635150.4341621,
     "ast_hash": "dc82fc3369cb5cfa0c1e715a94036ecb",
+    "semantic_hash": ""
+  },
+  "src/components/vehicules/HomeLatest.tsx": {
+    "mtime": 1792637144.3897269,
+    "seen": 1792637285.133231,
+    "ast_hash": "ba2f4e56054b3c3cb9551cda780019bc",
+    "semantic_hash": ""
+  },
+  "src/components/vehicules/VehicleCard.tsx": {
+    "mtime": 1792637144.385949,
+    "seen": 1792637285.1332328,
+    "ast_hash": "11df6b2092ebdcf7ce153d5e92f3de15",
+    "semantic_hash": ""
+  },
+  "src/components/vehicules/VehicleFiltersPanel.tsx": {
+    "mtime": 1792636319.759642,
+    "seen": 1792637285.1332347,
+    "ast_hash": "057170401857f9c98c2488a9957cb084",
+    "semantic_hash": ""
+  },
+  "src/components/vehicules/VehicleGallery.tsx": {
+    "mtime": 1792636848.5960135,
+    "seen": 1792637285.133236,
+    "ast_hash": "c3abcbc5fef0bef7295f3f4ef38b6fb0",
+    "semantic_hash": ""
+  },
+  "src/data/actualites.ts": {
+    "mtime": 1792637176.6749003,
+    "seen": 1792637285.1332386,
+    "ast_hash": "b4e8731798806128d2635147e87d6d94",
+    "semantic_hash": ""
+  },
+  "src/data/occasions.ts": {
+    "mtime": 1792637176.6741347,
+    "seen": 1792637285.1334007,
+    "ast_hash": "822ed3dfabd8393f3b4debc06eccf640",
+    "semantic_hash": ""
+  },
+  "src/lib/contentModel.ts": {
+    "mtime": 1792636403.3565657,
+    "seen": 1792637285.133965,
+    "ast_hash": "80cd4d17d6d8cdff7ac0bc737c2f8099",
+    "semantic_hash": ""
+  },
+  "src/lib/publicContent.ts": {
+    "mtime": 1792637144.3839808,
+    "seen": 1792637285.134141,
+    "ast_hash": "1fc18d990c7554145cf28d1bdb4287de",
+    "semantic_hash": ""
+  },
+  "src/lib/vehicleFilters.ts": {
+    "mtime": 1792637118.9369571,
+    "seen": 1792637285.1348212,
+    "ast_hash": "3fef93386064a9609e71316a871b5889",
+    "semantic_hash": ""
+  },
+  "src/pages/ActualiteDetail.tsx": {
+    "mtime": 1792637176.6982727,
+    "seen": 1792637285.135259,
+    "ast_hash": "8ab70863fcc056dcf7fd948dce66c3e4",
+    "semantic_hash": ""
+  },
+  "src/pages/Actualites.tsx": {
+    "mtime": 1792637176.6898773,
+    "seen": 1792637285.1352618,
+    "ast_hash": "f6a285b3f591a0567456703de7072ff6",
+    "semantic_hash": ""
+  },
+  "src/pages/VehiculeDetail.tsx": {
+    "mtime": 1792637176.6878111,
+    "seen": 1792637285.1358786,
+    "ast_hash": "c6d218f548d1ab6892e4a0b6e0731e86",
+    "semantic_hash": ""
+  },
+  "src/pages/Vehicules.tsx": {
+    "mtime": 1792637176.6888003,
+    "seen": 1792637285.1358805,
+    "ast_hash": "e11c90e572754b2a8a295ed970faa407",
+    "semantic_hash": ""
+  },
+  "src/test/vehicleFilters.test.ts": {
+    "mtime": 1792637204.8269253,
+    "seen": 1792637285.136643,
+    "ast_hash": "ac67c79e323b93d8b81ec8a3544a542d",
     "semantic_hash": ""
   }
 }
