@@ -10,6 +10,7 @@ import { getPublicVehicle, orderedPhotos, paragraphs, photoUrl, publicViewCount,
 import { FUEL_LABELS, GEARBOX_LABELS, formatKm, formatPrice, vehicleSpecs } from "@/lib/contentModel";
 import { legalInfo } from "@/data/legal";
 import { occasionsSeo, occasionsTextes } from "@/data/occasions";
+import { absoluteUrl } from "@/lib/site";
 
 const NoIndex = () => {
   useNoIndex();
@@ -91,13 +92,14 @@ const VehiculeDetail = () => {
     };
   }, [query.isSuccess, query.data, slug, navigate]);
 
-  const url = typeof window !== "undefined" ? `${window.location.origin}/vehicules/${slug}` : "";
+  const url = absoluteUrl(`/vehicules/${slug}`);
   const jsonLd = useMemo(() => (vehicle ? carJsonLd(vehicle, url) : undefined), [vehicle, url]);
   const sold = vehicle?.status === "sold";
   useSeo({
     title: vehicle ? occasionsTextes.seoTitre(vehicle.title, formatPrice(vehicle.price_eur), sold) : occasionsSeo.title,
     // Always a description: otherwise the one from the previous page would stay.
     description: vehicle ? occasionsTextes.seoDescription(vehicle.title, vehicleSpecs(vehicle)) : occasionsSeo.description,
+    image: vehicle?.vehicle_photos.length ? photoUrl(orderedPhotos(vehicle.vehicle_photos)[0].storage_path) : undefined,
     jsonLd,
   });
 

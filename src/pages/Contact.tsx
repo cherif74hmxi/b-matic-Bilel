@@ -6,8 +6,12 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import { legalInfo } from "@/data/legal";
 import { sendLead } from "@/lib/leads";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
+import { contactJsonLd } from "@/seo/schema";
 
 const Contact = () => {
+  useSeo({ ...pagesSeo["/contact"], jsonLd: contactJsonLd() });
   const [form, setForm] = useState({ nom: "", email: "", telephone: "", message: "" });
   const [consent, setConsent] = useState(false);
   const [formState, setFormState] = useState<{ status: string; message: string }>({ status: "idle", message: "" });

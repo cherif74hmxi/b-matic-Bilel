@@ -10,6 +10,8 @@ import mechanicBg from "@/assets/mechanic-bg.webp";
 import { serviceCategories, findService, type Service } from "@/data/services";
 import { sendLead } from "@/lib/leads";
 import { rdvHeures, rdvRegles, rdvTextes } from "@/data/rdv";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
 import { addDays, bookRdv, brusselsNow, fetchTakenSlots, isSlotInWindow, slotKey } from "@/lib/rdv";
 
 /* ------------------------------------------------------------------ helpers */
@@ -44,6 +46,7 @@ function priceNode(s: Service) {
 const STEPS = ["Service", "Date & heure", "Vos informations", "Confirmation"];
 
 const Mecanique = () => {
+  useSeo({ ...pagesSeo["/mecanique"] });
   const [step, setStep] = useState(1);
 
   // Présélection via ?service=<id> (ex. depuis une promo de l'accueil).

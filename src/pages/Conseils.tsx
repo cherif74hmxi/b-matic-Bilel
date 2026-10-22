@@ -11,7 +11,8 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import useSeo from "@/hooks/useSeo";
-import { absoluteUrl } from "@/lib/site";
+import { pagesSeo } from "@/data/seo";
+import { conseilsJsonLd } from "@/seo/schema";
 import { conseils, tempsDeLecture } from "@/data/conseils";
 import { faqItems, type FaqCategorie } from "@/data/faq";
 
@@ -28,41 +29,7 @@ const Conseils = () => {
     return Array.from(map.entries());
   }, []);
 
-  // Données structurées : liste d'articles (ItemList) + FAQ (FAQPage) dans un
-  // même graphe, pour conserver le balisage FAQPage utile au référencement.
-  const jsonLd = useMemo(
-    () => ({
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "ItemList",
-          name: "Conseils auto B MATIC",
-          itemListElement: conseils.map((c, i) => ({
-            "@type": "ListItem",
-            position: i + 1,
-            name: c.titre,
-            url: absoluteUrl(`/conseils/${c.slug}`),
-          })),
-        },
-        {
-          "@type": "FAQPage",
-          mainEntity: faqItems.map((item) => ({
-            "@type": "Question",
-            name: item.question,
-            acceptedAnswer: { "@type": "Answer", text: item.reponse },
-          })),
-        },
-      ],
-    }),
-    [],
-  );
-
-  useSeo({
-    title: "Conseils auto : entretien, pare-brise, pneus, panne | B MATIC",
-    description:
-      "Conseils auto pratiques par B MATIC (Ans, Liège) : pare-brise et assurance, entretien, voyants du tableau de bord, hiver, pneus, panne et vente de voiture en Belgique.",
-    jsonLd,
-  });
+  useSeo({ ...pagesSeo["/conseils"], jsonLd: conseilsJsonLd() });
 
   return (
     <div className="pt-24 pb-20">

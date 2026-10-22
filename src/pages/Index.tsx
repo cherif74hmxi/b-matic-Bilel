@@ -11,6 +11,8 @@ import { pareBriseAccueil, pareBriseCadeaux, pareBriseMention, pareBriseRayonKm 
 import AuroraBackground from "@/components/AuroraBackground";
 import HomeLatest from "@/components/vehicules/HomeLatest";
 import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
+import { accueilJsonLd } from "@/seo/schema";
 import heroBg from "@/assets/hero-bg.webp";
 import { serviceCategories } from "@/data/services";
 import { legalInfo } from "@/data/legal";
@@ -37,11 +39,7 @@ const promoMin = promotions.length > 0 ? Math.min(...promotions.map((p) => p.pri
 const engagements = accueilEngagements(pareBriseRayonKm);
 
 const Index = () => {
-  useSeo({
-    title: "B MATIC — Garage automobile | Pare-brise, Mécanique, Dépannage",
-    description:
-      "B MATIC, votre garage automobile de confiance. Remplacement de pare-brise pris en charge par l'assurance, entretien et promotions, reprise de véhicules et dépannage 24h/24.",
-  });
+  useSeo({ ...pagesSeo["/"], jsonLd: accueilJsonLd() });
 
   const offresFlash = accueilOffresFlash.filter((o) => !o.prixPromo || promoMin !== null);
 

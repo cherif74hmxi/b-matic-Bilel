@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import LegalPage from "@/components/LegalPage";
 import { legalInfo } from "@/data/legal";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
 
 const MentionsLegales = () => {
+  useSeo({ ...pagesSeo["/mentions-legales"] });
   return (
     <LegalPage title="Mentions légales" updated={legalInfo.lastUpdated}>
       <h2>Éditeur du site</h2>

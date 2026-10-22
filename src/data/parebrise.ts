@@ -27,7 +27,7 @@ const zone = `Liège et jusqu'à ${pareBriseRayonKm} km autour`;
 export const pareBriseSeo = {
   title: "Remplacement pare-brise Liège — franchise offerte + cadeau | B MATIC",
   description:
-    `Remplacement de pare-brise à ${zone} : franchise offerte, 0 € à avancer, toutes assurances, jusqu'à 300 € ou un cadeau. Centre à Ans ouvert ${pareBriseHoraires.texte}.`,
+    `Remplacement de pare-brise à ${zone} : franchise offerte, 0 € à avancer, toutes assurances, jusqu'à 300 € ou un cadeau. Centre à Ans, 7j/7.`,
   /** Nom du service dans les données structurées. */
   serviceName: "Remplacement de pare-brise à Liège",
 };

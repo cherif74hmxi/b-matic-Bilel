@@ -5,6 +5,7 @@ import GlowCard from "@/components/GlowCard";
 import InsurerMarquee from "@/components/InsurerMarquee";
 import GiftIllustration from "@/components/GiftIllustration";
 import useSeo from "@/hooks/useSeo";
+import { pareBriseJsonLd } from "@/seo/schema";
 import { legalInfo } from "@/data/legal";
 import { assurancesIntro } from "@/data/assurances";
 import {
@@ -23,49 +24,6 @@ import {
   pareBriseCtaFinal,
   pareBriseMention,
 } from "@/data/parebrise";
-
-// Données structurées : le service (avec le garage et sa zone) + la FAQ.
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Service",
-      name: pareBriseSeo.serviceName,
-      serviceType: "Remplacement de pare-brise",
-      description: pareBriseSeo.description,
-      provider: {
-        "@type": "AutoRepair",
-        name: "B MATIC",
-        legalName: legalInfo.companyName,
-        telephone: legalInfo.phone,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: legalInfo.addressParts.street,
-          postalCode: legalInfo.addressParts.postalCode,
-          addressLocality: legalInfo.addressParts.city,
-          addressRegion: legalInfo.addressParts.region,
-          addressCountry: legalInfo.addressParts.country,
-        },
-      },
-      areaServed: [
-        ...pareBriseLieu.villes.map((name) => ({ "@type": "City", name })),
-        {
-          "@type": "GeoCircle",
-          geoMidpoint: { "@type": "GeoCoordinates", latitude: 50.6326, longitude: 5.5797 }, // Liège
-          geoRadius: pareBriseRayonKm * 1000,
-        },
-      ],
-    },
-    {
-      "@type": "FAQPage",
-      mainEntity: pareBriseFaq.map((q) => ({
-        "@type": "Question",
-        name: q.question,
-        acceptedAnswer: { "@type": "Answer", text: q.reponse },
-      })),
-    },
-  ],
-};
 
 /** Titre de section commun. */
 const SectionTitle = ({ children, sub }: { children: React.ReactNode; sub?: string }) => (
@@ -102,7 +60,7 @@ const Ctas = ({ label, to }: { label: string; to: string }) => (
 );
 
 const PareBrise = () => {
-  useSeo({ title: pareBriseSeo.title, description: pareBriseSeo.description, jsonLd });
+  useSeo({ title: pareBriseSeo.title, description: pareBriseSeo.description, jsonLd: pareBriseJsonLd() });
 
   return (
     <div className="pt-24 pb-20">

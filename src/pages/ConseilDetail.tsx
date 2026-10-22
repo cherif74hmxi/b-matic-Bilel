@@ -1,12 +1,10 @@
-import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Info } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import NeonButton from "@/components/NeonButton";
 import useSeo from "@/hooks/useSeo";
-import { absoluteUrl } from "@/lib/site";
-import { conseilsLies, conseilTexte, findConseil, tempsDeLecture, type ConseilBloc } from "@/data/conseils";
-import logo from "@/assets/bmatic-logo.webp";
+import { conseilJsonLd } from "@/seo/schema";
+import { conseilsLies, findConseil, tempsDeLecture, type ConseilBloc } from "@/data/conseils";
 
 const dateLongue = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("fr-BE", { day: "numeric", month: "long", year: "numeric" });
@@ -41,52 +39,17 @@ const ConseilDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const conseil = slug ? findConseil(slug) : undefined;
 
-  // Données structurées Article + fil d'Ariane (générés depuis la même source).
-  const jsonLd = useMemo(() => {
-    if (!conseil) return undefined;
-    const url = absoluteUrl(`/conseils/${conseil.slug}`);
-    const texte = conseilTexte(conseil);
-    return {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Article",
-          "@id": `${url}#article`,
-          headline: conseil.titre,
+  useSeo(
+    conseil
+      ? {
+          title: `${conseil.titre} | B MATIC`,
           description: conseil.extrait,
-          articleSection: conseil.categorie,
-          articleBody: texte,
-          wordCount: texte.split(/\s+/).filter(Boolean).length,
-          inLanguage: "fr-BE",
-          datePublished: conseil.publie,
-          dateModified: conseil.misAJour ?? conseil.publie,
-          image: absoluteUrl(conseil.image ?? logo),
-          mainEntityOfPage: url,
-          url,
-          author: { "@type": "Organization", name: "B MATIC", url: absoluteUrl("/") },
-          publisher: {
-            "@type": "Organization",
-            name: "B MATIC",
-            logo: { "@type": "ImageObject", url: absoluteUrl(logo) },
-          },
-        },
-        {
-          "@type": "BreadcrumbList",
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Accueil", item: absoluteUrl("/") },
-            { "@type": "ListItem", position: 2, name: "Conseils", item: absoluteUrl("/conseils") },
-            { "@type": "ListItem", position: 3, name: conseil.titre, item: url },
-          ],
-        },
-      ],
-    };
-  }, [conseil]);
-
-  useSeo({
-    title: conseil ? `${conseil.titre} — Conseils B MATIC` : "Conseil introuvable — B MATIC",
-    description: conseil?.extrait,
-    jsonLd,
-  });
+          image: conseil.image,
+          type: "article",
+          jsonLd: conseilJsonLd(conseil),
+        }
+      : { title: "Conseil introuvable | B MATIC", noindex: true },
+  );
 
   // Slug inconnu : message clair + retour à la liste (pas de 404 générique).
   if (!conseil) {

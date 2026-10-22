@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import LegalPage from "@/components/LegalPage";
 import { legalInfo, supervisoryAuthority } from "@/data/legal";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
 
 const PolitiqueConfidentialite = () => {
+  useSeo({ ...pagesSeo["/politique-de-confidentialite"] });
   return (
     <LegalPage title="Politique de confidentialité" updated={legalInfo.lastUpdated}>
       <p>

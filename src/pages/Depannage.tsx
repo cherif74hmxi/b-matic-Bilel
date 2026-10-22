@@ -2,8 +2,12 @@ import { Phone, MapPin, Clock, Truck } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import NeonButton from "@/components/NeonButton";
 import { legalInfo } from "@/data/legal";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
+import { depannageJsonLd } from "@/seo/schema";
 
 const Depannage = () => {
+  useSeo({ ...pagesSeo["/depannage"], jsonLd: depannageJsonLd() });
   return (
     <div className="min-h-screen pt-20">
       <section className="py-20 px-4">

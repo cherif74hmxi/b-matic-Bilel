@@ -7,6 +7,8 @@ import useSeo, { useNoIndex } from "@/hooks/useSeo";
 import { formatPostDate, postCoverUrl, getPublicPost, paragraphs, resolveSlugRedirect } from "@/lib/publicContent";
 import { autoExcerpt } from "@/lib/contentModel";
 import { actualitesSeo, actualitesTextes } from "@/data/actualites";
+import { absoluteUrl } from "@/lib/site";
+import { garageId, LOGO } from "@/seo/schema";
 
 const NoIndex = () => {
   useNoIndex();
@@ -48,14 +50,27 @@ const ActualiteDetail = () => {
             image: post.cover_path ? [postCoverUrl(post.cover_path)] : undefined,
             datePublished: post.published_at ?? post.created_at,
             dateModified: post.updated_at,
-            url: `${window.location.origin}/actualites/${post.slug}`,
-            author: { "@type": "Organization", name: "B MATIC" },
-            publisher: { "@type": "Organization", name: "B MATIC" },
+            url: absoluteUrl(`/actualites/${post.slug}`),
+            mainEntityOfPage: absoluteUrl(`/actualites/${post.slug}`),
+            inLanguage: "fr-BE",
+            author: { "@type": "Organization", "@id": garageId(), name: "B MATIC", url: absoluteUrl("/") },
+            publisher: {
+              "@type": "Organization",
+              "@id": garageId(),
+              name: "B MATIC",
+              logo: { "@type": "ImageObject", url: absoluteUrl(LOGO) },
+            },
           }
         : undefined,
     [post, description],
   );
-  useSeo({ title: post ? `${post.title} — Actualités B MATIC` : actualitesSeo.title, description: description ?? actualitesSeo.description, jsonLd });
+  useSeo({
+    title: post ? `${post.title} — Actualités B MATIC` : actualitesSeo.title,
+    description: description ?? actualitesSeo.description,
+    image: post?.cover_path ? postCoverUrl(post.cover_path) : undefined,
+    type: post ? "article" : "website",
+    jsonLd,
+  });
 
   const back = (
     <Link to="/actualites" className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-muted-foreground hover:text-foreground mb-4">

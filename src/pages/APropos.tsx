@@ -2,6 +2,8 @@ import { Shield, Eye, Heart } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
 import mechanicBg from "@/assets/mechanic-bg.webp";
+import useSeo from "@/hooks/useSeo";
+import { pagesSeo } from "@/data/seo";
 
 const advantages = [
   { icon: Shield, title: "Professionnalisme", desc: "Une équipe qualifiée et expérimentée, dédiée à l'excellence automobile depuis des années." },
@@ -10,6 +12,7 @@ const advantages = [
 ];
 
 const APropos = () => {
+  useSeo({ ...pagesSeo["/a-propos"] });
   return (
     <div className="pt-24 pb-20">
       <div className="container mx-auto px-4">
