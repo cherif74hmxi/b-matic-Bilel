@@ -1,12 +1,11 @@
 import { lazy, Suspense, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
-  Building2, Camera, CarFront, CircleHelp, Hash, Home, Info, Keyboard, MapPin,
-  PanelLeft, RectangleHorizontal, ShieldCheck, Sun, Loader2,
+  Building2, Camera, CircleHelp, Hash, Home, Info, Keyboard, MapPin, ShieldCheck, Loader2,
 } from "lucide-react";
 import { assureurs } from "@/data/assurances";
 import {
-  rdvAssurance, rdvBesoins, rdvCoordonnees, rdvCreneau, rdvLieu, rdvVehicule, type BesoinId,
+  rdvAssurance, rdvBesoins, rdvCoordonnees, rdvCreneau, rdvLieu, rdvVehicule,
 } from "@/data/rendezvous";
 import {
   formatPlate, isEmailValid, isInZone, isPhoneValid, isPlateValid, isPostalCodeValid, isYearValid,
@@ -14,6 +13,7 @@ import {
 } from "@/lib/rendezvous";
 import type { RegistrationScan } from "@/lib/registrationScan";
 import ChoiceButton, { ChoiceGroup } from "@/components/rdv/ChoiceButton";
+import GlassDiagram from "@/components/rdv/GlassDiagram";
 import SlotPicker from "@/components/rdv/SlotPicker";
 
 // ============================================================================
@@ -32,13 +32,6 @@ export interface StepProps {
   update: (patch: Partial<RdvForm>) => void;
 }
 
-const besoinIcons: Record<BesoinId, typeof CarFront> = {
-  "pare-brise": CarFront,
-  "vitre-laterale": PanelLeft,
-  "lunette-arriere": RectangleHorizontal,
-  toit: Sun,
-  inconnu: CircleHelp,
-};
 
 export const inputClass =
   "w-full h-12 rounded-xl border-2 border-border bg-card px-4 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary transition-colors";
@@ -81,16 +74,25 @@ export const BesoinStep = ({ form, update }: StepProps) => {
             onClick={() => update({ besoin: b.id, sousChoix: form.besoin === b.id ? form.sousChoix : "" })}
             label={b.label}
             texte={b.texte}
-            icon={besoinIcons[b.id]}
+            visual={b.zones ? <GlassDiagram zones={b.zones} className="w-full h-full" /> : undefined}
+            icon={b.zones ? undefined : CircleHelp}
           />
         ))}
       </ChoiceGroup>
       {besoin?.sousChoix && (
         <div className="mt-6 animate-fade-in">
-          <p className="font-semibold mb-3">{besoin.id === "pare-brise" ? "Réparer ou remplacer ?" : "Quelle vitre ?"}</p>
-          <ChoiceGroup label={besoin.label} className="grid-cols-2">
+          <p className="font-semibold mb-3">{besoin.sousQuestion}</p>
+          <ChoiceGroup label={besoin.sousQuestion ?? besoin.label} className="grid-cols-2">
             {besoin.sousChoix.map((s) => (
-              <ChoiceButton key={s.id} compact selected={form.sousChoix === s.id} onClick={() => update({ sousChoix: s.id })} label={s.label} texte={s.texte} />
+              <ChoiceButton
+                key={s.id}
+                compact
+                selected={form.sousChoix === s.id}
+                onClick={() => update({ sousChoix: s.id })}
+                label={s.label}
+                texte={s.texte}
+                visual={s.zones ? <GlassDiagram zones={s.zones} className="w-full h-full" /> : undefined}
+              />
             ))}
           </ChoiceGroup>
         </div>

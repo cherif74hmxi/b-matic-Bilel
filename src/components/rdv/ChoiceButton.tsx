@@ -6,6 +6,10 @@ import { Check } from "lucide-react";
 // ----------------------------------------------------------------------------
 //  Cible tactile ≥ 56 px, rôle « radio » : à placer dans un conteneur
 //  role="radiogroup" (voir ChoiceGroup).
+//  · `icon`   : petite icône lucide dans un carré ;
+//  · `visual` : vignette libre (ex. schéma de voiture), plus grande ;
+//  · `compact`: libellé centré, sans pastille (Oui / Non, sous-choix…) ;
+//    avec `visual`, la vignette passe au-dessus du libellé.
 // ============================================================================
 
 export const ChoiceGroup = ({ label, children, className = "" }: { label: string; children: ReactNode; className?: string }) => (
@@ -20,6 +24,7 @@ const ChoiceButton = ({
   label,
   texte,
   icon: Icon,
+  visual,
   compact = false,
 }: {
   selected: boolean;
@@ -27,7 +32,7 @@ const ChoiceButton = ({
   label: string;
   texte?: string;
   icon?: ComponentType<{ className?: string }>;
-  /** Bouton centré sans description (Oui / Non, Avant / Arrière…). */
+  visual?: ReactNode;
   compact?: boolean;
 }) => (
   <button
@@ -35,20 +40,15 @@ const ChoiceButton = ({
     role="radio"
     aria-checked={selected}
     onClick={onClick}
-    className={`relative w-full min-h-14 flex items-center gap-3.5 rounded-xl border-2 px-4 py-3 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-      compact ? "justify-center text-center" : ""
-    } ${
-      selected
-        ? "border-primary bg-primary/10 shadow-[0_0_0_4px_hsl(var(--primary)/0.12)]"
-        : "border-border bg-card hover:border-primary/50"
+    className={`relative w-full min-h-14 flex rounded-xl border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+      compact && visual ? "flex-col items-center gap-2 text-center" : "items-center gap-3.5"
+    } ${compact && !visual ? "justify-center text-center" : ""} ${
+      selected ? "border-primary bg-primary/[0.04] ring-1 ring-primary" : "border-border bg-card hover:border-foreground/30"
     }`}
   >
-    {Icon && (
-      <span
-        className={`shrink-0 w-11 h-11 rounded-lg grid place-items-center transition-colors ${
-          selected ? "bg-gradient-neon text-primary-foreground" : "bg-muted text-primary"
-        }`}
-      >
+    {visual && <span className={`shrink-0 ${compact ? "w-12 h-[84px]" : "w-10 h-[70px]"}`}>{visual}</span>}
+    {Icon && !visual && (
+      <span className="shrink-0 w-10 h-10 rounded-lg grid place-items-center bg-muted text-foreground">
         <Icon className="w-5 h-5" aria-hidden="true" />
       </span>
     )}
@@ -58,12 +58,12 @@ const ChoiceButton = ({
     </span>
     {!compact && (
       <span
-        className={`shrink-0 w-6 h-6 rounded-full border-2 grid place-items-center transition-all ${
-          selected ? "bg-primary border-primary text-primary-foreground" : "border-border"
+        className={`shrink-0 w-5 h-5 rounded-full border grid place-items-center transition-colors ${
+          selected ? "bg-primary border-primary text-primary-foreground" : "border-foreground/30"
         }`}
         aria-hidden="true"
       >
-        {selected && <Check className="w-3.5 h-3.5" strokeWidth={3} />}
+        {selected && <Check className="w-3 h-3" strokeWidth={3} />}
       </span>
     )}
   </button>

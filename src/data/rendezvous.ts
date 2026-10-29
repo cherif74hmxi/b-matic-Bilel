@@ -9,7 +9,7 @@
 //      les libellés peuvent l'être.
 // ============================================================================
 import { legalInfo } from "@/data/legal";
-import { pareBriseRayonKm } from "@/data/parebrise";
+import { franchiseCondition, pareBriseRayonKm } from "@/data/parebrise";
 
 export const rdvEtapes = ["Besoin", "Véhicule", "Assurance", "Lieu", "Créneau", "Coordonnées"] as const;
 
@@ -21,12 +21,26 @@ export const rdvIntro = {
 // ------------------------------------------------------------------ Étape 1
 export type BesoinId = "pare-brise" | "vitre-laterale" | "lunette-arriere" | "toit" | "inconnu";
 
+/** Vitrages dessinés sur le schéma de voiture (src/components/rdv/GlassDiagram). */
+export type ZoneVitrage =
+  | "pare-brise"
+  | "toit"
+  | "lunette"
+  | "avant-gauche"
+  | "avant-droite"
+  | "arriere-gauche"
+  | "arriere-droite";
+
 export interface Besoin {
   id: BesoinId;
   label: string;
   texte: string;
+  /** Vitre(s) surlignée(s) sur le schéma ; absent = pas de schéma (« Je ne sais pas »). */
+  zones?: ZoneVitrage[];
   /** Sous-choix obligatoire (ex. réparer / remplacer). */
-  sousChoix?: { id: string; label: string; texte?: string }[];
+  sousChoix?: { id: string; label: string; texte?: string; zones?: ZoneVitrage[] }[];
+  /** Question au-dessus des sous-choix. */
+  sousQuestion?: string;
   /** Ligne d'information sous le choix. */
   note?: string;
 }
@@ -36,6 +50,8 @@ export const rdvBesoins: Besoin[] = [
     id: "pare-brise",
     label: "Pare-brise",
     texte: "Impact, fissure ou pare-brise cassé",
+    zones: ["pare-brise"],
+    sousQuestion: "Réparer ou remplacer ?",
     sousChoix: [
       { id: "impact", label: "Réparer un impact", texte: "Petit impact, sans fissure" },
       { id: "remplacement", label: "Remplacer", texte: "Fissure ou impact trop grand" },
@@ -46,13 +62,17 @@ export const rdvBesoins: Besoin[] = [
     id: "vitre-laterale",
     label: "Vitre latérale",
     texte: "Vitre de portière cassée",
+    zones: ["avant-gauche", "arriere-gauche", "avant-droite", "arriere-droite"],
+    sousQuestion: "Quelle vitre ? (gauche = côté conducteur)",
     sousChoix: [
-      { id: "avant", label: "Avant" },
-      { id: "arriere", label: "Arrière" },
+      { id: "avant-gauche", label: "Avant gauche", zones: ["avant-gauche"] },
+      { id: "avant-droite", label: "Avant droite", zones: ["avant-droite"] },
+      { id: "arriere-gauche", label: "Arrière gauche", zones: ["arriere-gauche"] },
+      { id: "arriere-droite", label: "Arrière droite", zones: ["arriere-droite"] },
     ],
   },
-  { id: "lunette-arriere", label: "Lunette arrière", texte: "Vitre du hayon ou du coffre" },
-  { id: "toit", label: "Toit ouvrant / panoramique", texte: "Toit vitré fêlé ou cassé" },
+  { id: "lunette-arriere", label: "Lunette arrière", texte: "Vitre du hayon ou du coffre", zones: ["lunette"] },
+  { id: "toit", label: "Toit ouvrant / panoramique", texte: "Toit vitré fêlé ou cassé", zones: ["toit"] },
   { id: "inconnu", label: "Je ne sais pas", texte: "On regarde ensemble, sans engagement" },
 ];
 
@@ -90,7 +110,7 @@ export const rdvAssurance = {
   assureurQuestion: "Votre assureur",
   assureurAutre: "Autre",
   assureurAutrePlaceholder: "Nom de votre assureur (facultatif)",
-  rassurance: "On s'occupe des démarches, vous n'avancez rien, franchise offerte.",
+  rassurance: `On s'occupe des démarches avec votre assureur. ${franchiseCondition}`,
   sansCouverture: "Pas de couverture bris de glace ? Pas de souci : on vous fait un devis, sans engagement.",
   /** Juste le nom de l'assureur : jamais de numéro de contrat ici. */
   aide: "Juste le nom : pas besoin de numéro de contrat.",
