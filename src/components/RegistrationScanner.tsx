@@ -109,7 +109,7 @@ const RegistrationScanner = ({
       <input ref={gallery} type="file" accept="image/*" className="hidden" onChange={(e) => void handle(e.currentTarget)} />
 
       {error && (
-        <p role="alert" className="flex gap-2 items-start text-sm text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 mt-4 max-w-md mx-auto">
+        <p role="alert" className="flex gap-2 items-start text-sm text-warning bg-warning/10 border border-warning/30 rounded-lg p-3 mt-4 max-w-md mx-auto">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" /> {error}
         </p>
       )}

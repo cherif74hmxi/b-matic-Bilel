@@ -150,7 +150,7 @@ const Contact = () => {
                   {formState.status === "loading" ? "Envoi en cours..." : "Envoyer le message"}
                 </NeonButton>
                 {formState.message && (
-                  <div className={`mt-2 p-4 rounded-lg text-sm text-center font-medium ${formState.status === "success" ? "bg-green-500/20 text-green-400 border border-green-500/30" : formState.status === "error" ? "bg-destructive/20 text-destructive border border-destructive/30" : "bg-muted text-muted-foreground"}`}>
+                  <div className={`mt-2 p-4 rounded-lg text-sm text-center font-medium ${formState.status === "success" ? "bg-success/10 text-success border border-success/30" : formState.status === "error" ? "bg-destructive/20 text-destructive border border-destructive/30" : "bg-muted text-muted-foreground"}`}>
                     {formState.message}
                   </div>
                 )}

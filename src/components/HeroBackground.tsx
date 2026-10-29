@@ -1,5 +1,6 @@
 /**
- * Fond du hero de l'accueil : photo de l'atelier + calques sombres pour la lisibilité.
+ * Fond du hero de l'accueil : photo de l'atelier + calques de la couleur du fond
+ * (clairs ou sombres selon le thème) pour la lisibilité du texte.
  *
  * Images (public/) :
  *  - hero-garage-mobile.webp : 800 px, recadrée sur l'atelier et les voitures (téléphones)
@@ -22,7 +23,7 @@ const HeroBackground = () => (
       />
     </picture>
 
-    {/* Assombrissement général (l'image est claire). */}
+    {/* Voile général couleur du fond. */}
     <div className="absolute inset-0 bg-background/45" />
     {/* Plus dense à gauche, là où sont le titre et les boutons. */}
     <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/10 md:via-background/70" />
