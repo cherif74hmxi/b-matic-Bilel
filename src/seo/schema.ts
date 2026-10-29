@@ -181,7 +181,7 @@ export const conseilJsonLd = (c: Conseil) => {
         inLanguage: "fr-BE",
         datePublished: c.publie,
         dateModified: c.misAJour ?? c.publie,
-        image: absoluteUrl(c.image ?? OG_IMAGE),
+        image: absoluteUrl(c.image ? `${c.image.src}.jpg` : OG_IMAGE),
         mainEntityOfPage: url,
         url,
         author: editeur,

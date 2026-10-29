@@ -16,9 +16,10 @@
 //    - `categorie` : libellé court affiché sur la vignette.
 //    - `publie` / `misAJour` : dates « AAAA-MM-JJ » (SEO : datePublished /
 //                    dateModified). Mettre à jour `misAJour` à chaque retouche.
-//    - `icon`      : icône lucide utilisée comme vignette (dégradé néon).
-//    - `image`     : (facultatif) vraie photo importée depuis src/assets/ —
-//                    si présente, elle remplace la vignette à icône.
+//    - `icon`      : icône lucide (vignette de secours si pas de photo).
+//    - `image`     : photo dans public/conseils/ : « <nom>.jpg » (1200 px,
+//                    aperçu de partage) + « <nom>-480/800/1200/1600.webp »
+//                    (affichage, srcset). `src` = chemin SANS extension.
 //    - `cta`       : bouton d'action en fin d'article (service concerné).
 //    - `contenu`   : suite de blocs :
 //                      "texte"              → paragraphe
@@ -28,9 +29,20 @@
 // ============================================================================
 import { ShieldCheck, Target, ScanEye, Car, type LucideIcon } from "lucide-react";
 import { RDV_PATH } from "@/data/rdv";
-import { pareBriseCadeaux, pareBriseHoraires, pareBriseRayonKm } from "@/data/parebrise";
+import { franchiseCondition, pareBriseCadeaux, pareBriseHoraires, pareBriseRayonKm } from "@/data/parebrise";
 
 export type ConseilBloc = string | { titre: string } | { liste: string[] } | { aSavoir: string };
+
+/** Photo d'article : `src` sans extension, ex. « /conseils/impact-parebrise ». */
+export interface ConseilImage {
+  src: string;
+  alt: string;
+}
+
+/** Largeurs WebP disponibles pour chaque photo (voir public/conseils/). */
+export const CONSEIL_IMAGE_LARGEURS = [480, 800, 1200, 1600] as const;
+/** Dimensions de référence (ratio 4:3 des photos fournies). */
+export const CONSEIL_IMAGE_TAILLE = { largeur: 1200, hauteur: 896 };
 
 export interface Conseil {
   slug: string;
@@ -42,8 +54,8 @@ export interface Conseil {
   /** Date de dernière mise à jour « AAAA-MM-JJ » (facultatif). */
   misAJour?: string;
   icon: LucideIcon;
-  /** Vraie photo (facultatif) ; si absente, la vignette à icône est utilisée. */
-  image?: string;
+  /** Photo (facultatif) ; si absente, la vignette à icône est utilisée. */
+  image?: ConseilImage;
   cta: { label: string; to: string };
   contenu: ConseilBloc[];
 }
@@ -54,33 +66,34 @@ export const conseils: Conseil[] = [
   // --------------------------------------------------------------------------
   {
     slug: "pare-brise-fissure-assurance",
-    titre: "Pare-brise fissuré : comment le faire remplacer sans rien payer",
+    titre: "Pare-brise fissuré : le faire remplacer avec votre assurance",
     extrait:
       "Impact, fissure, assurance bris de glace, franchise : ce qu'il faut savoir avant de faire remplacer votre pare-brise à Liège.",
     categorie: "Pare-brise",
     publie: "2026-10-22",
     icon: ShieldCheck,
+    image: { src: "/conseils/pare-brise-fissure", alt: "Technicien B MATIC examinant un pare-brise fissuré dans l'atelier" },
     cta: { label: "Demander mon devis", to: RDV_PATH },
     contenu: [
-      "Un gravillon sur l'autoroute, un choc thermique un matin de gel, et le petit impact devient une fissure qui traverse le pare-brise. Bonne nouvelle : dans la plupart des cas, le remplacement ne vous coûte rien si votre contrat d'assurance couvre le bris de glace.",
+      "Un gravillon sur l'autoroute, un choc thermique un matin de gel, et le petit impact devient une fissure qui traverse le pare-brise. Bonne nouvelle : si votre contrat d'assurance couvre le bris de glace, le remplacement peut être pris en charge par votre assureur.",
       { titre: "Impact ou fissure : réparer ou remplacer ?" },
       "Un impact plus petit qu'une pièce de 2 €, situé hors du champ de vision du conducteur et loin des bords, peut souvent être réparé. Au-delà, ou dès qu'une fissure apparaît, le remplacement s'impose : un pare-brise fragilisé protège moins bien en cas d'accident et peut vous valoir un refus au contrôle technique.",
       { aSavoir: "N'attendez pas : le froid, le chauffage à fond ou une simple route abîmée suffisent à transformer un impact en fissure." },
       { titre: "Qui paie ? Le rôle de votre assurance" },
       "Le remplacement d'un pare-brise est pris en charge par la garantie « bris de glace » ou « bris de vitrage », incluse dans les formules omnium (partielle ou complète) ou ajoutée en option à une RC auto. Vérifiez votre contrat ou demandez à votre courtier.",
-      "Votre contrat peut prévoir une franchise, c'est-à-dire un montant qui reste normalement à votre charge. Chez B MATIC, la franchise est offerte : vous n'avez rien à avancer, nous traitons directement avec votre assureur.",
-      { titre: "Vous choisissez librement votre réparateur" },
-      "Votre assureur peut vous proposer un réseau de réparateurs agréés, mais vous restez libre de choisir le professionnel qui remplace votre pare-brise. Il suffit de nous communiquer le nom de votre assurance : nous nous occupons des démarches.",
+      `Votre contrat peut prévoir une franchise, c'est-à-dire un montant qui reste normalement à votre charge. Chez B MATIC : ${franchiseCondition.charAt(0).toLowerCase()}${franchiseCondition.slice(1)} Nous traitons directement avec votre assureur.`,
+      { titre: "Pouvez-vous choisir votre réparateur ?" },
+      "Votre assureur peut vous proposer un réseau de réparateurs agréés. En règle générale, vous pouvez choisir le professionnel qui remplace votre pare-brise, mais certains contrats prévoient des conditions particulières (réseau agréé, plafond de prise en charge). Communiquez-nous le nom de votre assurance : nous vérifions avec vous et nous nous occupons des démarches.",
       { titre: "Comment se passe le remplacement chez B MATIC" },
       {
         liste: [
           `Au centre d'Ans (${pareBriseHoraires.texte}) ou à votre domicile, à votre travail, à Liège et jusqu'à ${pareBriseRayonKm} km autour.`,
           "Vitrage homologué selon la norme européenne ECE R43. Votre voiture a une caméra d'aide à la conduite derrière le pare-brise ? Le recalibrage est inclus après le remplacement.",
-          "Franchise offerte et 0 € à avancer.",
+          "Avec une couverture bris de glace acceptée, paiement réglé directement avec votre assureur. Si votre contrat prévoit une franchise, nous la prenons en charge dans le cadre de notre offre.",
           `En plus, un cadeau au choix : ${cadeaux}.`,
         ],
       },
-      { aSavoir: "Un devis écrit vous est remis avant toute intervention. La prise en charge dépend de votre contrat et de l'accord de votre assureur." },
+      { aSavoir: `Un devis écrit vous est remis avant toute intervention. ${franchiseCondition}` },
     ],
   },
 
@@ -93,6 +106,7 @@ export const conseils: Conseil[] = [
     categorie: "Impact",
     publie: "2026-10-29",
     icon: Target,
+    image: { src: "/conseils/impact-parebrise", alt: "Réparation d'un impact de pare-brise à la résine" },
     cta: { label: "Faire vérifier mon impact", to: RDV_PATH },
     contenu: [
       "Un gravillon projeté par le camion de devant, un petit « clac » et une étoile apparaît sur le pare-brise. Tant qu'elle reste petite, on peut souvent la réparer. Mais un impact ne guérit jamais tout seul : avec les vibrations et les écarts de température, il finit presque toujours par s'étendre.",
@@ -129,6 +143,7 @@ export const conseils: Conseil[] = [
     categorie: "Caméra",
     publie: "2026-10-29",
     icon: ScanEye,
+    image: { src: "/conseils/recalibrer-camera", alt: "Recalibrage de la caméra d'aide à la conduite avec une mire" },
     cta: { label: "Demander mon devis", to: RDV_PATH },
     contenu: [
       "Sur beaucoup de voitures récentes, une caméra est fixée derrière le pare-brise, au niveau du rétroviseur intérieur. Elle « regarde » la route pour les aides à la conduite : freinage d'urgence automatique, alerte et maintien dans la voie, lecture des panneaux de vitesse, feux de route automatiques…",
@@ -157,6 +172,7 @@ export const conseils: Conseil[] = [
     categorie: "Vitres",
     publie: "2026-10-29",
     icon: Car,
+    image: { src: "/conseils/vitre-laterale", alt: "Remplacement d'une vitre latérale brisée" },
     cta: { label: "Faire remplacer ma vitre", to: RDV_PATH },
     contenu: [
       "Contrairement au pare-brise, les vitres latérales et la lunette arrière sont le plus souvent en verre trempé : au moindre choc, elles éclatent en milliers de petits morceaux. Elles ne se réparent pas, elles se remplacent.",

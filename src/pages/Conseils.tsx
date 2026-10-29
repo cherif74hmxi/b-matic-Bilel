@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Lightbulb, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
+import ConseilPhoto from "@/components/ConseilPhoto";
 import NeonButton from "@/components/NeonButton";
 import {
   Accordion,
@@ -38,9 +39,8 @@ const Conseils = () => {
         {/* ------------------------------------------------------------ Hero */}
         <AnimatedSection>
           <div className="max-w-2xl mx-auto text-center mb-12">
-            <Lightbulb className="w-9 h-9 text-neon-cyan mx-auto mb-4" />
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              <span className="text-gradient-neon">Nos conseils pare-brise</span>
+              Nos conseils pare-brise
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
               Impact, remplacement, caméra, vitres, assurance… des articles pratiques
@@ -54,22 +54,22 @@ const Conseils = () => {
           {conseils.map((c, i) => (
             <AnimatedSection key={c.slug} delay={i * 100}>
               <Link to={`/conseils/${c.slug}`} className="block h-full group">
-                <GlowCard className="flex flex-col h-full !p-0 overflow-hidden">
-                  {/* Vignette : vraie photo si fournie, sinon dégradé néon + icône */}
+                <GlowCard className="flex flex-col h-full !p-0 overflow-hidden transition-colors group-hover:border-foreground/30">
+                  {/* Vignette : photo de l'article, sinon fond neutre + icône */}
                   {c.image ? (
-                    <img
-                      src={c.image}
-                      alt={c.titre}
-                      loading="lazy"
-                      className="w-full aspect-[16/10] object-cover"
+                    <ConseilPhoto
+                      image={c.image}
+                      decorative
+                      sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
+                      className="w-full aspect-[16/10]"
                     />
                   ) : (
-                    <div className="w-full aspect-[16/10] bg-gradient-neon grid place-items-center">
-                      <c.icon className="w-12 h-12 text-primary-foreground" aria-hidden="true" />
+                    <div className="w-full aspect-[16/10] bg-muted grid place-items-center">
+                      <c.icon className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
                     </div>
                   )}
                   <div className="flex flex-col flex-1 p-6">
-                    <span className="text-neon-cyan text-xs font-heading uppercase tracking-widest mb-2">
+                    <span className="eyebrow mb-2">
                       {c.categorie} · {tempsDeLecture(c)} min
                     </span>
                     <h2 className="font-heading text-lg font-bold mb-2 text-foreground">
@@ -78,7 +78,7 @@ const Conseils = () => {
                     <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">
                       {c.extrait}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 text-neon-cyan text-sm font-heading uppercase tracking-wider">
+                    <span className="inline-flex items-center gap-1.5 text-primary text-sm font-semibold">
                       Lire l'article
                       <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </span>
@@ -92,7 +92,7 @@ const Conseils = () => {
         {/* ------------------------------------------------ Questions fréquentes */}
         <AnimatedSection>
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-center mb-3">
-            <span className="text-gradient-neon">Questions fréquentes</span>
+            Questions fréquentes
           </h2>
           <p className="text-muted-foreground text-center text-sm mb-10 max-w-xl mx-auto">
             Pare-brise, assurance, délais, paiement… les réponses aux questions les
@@ -103,13 +103,13 @@ const Conseils = () => {
         <div className="max-w-3xl mx-auto space-y-10">
           {groupes.map(([categorie, items], gi) => (
             <AnimatedSection key={categorie} delay={gi * 60}>
-              <h3 className="font-heading text-lg md:text-xl font-bold mb-3 text-neon-purple">
+              <h3 className="font-heading text-lg md:text-xl font-bold mb-3">
                 {categorie}
               </h3>
               <Accordion type="single" collapsible className="w-full">
                 {items.map((item, i) => (
                   <AccordionItem key={i} value={`${categorie}-${i}`}>
-                    <AccordionTrigger className="text-left text-sm md:text-base font-semibold text-foreground hover:no-underline hover:text-neon-cyan">
+                    <AccordionTrigger className="text-left text-sm md:text-base font-semibold text-foreground hover:no-underline hover:text-foreground">
                       {item.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed">

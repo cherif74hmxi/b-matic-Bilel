@@ -53,7 +53,7 @@ export function prerenderPages(): PrerenderPage[] {
       title: `${c.titre} | B MATIC`,
       description: c.extrait,
       url: pageUrl(`/conseils/${c.slug}`),
-      image: absoluteUrl(c.image ?? OG_IMAGE),
+      image: absoluteUrl(c.image ? `${c.image.src}.jpg` : OG_IMAGE),
       type: "article",
       jsonLd: conseilJsonLd(c),
     },
