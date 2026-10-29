@@ -240,11 +240,6 @@
     @apply inline-flex items-center gap-1.5 rounded-full bg-highlight-soft text-highlight font-body text-xs font-semibold uppercase tracking-[0.1em] px-3 py-1.5;
   }
 
-  /* Carte Leaflet (MapEmbed) : laisse voir l'adresse pendant le chargement. */
-  .bm-map.leaflet-container {
-    background: transparent;
-    font: inherit;
-  }
 
   .legal-prose h2 {
     @apply font-heading text-lg md:text-xl font-bold text-foreground mt-10 mb-3 pt-1;
@@ -282,33 +277,6 @@
    Performance prioritaire : transform/opacity uniquement (GPU), aucune image
    lourde. Tout est désactivé/figé sous prefers-reduced-motion (bloc en bas).
    ========================================================================== */
-
-/* --- Scanner de carte grise (RegistrationScanner) ------------------------- */
-/*  Les coins « respirent » (invite à reculer pour tout cadrer), une ligne
-    balaie le cadre pendant la lecture (un seul trait fin : coût négligeable). */
-@keyframes scan-breathe {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(0.9); }
-}
-@keyframes scan-sweep {
-  from { top: 0; }
-  to   { top: calc(100% - 2px); }
-}
-@keyframes scan-hint {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.25); }
-}
-.scan-corners { animation: scan-breathe 2.6s ease-in-out infinite; }
-.scan-hint { animation: scan-hint 2.6s ease-in-out infinite; }
-.scan-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: hsl(var(--neon-cyan));
-  box-shadow: 0 0 12px 2px hsl(var(--neon-cyan) / 0.7);
-  animation: scan-sweep 1.6s ease-in-out infinite alternate;
-}
 
 /* --- Respect de prefers-reduced-motion (transverse) ----------------------- */
 @media (prefers-reduced-motion: reduce) {

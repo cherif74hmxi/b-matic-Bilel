@@ -40,8 +40,8 @@ const CookieConsent = () => {
         <div className="flex items-start gap-3 flex-1">
           <Cookie className="w-6 h-6 text-primary shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Ce site utilise uniquement des cookies strictement nécessaires à son bon
-            fonctionnement — aucun suivi publicitaire.{" "}
+            Ce site n'utilise aucun cookie publicitaire ni de suivi. Seule la carte Google
+            Maps peut déposer ses propres cookies.{" "}
             <Link to="/politique-de-confidentialite" className="text-primary underline underline-offset-2 hover:text-primary-hover">
               En savoir plus
             </Link>

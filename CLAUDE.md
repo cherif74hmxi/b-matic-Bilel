@@ -23,10 +23,10 @@
 - Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation).
 - Réutiliser les composants existants : `GlowCard`, `NeonButton`, classes `.btn-main`
   (violet plein) / `.btn-ghost` (contour violet). Thème sombre néon : `data-theme="sombre"`.
-- Carte du centre : `MapEmbed` (OpenStreetMap / Leaflet, aucun cookie) ; position dans
-  `src/data/legal.ts` → `mapsCoords`.
+- Carte du centre : `MapEmbed` (iframe Google Maps affichée directement, adresse
+  `src/data/legal.ts` → `mapsQuery`) + bouton « Itinéraire ».
 - Images : `public/conseils/` (WebP 480→1600 + JPG pour l'OG), `public/assureurs/` (logos
-  rognés, affichés par `InsurerLogos`), `public/cadeaux/` (photos détourées, `GiftGrid`).
+  rognés, affichés par `InsurerLogos`), `public/cadeaux/` (photos détourées, carrousel `GiftCarousel`). Logos en bandeau défilant.
 - Voir `src/index.css` et `tailwind.config.ts` pour les tokens.
 
 ## Règles de travail
@@ -75,8 +75,7 @@ Tests must match `src/**/*.{test,spec}.{ts,tsx}`. `playwright.config.ts` uses Lo
 - **Data modules (`src/data/`) are the single source of truth for editable content**:
   - `legal.ts`: company identity, contact info (email/phone/WhatsApp), host and GDPR authority. Used by Contact, Footer, MentionsLegales and PolitiqueConfidentialite. The `[ ... ]` placeholders are meant to be filled in by the business owner. `country` (`"BE"`/`"FR"`) selects the supervisory authority.
   - `rendezvous.ts`: texts and choices of the multi-step quote/booking form (`/rendez-vous`, page `RendezVous.tsx`, steps in `components/rdv/`, logic in `lib/rendezvous.ts`). Slot rules are in `rdv.ts`, insurers in `assurances.ts`.
-  - `vehicules.ts`: make/model list used to normalise the registration-document scan.
-- **Forms**: Contact and RendezVous post to Formspree and to `leads` (Supabase). Every form has a mandatory GDPR consent checkbox. The booking form reserves the slot through the `book_rdv` RPC; sensitive documents (carte grise, insurance certificate) are only offered, optionally, on the confirmation screen and go to the private `client-documents` bucket (purged after 90 days by the `purge-documents` Edge Function).
+- **Forms**: Contact and RendezVous post to Formspree and to `leads` (Supabase). Every form has a mandatory GDPR consent checkbox. The booking form reserves the slot through the `book_rdv` RPC. No document is collected (no upload, no registration-document scan): the vehicle is entered by hand (plate, or make + model + year) and the garage contacts the insurer itself.
 - **UI**: `src/components/ui/` holds generated shadcn/ui primitives, so avoid hand-editing them. The site's own look comes from the custom components `GlowCard`, `NeonButton` and `AnimatedSection` (an IntersectionObserver fade-in with a `delay` prop), plus the Tailwind theme tokens `neon-{blue,purple,pink,cyan}`, `text-gradient-neon`, `font-heading`/`font-body` and the `glow-pulse` animation, defined in `tailwind.config.ts` and `src/index.css`. Pages tend to use raw Tailwind and these components more than shadcn primitives.
 - `CookieConsent` stores the user's choice in `localStorage` (inside try/catch).
 

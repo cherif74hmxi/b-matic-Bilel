@@ -44,31 +44,6 @@ const PolitiqueConfidentialite = () => {
           (jamais de numéro de contrat), lieu d'intervention (au centre, ou code postal pour une
           intervention à domicile ou au travail), date et heure choisies.
         </li>
-        <li>
-          <strong>Documents facultatifs, après la réservation :</strong> sur l'écran de
-          confirmation, vous pouvez, si vous le souhaitez et avec votre accord explicite, nous
-          transmettre une photo ou un PDF de votre <strong>carte grise</strong> et de votre{" "}
-          <strong>attestation d'assurance</strong>, pour préparer le dossier avec votre assureur.
-          Ces documents sont stockés dans un espace <strong>privé</strong> (aucun lien public),
-          consultable uniquement par notre équipe, et <strong>supprimés automatiquement après{" "}
-          {legalInfo.documentsRetentionDays} jours</strong>. Les photos sont réencodées dans votre
-          navigateur avant l'envoi, ce qui retire leurs métadonnées (dont la position GPS). Vous
-          pouvez aussi simplement les apporter le jour du rendez-vous.
-        </li>
-        <li>
-          <strong>Scan de la carte grise (facultatif, formulaire de rendez-vous) :</strong> si vous choisissez
-          cette option, la photo de votre carte grise est transmise à notre assistant de lecture
-          ({legalInfo.aiAssistant.name}, voir § 4) uniquement pour en lire les{" "}
-          <strong>caractéristiques techniques du véhicule</strong> (marque, modèle, version, date de
-          première immatriculation, carburant, puissance, cylindrée, numéro de châssis). Les
-          informations sur le titulaire (nom, adresse) ne sont ni demandées ni enregistrées. La
-          photo n'est <strong>pas conservée</strong> : elle est traitée le temps de la lecture puis
-          oubliée ; seuls les champs que vous validez dans le formulaire nous sont envoyés.
-          Pour éviter les abus, chaque lecture est comptée à partir d'une{" "}
-          <strong>empreinte non réversible de votre adresse IP</strong> (hachage avec une clé
-          secrète qui change chaque jour), effacée au bout de 24 heures ; l'adresse IP elle-même
-          n'est jamais enregistrée.
-        </li>
       </ul>
       <p>
         Les demandes envoyées via ces formulaires nous parviennent par e-mail et sont
@@ -112,16 +87,6 @@ const PolitiqueConfidentialite = () => {
             </td>
           </tr>
           <tr>
-            <td>Préparer le dossier d'assurance avec les documents que vous avez choisi de transmettre (carte grise, attestation d'assurance)</td>
-            <td>Votre consentement (art. 6.1.a), retirable à tout moment sur simple demande</td>
-            <td>{legalInfo.documentsRetentionDays} jours au maximum, puis suppression automatique</td>
-          </tr>
-          <tr>
-            <td>Lire la carte grise (scan facultatif) et limiter les abus de ce service</td>
-            <td>Votre demande (mesures précontractuelles, art. 6.1.b) ; intérêt légitime à protéger le service (art. 6.1.f) pour l'empreinte d'IP</td>
-            <td>Photo : non conservée (traitement immédiat). Empreinte d'IP : 24 heures</td>
-          </tr>
-          <tr>
             <td>Mesurer la fréquentation du site</td>
             <td>Notre intérêt légitime à améliorer le site (art. 6.1.f) — données non identifiantes</td>
             <td>Données anonymes, conservées à des fins statistiques</td>
@@ -149,8 +114,8 @@ const PolitiqueConfidentialite = () => {
         </li>
         <li>
           <strong>{legalInfo.database.name}</strong> ({legalInfo.database.company}) — hébergement
-          de la base de données et des fichiers (demandes reçues, documents facultatifs transmis
-          après un rendez-vous, statistiques de fréquentation, contenus du site).
+          de la base de données et des fichiers (demandes reçues, statistiques de fréquentation,
+          contenus du site).
           Serveurs situés : {legalInfo.database.region}. Ce prestataire est établi aux États-Unis ;
           tout transfert éventuel hors de l'Union européenne est encadré par des garanties
           appropriées (clauses contractuelles types). Voir leur politique :{" "}
@@ -160,27 +125,18 @@ const PolitiqueConfidentialite = () => {
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
         <li>
-          <strong>OpenStreetMap</strong> (OpenStreetMap Foundation, Royaume-Uni) — fonds de la
-          carte du centre affichée sur les pages Accueil et Contact. Comme pour toute image
-          chargée depuis un autre site, leurs serveurs reçoivent votre adresse IP et les
-          informations techniques de votre navigateur ; <strong>aucun cookie n'est déposé</strong>.
-          Voir leur politique :{" "}
-          <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">osmfoundation.org</a>.
-          Le bouton « Itinéraire » ouvre Google Maps dans un nouvel onglet,{" "}
-          <strong>uniquement si vous cliquez dessus</strong> : la politique de Google s'applique
-          alors (
-          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>
-          ).
+          <strong>Google Maps</strong> (Google Ireland Ltd.) — carte du centre affichée sur les
+          pages Accueil et Contact. Lorsque la carte s'affiche, Google reçoit votre adresse IP et
+          des informations techniques sur votre navigateur, et{" "}
+          <strong>peut déposer ses propres cookies</strong>, sous sa responsabilité. Le bouton
+          « Itinéraire » ouvre Google Maps dans un nouvel onglet. Voir leur politique :{" "}
+          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>.
         </li>
         <li>
           <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
-          d'intelligence artificielle utilisé pour deux usages : (1) l'aide à la rédaction des
+          d'intelligence artificielle utilisé uniquement pour l'aide à la rédaction des
           actualités, dans l'espace d'administration (seuls les textes du centre lui sont
-          transmis) ; (2) la{" "}
-          <strong>lecture de la carte grise</strong>, uniquement si vous choisissez le scan dans le
-          formulaire de rendez-vous : la photo lui est transmise pour en extraire les seules
-          caractéristiques techniques du véhicule, sans conservation de notre part. Vos coordonnées
-          et les autres données des formulaires{" "}
+          transmis). Vos coordonnées et les données des formulaires{" "}
           <strong>ne lui sont jamais envoyées</strong>. Ce prestataire est établi aux États-Unis
           (transferts encadrés par des garanties appropriées). Voir leurs conditions :{" "}
           <a href={legalInfo.aiAssistant.termsUrl} target="_blank" rel="noopener noreferrer">ai.google.dev</a>.
@@ -197,16 +153,15 @@ const PolitiqueConfidentialite = () => {
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
       </p>
       <p>
-        <strong>Carte :</strong> la carte du centre (OpenStreetMap) ne dépose aucun cookie et
-        ne nécessite donc aucun consentement.
+        <strong>Carte Google Maps :</strong> la carte du centre (pages Accueil et Contact) est
+        fournie par Google, qui peut déposer ses propres cookies lors de son affichage (voir § 4).
       </p>
 
       <h2>6. Sécurité</h2>
       <p>
         Les formulaires sont transmis via une connexion chiffrée (HTTPS). L'accès aux demandes
-        enregistrées et aux documents transmis est réservé aux administrateurs authentifiés et
-        protégé par des règles d'accès au niveau de la base de données ; les documents ne sont
-        consultables que par des liens temporaires (quelques minutes). Nous mettons en œuvre
+        enregistrées est réservé aux administrateurs authentifiés et protégé par des règles
+        d'accès au niveau de la base de données. Nous mettons en œuvre
         des mesures techniques et organisationnelles raisonnables pour protéger vos données
         contre tout accès, perte ou divulgation non autorisés.
       </p>
