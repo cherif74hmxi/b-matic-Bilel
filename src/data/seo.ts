@@ -21,9 +21,9 @@ export interface PageSeo {
 
 export const pagesSeo = {
   "/": {
-    title: "B MATIC — Pare-brise à Ans (Liège) | Franchise offerte + cadeau",
+    title: "B MATIC — Pare-brise à Ans (Liège) | Jusqu'à 300 € ou un cadeau",
     description:
-      "B MATIC, spécialiste pare-brise à Ans (Liège) : franchise offerte, 0 € à avancer, toutes assurances, jusqu'à 300 € ou un cadeau. Au centre ou à domicile, 7j/7.",
+      "Pare-brise à Ans (Liège) : toutes assurances, franchise prise en charge selon votre contrat, jusqu'à 300 € ou un cadeau. Au centre ou à domicile, 7j/7.",
   },
   [RDV_PATH]: {
     title: "Devis et rendez-vous pare-brise en ligne | B MATIC Ans (Liège)",

@@ -13,7 +13,7 @@
 //  ➜ Pour modifier la FAQ : éditer le tableau ci-dessous. Garder des réponses
 //    en texte simple (le rendu et le JSON-LD n'acceptent pas de HTML riche).
 // ============================================================================
-import { pareBriseCadeaux, pareBriseRayonKm } from "@/data/parebrise";
+import { pareBriseCadeaux, pareBriseRayonKm, franchiseCondition } from "@/data/parebrise";
 
 export type FaqCategorie =
   | "Pare-brise & assurance"
@@ -31,9 +31,9 @@ export const faqItems: FaqItem[] = [
   // --- Pare-brise & assurance ------------------------------------------------
   {
     categorie: "Pare-brise & assurance",
-    question: "Le remplacement de mon pare-brise va-t-il vraiment me coûter 0 € ?",
+    question: "Le remplacement de mon pare-brise va-t-il me coûter quelque chose ?",
     reponse:
-      "Si votre contrat auto inclut la garantie bris de glace, le remplacement peut être pris en charge intégralement, soit 0 € à payer. Le montant restant éventuellement à votre charge dépend de votre contrat, de la franchise prévue et de l'accord de votre assureur.",
+      `Si votre contrat auto inclut la garantie bris de glace et que votre assureur donne son accord, le remplacement est réglé directement avec lui. ${franchiseCondition}`,
   },
   {
     categorie: "Pare-brise & assurance",
@@ -45,7 +45,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Pare-brise & assurance",
     question: "Quel cadeau vais-je recevoir pour le remplacement de mon pare-brise ?",
     reponse:
-      `Pour tout pare-brise remplacé, la franchise est offerte et vous choisissez un cadeau : ${pareBriseCadeaux.map((c) => c.nom).join(", ")}. Détails sur la page Pare-brise.`,
+      `Pour tout pare-brise remplacé, vous choisissez un cadeau : ${pareBriseCadeaux.map((c) => c.nom).join(", ")}. ${franchiseCondition}`,
   },
   {
     categorie: "Pare-brise & assurance",
@@ -100,7 +100,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Paiement & garanties",
     question: "Comment se passe le paiement ?",
     reponse:
-      "Lorsque la garantie bris de glace s'applique, le montant couvert est réglé directement avec votre assureur et la franchise est offerte : vous n'avancez rien. Un devis écrit vous est remis avant toute intervention.",
+      `Lorsque la garantie bris de glace s'applique, le montant couvert est réglé directement avec votre assureur. ${franchiseCondition} Un devis écrit vous est remis avant toute intervention.`,
   },
   {
     categorie: "Paiement & garanties",

@@ -19,7 +19,7 @@ export const accueilHero = {
 
 /** Les 4 arguments clés, juste sous le hero. */
 export const accueilArguments = [
-  { icon: "HandCoins", titre: "0 € à avancer", texte: "Réglé directement avec votre assurance, franchise offerte." },
+  { icon: "HandCoins", titre: "Paiement direct", texte: "Avec une couverture bris de glace, on règle directement avec votre assureur." },
   { icon: "ShieldCheck", titre: "Toutes assurances", texte: "On s'occupe des démarches avec votre assureur." },
   { icon: "Clock", titre: "Ouvert 7j/7", texte: `${horaires.centre.detail}.` },
   { icon: "Home", titre: "À domicile", texte: "Au centre d'Ans, chez vous ou au travail." },
@@ -27,7 +27,7 @@ export const accueilArguments = [
 
 export const accueilCadeaux = {
   titre: "Un cadeau au choix pour votre pare-brise",
-  texte: "Franchise offerte, et en plus jusqu'à 300 € ou l'un de ces cadeaux pour tout pare-brise remplacé.",
+  texte: "En plus de la prise en charge de votre franchise*, jusqu'à 300 € ou l'un de ces cadeaux pour tout pare-brise remplacé.",
 };
 
 export const accueilAssureurs = {

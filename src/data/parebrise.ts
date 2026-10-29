@@ -7,8 +7,11 @@
 //  FAQPage) sont construites à partir de ces mêmes textes.
 //
 //  Assureurs partenaires : liste à part dans src/data/assurances.ts.
-//  Illustrations des cadeaux : dessins maison (src/components/GiftIllustration),
-//  choisis par le champ `illustration` — pas de photos produits ni de logos.
+//  Photos des cadeaux : public/cadeaux/ (fond transparent, voir `image`).
+//
+//  ⚠️  FRANCHISE : elle n'est PAS toujours gratuite. Ne jamais écrire
+//      « franchise offerte » sans condition : réutiliser `franchiseCondition`
+//      (ou « franchise prise en charge* » renvoyant à la mention légale).
 // ============================================================================
 import { legalInfo } from "@/data/legal";
 import { horaires } from "@/data/horaires";
@@ -21,11 +24,18 @@ export const pareBriseHoraires = horaires.centre;
 export const pareBriseRayonKm = 70;
 const zone = `Liège et jusqu'à ${pareBriseRayonKm} km autour`;
 
+/**
+ * Phrase de référence sur la franchise (FAQ, formulaire, conseils, mention
+ * légale). Toute promesse sur la franchise doit rester conforme à celle-ci.
+ */
+export const franchiseCondition =
+  "Si votre contrat prévoit une franchise, nous la prenons en charge dans le cadre de notre offre — selon votre contrat et l'accord de votre assureur.";
+
 // ------------------------------------------------------------------ SEO
 export const pareBriseSeo = {
-  title: "Remplacement pare-brise Liège — franchise offerte + cadeau | B MATIC",
+  title: "Remplacement pare-brise Liège — jusqu'à 300 € ou un cadeau | B MATIC",
   description:
-    `Remplacement de pare-brise à ${zone} : franchise offerte, 0 € à avancer, toutes assurances, jusqu'à 300 € ou un cadeau. Centre à Ans, 7j/7.`,
+    `Pare-brise remplacé à ${zone}. Toutes assurances, franchise prise en charge selon votre contrat, jusqu'à 300 € ou un cadeau. Centre à Ans, 7j/7.`,
   /** Nom du service dans les données structurées. */
   serviceName: "Remplacement de pare-brise à Liège",
 };
@@ -33,15 +43,16 @@ export const pareBriseSeo = {
 // ------------------------------------------------------------------ Hero
 export const pareBriseHero = {
   surtitre: "Remplacement pare-brise Liège",
-  titre: "Votre pare-brise remplacé.",
-  titreAccent: "Franchise offerte + jusqu'à 300 € ou un cadeau.",
-  sousTitre: `Remplacement à ${zone} · 0 € à avancer · Toutes assurances · 7j/7`,
+  /** Titre en trois morceaux : seul `titreAccent` reçoit le dégradé B MATIC. */
+  titre: "Votre pare-brise remplacé,",
+  titreAccent: "votre franchise prise en charge*",
+  titreSuite: "et jusqu'à 300 € ou un cadeau.",
+  sousTitre: `Au centre à Ans ou chez vous, à ${zone}. Toutes assurances, 7j/7.`,
   ctaPrincipal: { label: "Demander un devis / Prendre RDV", to: RDV_PATH },
   badges: [
-    "Franchise offerte + cadeau",
-    "0 € à avancer",
+    "Franchise prise en charge*",
     "Toutes assurances",
-    "Aucune démarche",
+    "Démarches faites avec vous",
     "Ouvert 7j/7",
   ],
 };
@@ -61,38 +72,31 @@ export const pareBrisePrestations = [
 ];
 
 // ------------------------------------------------------------------ Cadeaux
-/** Dessin utilisé pour chaque cadeau (voir src/components/GiftIllustration.tsx). */
-export type GiftIllustrationKey =
-  | "argent"
-  | "jeux"
-  | "console"
-  | "tablette"
-  | "trottinette"
-  | "pneus"
-  | "airfryer"
-  | "aspirateur";
-
 export interface PareBriseCadeau {
   nom: string;
-  illustration: GiftIllustrationKey;
+  /**
+   * Photo détourée (fond transparent) dans public/cadeaux/, WebP. `largeur` et
+   * `hauteur` = dimensions réelles du fichier (évitent les sauts de mise en page).
+   */
+  image: { src: string; largeur: number; hauteur: number };
 }
 
 export const pareBriseOffre = {
-  titre: "Franchise offerte, et vous choisissez votre cadeau",
-  texte: "Franchise offerte + jusqu'à 300 € ou le cadeau de votre choix, pour tout pare-brise remplacé.",
+  titre: "Vous choisissez votre cadeau",
+  texte: "En plus de la prise en charge de votre franchise*, jusqu'à 300 € ou le cadeau de votre choix pour tout pare-brise remplacé.",
   note: "Un cadeau au choix parmi :",
 };
 
 /** Cadeaux proposés (le client en choisit UN). Ordre = ordre d'affichage. */
 export const pareBriseCadeaux: PareBriseCadeau[] = [
-  { nom: "Jusqu'à 300 €", illustration: "argent" },
-  { nom: "GTA 6 + FC 27", illustration: "jeux" },
-  { nom: "Nintendo Switch 2", illustration: "console" },
-  { nom: "iPad", illustration: "tablette" },
-  { nom: "Trottinette électrique", illustration: "trottinette" },
-  { nom: "Jusqu'à 4 pneus", illustration: "pneus" },
-  { nom: "Air Fryer Ninja", illustration: "airfryer" },
-  { nom: "Aspirateur Tineco", illustration: "aspirateur" },
+  { nom: "Jusqu'à 300 €", image: { src: "/cadeaux/argent.webp", largeur: 480, hauteur: 335 } },
+  { nom: "GTA 6 + FC 27", image: { src: "/cadeaux/gta6-fc27.webp", largeur: 480, hauteur: 366 } },
+  { nom: "Nintendo Switch 2", image: { src: "/cadeaux/nintendo-switch.webp", largeur: 480, hauteur: 251 } },
+  { nom: "iPad", image: { src: "/cadeaux/ipad.webp", largeur: 323, hauteur: 420 } },
+  { nom: "Trottinette électrique", image: { src: "/cadeaux/trottinette.webp", largeur: 357, hauteur: 417 } },
+  { nom: "Jusqu'à 4 pneus", image: { src: "/cadeaux/pneus.webp", largeur: 182, hauteur: 298 } },
+  { nom: "Air Fryer Ninja", image: { src: "/cadeaux/air-fryer.webp", largeur: 298, hauteur: 278 } },
+  { nom: "Aspirateur Tineco", image: { src: "/cadeaux/aspirateur.webp", largeur: 182, hauteur: 420 } },
 ];
 
 // ------------------------------------------------------------------ Compris
@@ -104,10 +108,10 @@ export interface PareBrisePoint {
 export const pareBriseCompris = {
   titre: "Ce qui est compris",
   points: [
-    { titre: "Franchise offerte", texte: "Prise en charge par le centre." },
-    { titre: "0 € à avancer", texte: "Réglés directement par l'assurance." },
+    { titre: "Franchise prise en charge*", texte: "Si votre contrat en prévoit une, selon l'accord de votre assureur." },
+    { titre: "Paiement direct", texte: "Avec une couverture bris de glace, on règle directement avec votre assureur." },
     { titre: "Toutes assurances", texte: "Démarches faites avec vous." },
-    { titre: "Jusqu'à 300 € ou un cadeau", texte: "Pour tout pare-brise remplacé." },
+    { titre: "Jusqu'à 300 € ou un cadeau", texte: "Pour tout pare-brise remplacé." },
     { titre: "Ouvert 7j/7", texte: `${pareBriseHoraires.detail}.` },
   ] as PareBrisePoint[],
 };
@@ -118,7 +122,7 @@ export const pareBriseEtapes = {
   etapes: [
     { titre: "Vous prenez rendez-vous", texte: "Par le formulaire ou par téléphone. On commande le vitrage." },
     { titre: "On remplace", texte: "Au centre ou chez vous, avec un vitrage homologué." },
-    { titre: "Vous recevez votre cadeau", texte: "Jusqu'à 300 € ou le cadeau de votre choix." },
+    { titre: "Vous recevez votre cadeau", texte: "Jusqu'à 300 € ou le cadeau de votre choix." },
   ] as PareBrisePoint[],
 };
 
@@ -153,9 +157,9 @@ export const pareBriseLieu = {
 
 // ------------------------------------------------------------------ Liberté de choix
 export const pareBriseLiberte = {
-  titre: "C'est vous qui choisissez votre réparateur, pas votre assurance.",
-  texte: "La franchise, c'est le centre qui la paie.",
-  puces: ["Rien à avancer", "Aucune démarche", "Franchise offerte + cadeau"],
+  titre: "Vous pouvez choisir votre réparateur.",
+  texte: franchiseCondition,
+  puces: ["Démarches faites avec vous", "Devis écrit avant intervention", "Cadeau au choix"],
 };
 
 // ------------------------------------------------------------------ Qualité
@@ -174,7 +178,7 @@ export const pareBriseAssurances = {
   points: [
     "Déclaration du sinistre faite avec vous au téléphone : aucun document à envoyer.",
     "Pris en charge si votre contrat comprend le bris de vitre ou une omnium.",
-    "Franchise offerte.",
+    franchiseCondition,
   ],
   // Le carrousel affiche la liste de src/data/assurances.ts.
   suite: "… et toutes les autres assurances. Dites-nous la vôtre, on s'occupe du reste.",
@@ -189,20 +193,22 @@ export interface PareBriseQuestion {
 export const pareBriseFaq: PareBriseQuestion[] = [
   {
     question: "Combien je vais payer ?",
-    reponse: "0 €, et vous repartez avec un cadeau. Un devis écrit vous est remis avant toute intervention.",
+    reponse:
+      `Si votre contrat couvre le bris de glace (bris de vitre ou omnium) et que votre assureur donne son accord, le remplacement est réglé directement avec lui. ${franchiseCondition} Sans couverture, vous recevez un devis écrit avant toute intervention.`,
   },
   {
-    question: "C'est quoi le piège ?",
+    question: "Où est le piège ?",
     reponse:
-      "Il n'y en a pas : le cadeau est pris sur notre marge. La facture envoyée à votre assureur est identique à celle d'un autre réparateur.",
+      "Il n'y en a pas : le cadeau est pris sur notre marge. La facture envoyée à votre assureur correspond au remplacement effectué, sans supplément lié au cadeau.",
   },
   {
     question: "Quels sont les cadeaux ?",
     reponse: `Au choix : ${pareBriseCadeaux.map((c) => c.nom).join(", ")}.`,
   },
   {
-    question: "Mon assureur m'a donné un garage, je suis obligé d'y aller ?",
-    reponse: "Non, vous êtes libre de choisir votre réparateur. Et la franchise, c'est pour nous.",
+    question: "Mon assureur me conseille un réparateur : puis-je quand même choisir B MATIC ?",
+    reponse:
+      `En règle générale, oui : vous pouvez choisir votre réparateur. Certains contrats prévoient des conditions particulières (réseau agréé, plafond de prise en charge) : nous les vérifions avec vous avant l'intervention. ${franchiseCondition}`,
   },
   {
     question: "Ça prend combien de temps ?",
@@ -232,15 +238,7 @@ export const pareBriseCtaFinal = {
   cta: { label: "Obtenir mon devis et mon cadeau", to: RDV_PATH },
 };
 
-/** Mention légale de l'offre (petits caractères, obligatoire). */
+/** Mention légale de l'offre (petits caractères, obligatoire), cible des « * ». */
 export const pareBriseMention =
-  "Devis écrit remis avant toute intervention. La prise en charge dépend de votre contrat et de l'accord de votre assureur. Cadeau ou montant selon le remplacement effectué et la prise en charge bris de glace.";
+  `${franchiseCondition} Devis écrit remis avant toute intervention. Cadeau ou montant selon le remplacement effectué et la prise en charge bris de glace.`;
 
-// ------------------------------------------------------------------ Accueil
-/** Bloc « offre pare-brise » de la page d'accueil. */
-export const pareBriseAccueil = {
-  surtitre: "Offre pare-brise",
-  titre: "Franchise offerte + jusqu'à 300 € ou un cadeau",
-  texte: `Remplacement à ${zone} · 0 € à avancer · Toutes assurances · 7j/7`,
-  cta: { label: "Découvrir l'offre", to: "/pare-brise" },
-};

@@ -7,7 +7,7 @@ import { pagesSeo } from "@/data/seo";
 
 const advantages = [
   { icon: Shield, title: "Vitrages homologués", desc: "Vitrages conformes à la norme européenne 43R, capteurs et caméras compris, pose garantie." },
-  { icon: Eye, title: "Transparence", desc: "Devis écrit avant toute intervention. Nous gérons le dossier avec votre assureur, vous n'avancez rien." },
+  { icon: Eye, title: "Transparence", desc: "Devis écrit avant toute intervention. Nous gérons le dossier avec votre assureur, et la franchise est prise en charge selon votre contrat." },
   { icon: Heart, title: "Disponibilité", desc: `Centre ouvert ${horaires.centre.texte}, et intervention à domicile ou au travail autour de Liège.` },
 ];
 
@@ -18,10 +18,10 @@ const APropos = () => {
       <div className="container mx-auto px-4">
         <AnimatedSection>
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-center mb-6">
-            <span className="text-gradient-neon">À propos</span> <span className="text-foreground">de B MATIC</span>
+            À propos de B MATIC
           </h1>
           <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12 text-lg leading-relaxed">
-            B MATIC est un centre spécialisé dans le pare-brise et le vitrage automobile, installé à Ans. Réparation d'impact, remplacement de pare-brise, de vitres et de lunette arrière : au centre ou chez vous, avec la franchise offerte. Centre ouvert {horaires.centre.detail}.
+            B MATIC est un centre spécialisé dans le pare-brise et le vitrage automobile, installé à Ans. Réparation d'impact, remplacement de pare-brise, de vitres et de lunette arrière : au centre ou chez vous, avec votre franchise prise en charge selon votre contrat et l'accord de votre assureur. Centre ouvert {horaires.centre.detail}.
           </p>
         </AnimatedSection>
 
@@ -40,8 +40,8 @@ const APropos = () => {
           {advantages.map((a, i) => (
             <AnimatedSection key={a.title} delay={i * 150}>
               <GlowCard className="text-center">
-                <div className="w-14 h-14 rounded-full bg-gradient-neon flex items-center justify-center mx-auto mb-4">
-                  <a.icon className="w-6 h-6 text-primary-foreground" />
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                  <a.icon className="w-5 h-5 text-foreground" />
                 </div>
                 <h3 className="font-heading text-lg font-semibold mb-3 text-foreground">{a.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{a.desc}</p>
