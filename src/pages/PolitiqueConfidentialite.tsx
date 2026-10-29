@@ -160,6 +160,14 @@ const PolitiqueConfidentialite = () => {
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
         <li>
+          <strong>Google Maps</strong> (Google Ireland Ltd.) — carte interactive affichée sur les
+          pages Accueil et Contact, <strong>uniquement si vous cliquez sur « Afficher la carte »</strong>.
+          Avant ce clic, aucun échange n'a lieu avec Google. Après ce clic, Google reçoit votre
+          adresse IP et les informations techniques de votre navigateur. Le bouton
+          « Itinéraire » ouvre simplement Google Maps dans un nouvel onglet. Voir leur politique :{" "}
+          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>.
+        </li>
+        <li>
           <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
           d'intelligence artificielle utilisé pour deux usages : (1) l'aide à la rédaction des
           actualités, dans l'espace d'administration (seuls les textes du centre lui sont
@@ -182,6 +190,12 @@ const PolitiqueConfidentialite = () => {
         par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
         Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
+      </p>
+      <p>
+        <strong>Carte Google Maps :</strong> elle n'est chargée que si vous cliquez sur
+        « Afficher la carte ». Ce clic vaut accord : Google peut alors déposer ses propres
+        cookies, sous sa responsabilité. Si vous ne cliquez pas, aucun cookie Google n'est
+        déposé ; l'adresse du centre reste affichée en texte.
       </p>
 
       <h2>6. Sécurité</h2>
