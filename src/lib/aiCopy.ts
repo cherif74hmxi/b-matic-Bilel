@@ -1,7 +1,7 @@
 // ============================================================================
 //  Rédaction assistée (Gemini) — appel de l'Edge Function « generate-copy »
 //  La clé Gemini reste un secret Supabase : le navigateur n'envoie que le JWT
-//  de l'admin connecté et les caractéristiques du véhicule / le sujet de l'actu.
+//  de l'admin connecté et le sujet de l'actualité.
 //  (Scan de carte grise, même fonction : voir src/lib/registrationScan.ts.)
 //  Activation : VITE_AI_ENABLED=true dans .env, une fois la fonction déployée.
 // ============================================================================
@@ -16,20 +16,6 @@ export const AI_ENABLED = import.meta.env.VITE_AI_ENABLED === "true";
 /** Longueurs maximales acceptées par l'Edge Function (à garder identiques). */
 export const AI_LIMITS = { notes: 10_000, draft: 20_000 } as const;
 
-export interface VehicleCopyInput {
-  make: string;
-  model: string;
-  version?: string;
-  year?: number;
-  mileage_km?: number;
-  fuel?: string;
-  gearbox?: string;
-  power_hp?: number;
-  price_eur?: number;
-  /** Notes libres du garage (ex. description déjà saisie), reformulées sans rien inventer. */
-  notes?: string;
-}
-
 export interface PostCopyInput {
   topic: string;
   draft?: string;
@@ -38,7 +24,7 @@ export interface PostCopyInput {
 /** Champs vides acceptés (null) : retirés avant l'envoi. */
 type Nullable<T> = { [K in keyof T]: T[K] | null };
 
-export type CopyRequest = { kind: "vehicle"; data: Nullable<VehicleCopyInput> } | { kind: "post"; data: Nullable<PostCopyInput> };
+export type CopyRequest = { kind: "post"; data: Nullable<PostCopyInput> };
 
 export interface GeneratedCopy {
   title: string;

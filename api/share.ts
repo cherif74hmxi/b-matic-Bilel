@@ -1,15 +1,14 @@
 // ============================================================================
-//  Aperçu de partage des fiches véhicules et actualités (fonction Vercel)
+//  Aperçu de partage des actualités (fonction Vercel)
 // ----------------------------------------------------------------------------
-//  vercel.json réécrit /vehicules/:slug et /actualites/:slug vers cette
-//  fonction. Elle renvoie la page habituelle (dist/index.html) avec un <head>
-//  déjà rempli : titre, description, photo et JSON-LD de la fiche. C'est ce
+//  vercel.json réécrit /actualites/:slug vers cette fonction. Elle renvoie la
+//  page habituelle (dist/index.html) avec un <head> déjà rempli : titre,
+//  description, photo et JSON-LD de l'article. C'est ce
 //  qu'affichent WhatsApp, Facebook ou LinkedIn quand on partage le lien.
 //  React démarre ensuite normalement.
 //
 //  En cas de problème (fiche absente, Supabase injoignable…), la page est
 //  renvoyée sans changement : le site reste toujours accessible.
-//  Les formats (prix, km) reprennent ceux de src/lib/contentModel.ts.
 // ============================================================================
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -18,15 +17,6 @@ import { clipDescription, injectHead, type HeadMeta } from "./_lib/head.js";
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
 const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-const FUEL: Record<string, string> = {
-  essence: "Essence", diesel: "Diesel", hybride: "Hybride",
-  hybride_rechargeable: "Hybride rechargeable", electrique: "Électrique", gpl: "GPL",
-};
-
-const price = (n: number | null) =>
-  n === null ? null : new Intl.NumberFormat("fr-BE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
-const km = (n: number | null) => (n === null ? null : `${new Intl.NumberFormat("fr-BE").format(n)} km`);
 
 export const siteBase = (requestUrl: string) => {
   const prod = process.env.VERCEL_PROJECT_PRODUCTION_URL;
@@ -45,56 +35,9 @@ async function rest<T>(query: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-interface VehicleRow {
-  slug: string; status: string; title: string; make: string | null; model: string | null;
-  year: number | null; mileage_km: number | null; fuel: string | null; price_eur: number | null;
-  description: string | null; vehicle_photos: { storage_path: string }[];
-}
-
 interface PostRow {
   slug: string; title: string; excerpt: string | null; content: string; cover_path: string | null;
   published_at: string | null; created_at: string; updated_at: string;
-}
-
-export async function vehicleMeta(slug: string, base: string): Promise<HeadMeta | null> {
-  const rows = await rest<VehicleRow[]>(
-    `vehicles?select=slug,status,title,make,model,year,mileage_km,fuel,price_eur,description,vehicle_photos(storage_path)` +
-      `&status=in.(published,sold)&slug=eq.${slug}&vehicle_photos.order=is_cover.desc,position.asc&vehicle_photos.limit=1&limit=1`,
-  );
-  const v = rows[0];
-  if (!v) return null;
-  const sold = v.status === "sold";
-  const specs = [v.year, km(v.mileage_km), v.fuel && FUEL[v.fuel]].filter(Boolean).join(" · ");
-  const url = `${base}/vehicules/${v.slug}`;
-  const image = v.vehicle_photos[0] ? publicFile("vehicle-photos", v.vehicle_photos[0].storage_path) : `${base}/og-image.jpg`;
-  return {
-    title: `${v.title}${sold ? " (vendu)" : price(v.price_eur) ? ` — ${price(v.price_eur)}` : ""} | B MATIC`,
-    description: clipDescription(`${v.title}${specs ? ` : ${specs}` : ""}. Véhicule d'occasion chez B MATIC à Ans (Liège).`),
-    url,
-    image,
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "Car",
-      name: v.title,
-      url,
-      image,
-      ...(v.make ? { brand: { "@type": "Brand", name: v.make } } : {}),
-      ...(v.model ? { model: v.model } : {}),
-      ...(v.year ? { vehicleModelDate: String(v.year) } : {}),
-      ...(v.mileage_km !== null ? { mileageFromOdometer: { "@type": "QuantitativeValue", value: v.mileage_km, unitCode: "KMT" } } : {}),
-      ...(v.price_eur !== null
-        ? {
-            offers: {
-              "@type": "Offer",
-              price: v.price_eur,
-              priceCurrency: "EUR",
-              availability: sold ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
-              seller: { "@id": `${base}/#garage` },
-            },
-          }
-        : {}),
-    },
-  };
 }
 
 export async function postMeta(slug: string, base: string): Promise<HeadMeta | null> {
@@ -156,7 +99,7 @@ export async function GET(request: Request): Promise<Response> {
     const slug = params.get("slug") ?? "";
     if (!SUPABASE_URL || !SUPABASE_KEY || !SLUG.test(slug)) return new Response(html, { headers });
     const base = siteBase(request.url);
-    const meta = kind === "vehicle" ? await vehicleMeta(slug, base) : kind === "post" ? await postMeta(slug, base) : null;
+    const meta = kind === "post" ? await postMeta(slug, base) : null;
     return new Response(meta ? injectHead(html, meta) : html, { headers });
   } catch {
     return new Response(html, { headers });

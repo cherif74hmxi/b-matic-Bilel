@@ -37,10 +37,9 @@ const PolitiqueConfidentialite = () => {
       <p>Nous collectons uniquement les données que vous nous transmettez volontairement via nos formulaires :</p>
       <ul>
         <li><strong>Formulaire de contact :</strong> nom, adresse e-mail, numéro de téléphone et contenu de votre message.</li>
-        <li><strong>Prise de rendez-vous (mécanique / detailing) :</strong> prénom, nom, e-mail, téléphone, prestation choisie, date et heure souhaitées, et informations sur votre véhicule (numéro de châssis / VIN ou photo de la carte grise).</li>
-        <li><strong>Demande de reprise de véhicule :</strong> nom, téléphone, e-mail (facultatif), caractéristiques et état du véhicule, ainsi que les photos du véhicule que vous choisissez de joindre.</li>
+        <li><strong>Demande de devis / prise de rendez-vous pare-brise :</strong> prénom, nom, e-mail, téléphone, prestation choisie, date et heure souhaitées, et informations sur votre véhicule (numéro de châssis / VIN ou photo de la carte grise).</li>
         <li>
-          <strong>Scan de la carte grise (facultatif, formulaire de reprise) :</strong> si vous choisissez
+          <strong>Scan de la carte grise (facultatif, formulaire de rendez-vous) :</strong> si vous choisissez
           cette option, la photo de votre carte grise est transmise à notre assistant de lecture
           ({legalInfo.aiAssistant.name}, voir § 4) uniquement pour en lire les{" "}
           <strong>caractéristiques techniques du véhicule</strong> (marque, modèle, version, date de
@@ -96,11 +95,6 @@ const PolitiqueConfidentialite = () => {
             </td>
           </tr>
           <tr>
-            <td>Établir une offre de reprise de véhicule</td>
-            <td>Mesures précontractuelles à votre demande (art. 6.1.b) et consentement</td>
-            <td>{legalInfo.leadsRetentionYears} ans à compter de la demande</td>
-          </tr>
-          <tr>
             <td>Lire la carte grise (scan facultatif) et limiter les abus de ce service</td>
             <td>Votre demande (mesures précontractuelles, art. 6.1.b) ; intérêt légitime à protéger le service (art. 6.1.f) pour l'empreinte d'IP</td>
             <td>Photo : non conservée (traitement immédiat). Empreinte d'IP : 24 heures</td>
@@ -145,10 +139,10 @@ const PolitiqueConfidentialite = () => {
         <li>
           <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
           d'intelligence artificielle utilisé pour deux usages : (1) l'aide à la rédaction des
-          annonces et actualités, dans l'espace d'administration du garage (seuls les
-          caractéristiques des véhicules et les textes du garage lui sont transmis) ; (2) la{" "}
+          actualités, dans l'espace d'administration (seuls les textes du centre lui sont
+          transmis) ; (2) la{" "}
           <strong>lecture de la carte grise</strong>, uniquement si vous choisissez le scan dans le
-          formulaire de reprise : la photo lui est transmise pour en extraire les seules
+          formulaire de rendez-vous : la photo lui est transmise pour en extraire les seules
           caractéristiques techniques du véhicule, sans conservation de notre part. Vos coordonnées
           et les autres données des formulaires{" "}
           <strong>ne lui sont jamais envoyées</strong>. Ce prestataire est établi aux États-Unis

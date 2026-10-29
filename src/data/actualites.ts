@@ -4,13 +4,13 @@
 // ============================================================================
 
 export const actualitesSeo = {
-  title: "Actualités du garage | B MATIC — Ans, Liège",
-  description: "Les dernières nouvelles de B MATIC : offres, arrivages de véhicules, horaires et conseils de votre garage à Ans.",
+  title: "Actualités | B MATIC pare-brise — Ans, Liège",
+  description: "Les dernières nouvelles de B MATIC, votre spécialiste pare-brise à Ans (Liège) : offres, cadeaux du moment, horaires et conseils.",
 };
 
 export const actualitesTextes = {
   titre: "Actualités",
-  texte: "Les nouvelles du garage : offres, arrivages, horaires…",
+  texte: "Les nouvelles du centre : offres, cadeaux du moment, horaires…",
   vide: "Aucune actualité pour le moment.",
   erreur: "Impossible de charger les actualités pour le moment. Réessayez dans un instant.",
   lire: "Lire l'article",
@@ -20,5 +20,5 @@ export const actualitesTextes = {
   /** Contact block at the bottom of an article. */
   ctaQuestion: "Une question ? Notre équipe vous répond.",
   ctaContact: "Nous contacter",
-  ctaVehicules: "Voir nos véhicules",
+  ctaRdv: "Demander un devis",
 };

@@ -101,7 +101,6 @@ export interface PeriodStats {
   clicks: Partial<Record<ClickKind, number>>;
   leads: Partial<Record<LeadType, Partial<Record<LeadStatus, number>>>>;
   top_pages: { path: string; views: number }[];
-  top_vehicles: { id: string; title: string; slug: string; status: string; views: number }[];
   sources: { host: string; visits: number }[];
 }
 

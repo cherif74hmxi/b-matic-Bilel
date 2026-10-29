@@ -3,6 +3,8 @@
 // ============================================================================
 import { insertPublicRow } from "@/lib/publicInsert";
 
+// « reprise » : formulaire retiré lors du pivot pare-brise, gardé pour afficher
+// les demandes déjà reçues (la contrainte de la table l'accepte toujours).
 export type LeadType = "contact" | "rdv" | "reprise";
 export type LeadStatus = "new" | "in_progress" | "done" | "archived";
 

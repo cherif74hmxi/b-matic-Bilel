@@ -1,18 +1,18 @@
 // ============================================================================
-//  Vues par fiche (véhicule / actualité), d'après page_views — admin
+//  Vues par actualité, d'après page_views — admin
 //  Fonction SQL admin_content_views (supabase/migrations/20261022000001_content_views.sql)
 // ============================================================================
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
-export type ContentKind = "vehicules" | "actualites";
+export type ContentKind = "actualites";
 
 export interface ContentViews {
   total: number;
   last30: number;
 }
 
-/** Vues par id de fiche (véhicule ou actualité). */
+/** Vues par id d'actualité. */
 export async function fetchContentViews(kind: ContentKind): Promise<Map<string, ContentViews>> {
   const { data, error } = await supabase.rpc("admin_content_views", { p_kind: kind });
   if (error) throw error;

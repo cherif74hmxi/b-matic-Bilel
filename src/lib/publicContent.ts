@@ -1,12 +1,11 @@
 // ============================================================================
-//  Lecture des contenus PUBLICS : véhicules (publiés + vendus) et actualités
+//  Lecture des contenus PUBLICS : actualités publiées
 // ----------------------------------------------------------------------------
 //  La RLS limite déjà les visiteurs au contenu en ligne ; le filtre de statut
 //  est répété ici pour qu'un admin connecté ne voie pas ses brouillons sur le
-//  site. Colonnes choisies une à une (le VIN n'est pas affiché publiquement).
-//  Pas de supabase-js ici : voir `rest()` plus bas.
+//  site. Pas de supabase-js ici : voir `rest()` plus bas.
 // ============================================================================
-import { STORAGE_BUCKETS, thumbPath, type Post, type Vehicle } from "@/lib/contentModel";
+import { STORAGE_BUCKETS, thumbPath, type Post } from "@/lib/contentModel";
 
 // Lecture par l'API REST (PostgREST) avec un simple fetch : le site public
 // n'embarque pas supabase-js (même principe que publicInsert.ts).
@@ -32,52 +31,10 @@ async function rest<T>(path: string, body?: unknown): Promise<T> {
 const publicFileUrl = (bucket: string, path: string) =>
   `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path.split("/").map(encodeURIComponent).join("/")}`;
 
-export const photoUrl = (storagePath: string) => publicFileUrl(STORAGE_BUCKETS.vehiclePhotos, storagePath);
-/** Image responsive : miniature (480 px) sur mobile, image complète au-delà. */
-export const photoSrcSet = (storagePath: string) => `${photoUrl(thumbPath(storagePath))} 480w, ${photoUrl(storagePath)} 1920w`;
 export const postCoverUrl = (path: string, thumb = false) => publicFileUrl(STORAGE_BUCKETS.postImages, thumb ? thumbPath(path) : path);
 export { thumbPath };
 
-export type PublicKind = "vehicules" | "actualites";
-
-const LIST_COLUMNS = "id,slug,status,title,make,model,version,year,mileage_km,fuel,gearbox,power_hp,price_eur,published_at,created_at,updated_at";
-const PHOTO_COLUMNS = "vehicle_photos(storage_path,is_cover,position,alt)";
-const ONLINE = "status=in.(published,sold)";
-
-export type PublicVehicle = Omit<Vehicle, "vin">;
-
-export interface PublicPhoto {
-  storage_path: string;
-  is_cover: boolean;
-  position: number;
-  alt: string | null;
-}
-
-export interface PublicVehicleWithPhotos extends PublicVehicle {
-  vehicle_photos: PublicPhoto[];
-}
-
-/** Vehicle in a list: no description, and only the cover photo. */
-export type PublicVehicleSummary = Omit<PublicVehicleWithPhotos, "description">;
-
-/** Photos dans l'ordre d'affichage : couverture d'abord, puis l'ordre choisi dans l'admin. */
-export const orderedPhotos = (photos: PublicPhoto[]) =>
-  [...photos].sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.position - b.position);
-
-/**
- * Vehicle list (most recent first), lightened: cover photo only, no description.
- * `availableOnly` + `limit`: the "latest vehicles" block on the home page.
- */
-export const listPublicVehicles = ({ availableOnly = false, limit }: { availableOnly?: boolean; limit?: number } = {}) =>
-  rest<PublicVehicleSummary[]>(
-    `vehicles?select=${LIST_COLUMNS},${PHOTO_COLUMNS}&${availableOnly ? "status=eq.published" : ONLINE}` +
-      `&vehicle_photos.order=is_cover.desc,position.asc&vehicle_photos.limit=1&order=published_at.desc.nullslast${limit ? `&limit=${limit}` : ""}`,
-  );
-
-export async function getPublicVehicle(slug: string): Promise<PublicVehicleWithPhotos | null> {
-  const rows = await rest<PublicVehicleWithPhotos[]>(`vehicles?select=${LIST_COLUMNS},description,${PHOTO_COLUMNS}&${ONLINE}&slug=eq.${encodeURIComponent(slug)}&limit=1`);
-  return rows[0] ?? null;
-}
+export type PublicKind = "actualites";
 
 const POST_SELECT = "select=id,slug,status,title,excerpt,content,cover_path,published_at,created_at,updated_at&status=eq.published";
 

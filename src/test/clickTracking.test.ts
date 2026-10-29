@@ -12,13 +12,13 @@ describe("classifyContactLink", () => {
   });
 
   it("compte les liens vers la réservation comme RDV", () => {
-    expect(classifyContactLink("/mecanique", origin)).toBe("rdv");
-    expect(classifyContactLink("https://bmatic.be/mecanique/?service=vidange", origin)).toBe("rdv");
+    expect(classifyContactLink("/rendez-vous", origin)).toBe("rdv");
+    expect(classifyContactLink("https://bmatic.be/rendez-vous/?besoin=pare-brise", origin)).toBe("rdv");
   });
 
   it("ignore les autres liens", () => {
     expect(classifyContactLink("/contact", origin)).toBeNull();
-    expect(classifyContactLink("https://autre-site.be/mecanique", origin)).toBeNull();
+    expect(classifyContactLink("https://autre-site.be/rendez-vous", origin)).toBeNull();
     expect(classifyContactLink("https://www.facebook.com/bmatic", origin)).toBeNull();
   });
 });

@@ -12,8 +12,6 @@ import RequireAdmin from "@/components/admin/RequireAdmin";
 import AdminLayout from "@/components/admin/AdminLayout";
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
-import AdminVehicules from "./AdminVehicules";
-import AdminVehiculeForm from "./AdminVehiculeForm";
 import AdminActualites from "./AdminActualites";
 import AdminActualiteForm from "./AdminActualiteForm";
 import AdminAgenda from "./AdminAgenda";
@@ -33,9 +31,6 @@ const AdminApp = () => {
           }
         >
           <Route index element={<AdminDashboard />} />
-          <Route path="vehicules" element={<AdminVehicules />} />
-          <Route path="vehicules/nouveau" element={<AdminVehiculeForm />} />
-          <Route path="vehicules/:id" element={<AdminVehiculeForm />} />
           <Route path="agenda" element={<AdminAgenda />} />
           <Route path="actualites" element={<AdminActualites />} />
           <Route path="actualites/nouvelle" element={<AdminActualiteForm />} />

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, ImageUp, Loader2, MoveDiagonal, ShieldCheck, AlertTriangle } from "lucide-react";
 import { scanRegistration, ScanError, type RegistrationScan } from "@/lib/registrationScan";
-import { repriseScan } from "@/data/reprise";
+import { scanTextes } from "@/data/scanCarteGrise";
 
 // ============================================================================
 //  RegistrationScanner — photo de la carte grise → champs pré-remplis
 // ----------------------------------------------------------------------------
-//  Réutilisé par le formulaire de reprise (public) et l'admin (ajout véhicule).
+//  Utilisé par le formulaire de rendez-vous (étape « Véhicule »), facultatif.
 //  Cadre « scanner » avec 4 coins qui respirent + indice « reculez » : simple
 //  guide visuel en CSS (transform uniquement, figé sous reduced-motion).
 //  La photo n'est affichée qu'en local pendant la lecture, puis oubliée.
@@ -71,7 +71,7 @@ const RegistrationScanner = ({
 
   return (
     <div>
-      <p className="font-semibold text-sm text-center mb-3">{repriseScan.consigne}</p>
+      <p className="font-semibold text-sm text-center mb-3">{scanTextes.consigne}</p>
 
       <div className="relative aspect-[3/2] w-full max-w-md mx-auto rounded-2xl bg-background/60 border border-border overflow-hidden">
         {preview ? <img src={preview} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" /> : <DocSketch />}
@@ -86,22 +86,22 @@ const RegistrationScanner = ({
             <div className="scan-line" aria-hidden="true" />
             <div className="absolute inset-x-0 bottom-3 flex justify-center" role="status">
               <span className="inline-flex items-center gap-2 rounded-full bg-background/85 px-3 py-1.5 text-xs font-medium">
-                <Loader2 className="w-4 h-4 animate-spin text-neon-cyan" aria-hidden="true" /> {repriseScan.lecture}
+                <Loader2 className="w-4 h-4 animate-spin text-neon-cyan" aria-hidden="true" /> {scanTextes.lecture}
               </span>
             </div>
           </>
         )}
       </div>
       <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-2">
-        <MoveDiagonal className="scan-hint w-3.5 h-3.5 text-neon-cyan shrink-0" aria-hidden="true" /> {repriseScan.indice}
+        <MoveDiagonal className="scan-hint w-3.5 h-3.5 text-neon-cyan shrink-0" aria-hidden="true" /> {scanTextes.indice}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 max-w-md mx-auto">
         <button type="button" onClick={() => camera.current?.click()} disabled={reading} className="btn-main min-h-[48px]">
-          <Camera className="w-4 h-4" aria-hidden="true" /> {repriseScan.boutonPhoto}
+          <Camera className="w-4 h-4" aria-hidden="true" /> {scanTextes.boutonPhoto}
         </button>
         <button type="button" onClick={() => gallery.current?.click()} disabled={reading} className="btn-ghost min-h-[48px] disabled:opacity-45">
-          <ImageUp className="w-4 h-4" aria-hidden="true" /> {repriseScan.boutonGalerie}
+          <ImageUp className="w-4 h-4" aria-hidden="true" /> {scanTextes.boutonGalerie}
         </button>
       </div>
       {/* capture : ouvre directement l'appareil photo arrière sur téléphone. */}
@@ -114,7 +114,7 @@ const RegistrationScanner = ({
         </p>
       )}
       <p className="flex gap-2 items-start text-xs text-muted-foreground mt-4 max-w-md mx-auto">
-        <ShieldCheck className="w-4 h-4 shrink-0 text-neon-cyan" aria-hidden="true" /> {repriseScan.confidentialite}
+        <ShieldCheck className="w-4 h-4 shrink-0 text-neon-cyan" aria-hidden="true" /> {scanTextes.confidentialite}
       </p>
     </div>
   );

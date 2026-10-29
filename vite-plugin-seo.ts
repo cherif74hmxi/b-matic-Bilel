@@ -84,7 +84,7 @@ export default function seoPrerender({ siteUrl, alias }: { siteUrl: string; alia
           path.join(outDir, "sitemap-pages.xml"),
           `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
         );
-        // Index : pages fixes (ce build) + véhicules et actualités (api/sitemap-annonces.ts, toujours à jour).
+        // Index : pages fixes (ce build) + actualités (api/sitemap-annonces.ts, toujours à jour).
         await fs.writeFile(
           path.join(outDir, "sitemap.xml"),
           `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +

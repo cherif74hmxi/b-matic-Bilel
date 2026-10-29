@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { conseils, conseilsLies, findConseil, tempsDeLecture } from "@/data/conseils";
 
 describe("data/conseils", () => {
-  it("expose au moins 5 articles", () => {
-    expect(conseils.length).toBeGreaterThanOrEqual(5);
+  it("expose au moins 4 articles", () => {
+    expect(conseils.length).toBeGreaterThanOrEqual(4);
   });
 
   it("a des slugs uniques et non vides", () => {

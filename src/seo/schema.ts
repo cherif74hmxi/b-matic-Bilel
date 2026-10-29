@@ -3,12 +3,15 @@
 // ----------------------------------------------------------------------------
 //  Utilisées par les pages (via useSeo) ET par le pré-rendu du build : une
 //  seule source, aucun texte en double.
-//  Le garage (AutoRepair) a un @id stable : les autres blocs (services,
-//  articles) y font référence au lieu de le répéter.
+//  Le centre a un @id stable : les autres blocs (services, articles) y font
+//  référence au lieu de le répéter. schema.org n'a pas de type « AutoGlass » :
+//  on garde AutoRepair (sous-type d'AutomotiveBusiness) avec le catalogue des
+//  vitrages traités. La catégorie Google « Vitrier auto » se règle dans la
+//  fiche Google Business Profile.
 // ============================================================================
 import { legalInfo } from "@/data/legal";
 import { horaires } from "@/data/horaires";
-import { pareBriseFaq, pareBriseLieu, pareBriseRayonKm, pareBriseSeo } from "@/data/parebrise";
+import { pareBriseFaq, pareBriseLieu, pareBrisePrestations, pareBriseRayonKm, pareBriseSeo } from "@/data/parebrise";
 import { faqItems } from "@/data/faq";
 import { conseils, conseilTexte, type Conseil } from "@/data/conseils";
 import { pagesSeo } from "@/data/seo";
@@ -30,15 +33,22 @@ const adresse = () => ({
   addressCountry: legalInfo.addressParts.country,
 });
 
-/**
- * Le garage : centre ouvert 7j/7 de 10h à 19h (src/data/horaires.ts).
- * Le dépannage 24h/24 est un service distinct (depannageJsonLd), jamais
- * mélangé aux horaires d'ouverture du centre.
- */
+/** Zone d'intervention : les villes citées + un cercle de 70 km autour de Liège. */
+const zoneServie = () => [
+  ...pareBriseLieu.villes.map((name) => ({ "@type": "City", name })),
+  {
+    "@type": "GeoCircle",
+    geoMidpoint: { "@type": "GeoCoordinates", latitude: 50.6326, longitude: 5.5797 }, // Liège
+    geoRadius: pareBriseRayonKm * 1000,
+  },
+];
+
+/** Le centre pare-brise : ouvert 7j/7 de 10h à 19h (src/data/horaires.ts). */
 export const garageJsonLd = () => ({
   "@type": "AutoRepair",
   "@id": garageId(),
   name: legalInfo.siteName,
+  description: pagesSeo["/"].description,
   legalName: legalInfo.companyName,
   vatID: legalInfo.vat,
   url: absoluteUrl("/"),
@@ -47,7 +57,16 @@ export const garageJsonLd = () => ({
   telephone: legalInfo.phone,
   email: legalInfo.email,
   address: adresse(),
-  areaServed: { "@type": "City", name: "Liège" },
+  areaServed: zoneServie(),
+  knowsAbout: ["Pare-brise", "Vitrage automobile", "Bris de glace"],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Vitrage automobile",
+    itemListElement: pareBrisePrestations.map((name) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name, serviceType: "Vitrage automobile" },
+    })),
+  },
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -60,7 +79,17 @@ export const garageJsonLd = () => ({
 
 const garageRef = () => ({ "@id": garageId() });
 
-/** Accueil : le site + le garage. */
+/** Le service pare-brise (offre phare), repris par l'accueil et la page pare-brise. */
+const pareBriseService = () => ({
+  "@type": "Service",
+  name: pareBriseSeo.serviceName,
+  serviceType: "Remplacement de pare-brise",
+  description: pareBriseSeo.description,
+  provider: garageRef(),
+  areaServed: zoneServie(),
+});
+
+/** Accueil : le site + le centre + le service pare-brise. */
 export const accueilJsonLd = () => ({
   "@context": CONTEXT,
   "@graph": [
@@ -72,6 +101,7 @@ export const accueilJsonLd = () => ({
       publisher: garageRef(),
     },
     garageJsonLd(),
+    pareBriseService(),
   ],
 });
 
@@ -84,47 +114,11 @@ export const contactJsonLd = () => ({
   ],
 });
 
-/** Dépannage : service disponible 24h/24, 7j/7. */
-export const depannageJsonLd = () => ({
-  "@context": CONTEXT,
-  "@graph": [
-    {
-      "@type": "Service",
-      name: "Dépannage et remorquage 24h/24",
-      serviceType: "Dépannage automobile",
-      description: pagesSeo["/depannage"].description,
-      provider: garageRef(),
-      areaServed: { "@type": "City", name: "Liège" },
-      hoursAvailable: {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: TOUS_LES_JOURS,
-        opens: "00:00",
-        closes: "23:59",
-      },
-    },
-    garageJsonLd(),
-  ],
-});
-
 /** Pare-brise : le service (avec sa zone d'intervention) + la FAQ. */
 export const pareBriseJsonLd = () => ({
   "@context": CONTEXT,
   "@graph": [
-    {
-      "@type": "Service",
-      name: pareBriseSeo.serviceName,
-      serviceType: "Remplacement de pare-brise",
-      description: pareBriseSeo.description,
-      provider: garageRef(),
-      areaServed: [
-        ...pareBriseLieu.villes.map((name) => ({ "@type": "City", name })),
-        {
-          "@type": "GeoCircle",
-          geoMidpoint: { "@type": "GeoCoordinates", latitude: 50.6326, longitude: 5.5797 }, // Liège
-          geoRadius: pareBriseRayonKm * 1000,
-        },
-      ],
-    },
+    pareBriseService(),
     garageJsonLd(),
     {
       "@type": "FAQPage",
@@ -143,7 +137,7 @@ export const conseilsJsonLd = () => ({
   "@graph": [
     {
       "@type": "ItemList",
-      name: "Conseils auto B MATIC",
+      name: "Conseils pare-brise B MATIC",
       itemListElement: conseils.map((c, i) => ({
         "@type": "ListItem",
         position: i + 1,

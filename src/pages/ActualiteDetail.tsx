@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import NeonButton from "@/components/NeonButton";
+import { RDV_PATH } from "@/data/rdv";
 import useSeo, { useNoIndex } from "@/hooks/useSeo";
 import { formatPostDate, postCoverUrl, getPublicPost, paragraphs, resolveSlugRedirect } from "@/lib/publicContent";
 import { autoExcerpt } from "@/lib/contentModel";
@@ -144,7 +145,7 @@ const ActualiteDetail = () => {
           <p className="text-muted-foreground mb-6">{actualitesTextes.ctaQuestion}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <NeonButton to="/contact">{actualitesTextes.ctaContact}</NeonButton>
-            <NeonButton to="/vehicules">{actualitesTextes.ctaVehicules}</NeonButton>
+            <NeonButton to={RDV_PATH}>{actualitesTextes.ctaRdv}</NeonButton>
           </div>
         </div>
       </article>

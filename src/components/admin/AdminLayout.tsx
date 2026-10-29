@@ -1,5 +1,5 @@
 import { NavLink, Link, Outlet } from "react-router-dom";
-import { CalendarDays, Car, ExternalLink, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
+import { CalendarDays, ExternalLink, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
 import { toast } from "sonner";
 import logo from "@/assets/bmatic-logo.webp";
 import { useAdminSession } from "@/hooks/useAdminSession";
@@ -15,7 +15,6 @@ import { guardLinkClick, confirmLeave } from "@/lib/unsavedChanges";
 const navItems = [
   { to: "/admin", label: "Tableau de bord", short: "Accueil", icon: LayoutDashboard, end: true },
   { to: "/admin/agenda", label: "Agenda", short: "Agenda", icon: CalendarDays, end: false },
-  { to: "/admin/vehicules", label: "Véhicules", short: "Véhicules", icon: Car, end: false },
   { to: "/admin/actualites", label: "Actualités", short: "Actus", icon: Newspaper, end: false },
 ];
 

@@ -10,7 +10,7 @@ import { insertPublicRow } from "@/lib/publicInsert";
 //  liens du site public, y compris ceux ajoutés plus tard. N'enregistre que le
 //  type de clic et la page (sans paramètres). Aucun identifiant de visiteur.
 //  Désactivé en développement et pour les navigateurs automatisés, comme
-//  PageViewTracker. Le clic sur le lien de RDV de la page /mecanique elle-même
+//  PageViewTracker. Le clic sur le lien de RDV de la page /rendez-vous elle-même
 //  n'est pas compté (on y est déjà).
 // ============================================================================
 

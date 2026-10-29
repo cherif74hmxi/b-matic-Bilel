@@ -9,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import ChunkErrorBoundary from "@/components/ChunkErrorBoundary";
 import PageViewTracker from "@/components/PageViewTracker";
 import ContactClickTracker from "@/components/ContactClickTracker";
+import { RDV_PATH } from "@/data/rdv";
 // Accueil chargé immédiatement (page d'atterrissage → LCP rapide).
 import Index from "./pages/Index";
 
@@ -16,14 +17,10 @@ import Index from "./pages/Index";
 // initial reste léger, chaque page ne se télécharge qu'à la navigation.
 const APropos = lazy(() => import("./pages/APropos"));
 const Contact = lazy(() => import("./pages/Contact"));
-const Reprise = lazy(() => import("./pages/Reprise"));
-const Mecanique = lazy(() => import("./pages/Mecanique"));
-const Depannage = lazy(() => import("./pages/Depannage"));
+const RendezVous = lazy(() => import("./pages/RendezVous"));
 const PareBrise = lazy(() => import("./pages/PareBrise"));
 const Conseils = lazy(() => import("./pages/Conseils"));
 const ConseilDetail = lazy(() => import("./pages/ConseilDetail"));
-const Vehicules = lazy(() => import("./pages/Vehicules"));
-const VehiculeDetail = lazy(() => import("./pages/VehiculeDetail"));
 const Actualites = lazy(() => import("./pages/Actualites"));
 const ActualiteDetail = lazy(() => import("./pages/ActualiteDetail"));
 const PolitiqueConfidentialite = lazy(() => import("./pages/PolitiqueConfidentialite"));
@@ -46,20 +43,26 @@ const publicRoutes = [
   { path: "/", element: <Index /> },
   { path: "/a-propos", element: <APropos /> },
   { path: "/contact", element: <Contact /> },
-  { path: "/reprise", element: <Reprise /> },
-  { path: "/mecanique", element: <Mecanique /> },
-  { path: "/depannage", element: <Depannage /> },
+  { path: RDV_PATH, element: <RendezVous /> },
   { path: "/pare-brise", element: <PareBrise /> },
   { path: "/conseils", element: <Conseils /> },
   { path: "/conseils/:slug", element: <ConseilDetail /> },
-  { path: "/vehicules", element: <Vehicules /> },
-  { path: "/vehicules/:slug", element: <VehiculeDetail /> },
   { path: "/actualites", element: <Actualites /> },
   { path: "/actualites/:slug", element: <ActualiteDetail /> },
   { path: "/politique-de-confidentialite", element: <PolitiqueConfidentialite /> },
   { path: "/mentions-legales", element: <MentionsLegales /> },
 ];
 const trackedPaths = publicRoutes.map((r) => r.path);
+
+// Pages retirées lors du pivot pare-brise (garder vercel.json en phase).
+const legacyRedirects = [
+  { from: "/pare-brise-assurances", to: "/pare-brise" },
+  { from: "/mecanique", to: RDV_PATH },
+  { from: "/reprise", to: "/" },
+  { from: "/depannage", to: "/" },
+  { from: "/vehicules", to: "/" },
+  { from: "/vehicules/:slug", to: "/" },
+];
 
 // PageViewTracker / ContactClickTracker : statistiques sans cookie, site public
 // uniquement (pas /admin).
@@ -95,8 +98,11 @@ const App = () => (
               {publicRoutes.map(({ path, element }) => (
                 <Route key={path} path={path} element={element} />
               ))}
-              {/* Ancienne adresse de la page pare-brise (liens déjà partagés). */}
-              <Route path="/pare-brise-assurances" element={<Navigate to="/pare-brise" replace />} />
+              {/* Anciennes adresses (liens déjà partagés). En production, vercel.json
+                  répond déjà par une redirection 301 : ceci couvre la navigation interne. */}
+              {legacyRedirects.map(({ from, to }) => (
+                <Route key={from} path={from} element={<Navigate to={to} replace />} />
+              ))}
               <Route path="*" element={<NotFound />} />
             </Route>
           </Routes>

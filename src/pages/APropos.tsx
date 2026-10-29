@@ -1,15 +1,14 @@
 import { Shield, Eye, Heart } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
-import mechanicBg from "@/assets/mechanic-bg.webp";
 import { horaires } from "@/data/horaires";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 
 const advantages = [
-  { icon: Shield, title: "Professionnalisme", desc: "Une équipe qualifiée et expérimentée, dédiée à l'excellence automobile depuis des années." },
-  { icon: Eye, title: "Transparence", desc: "Des tarifs clairs et honnêtes, sans surprise. Nous vous expliquons chaque intervention." },
-  { icon: Heart, title: "Service client", desc: `Votre satisfaction est notre priorité. Centre ouvert ${horaires.centre.texte} ; dépannage 24h/24 pour les urgences.` },
+  { icon: Shield, title: "Vitrages homologués", desc: "Vitrages conformes à la norme européenne 43R, capteurs et caméras compris, pose garantie." },
+  { icon: Eye, title: "Transparence", desc: "Devis écrit avant toute intervention. Nous gérons le dossier avec votre assureur, vous n'avancez rien." },
+  { icon: Heart, title: "Disponibilité", desc: `Centre ouvert ${horaires.centre.texte}, et intervention à domicile ou au travail autour de Liège.` },
 ];
 
 const APropos = () => {
@@ -22,13 +21,17 @@ const APropos = () => {
             <span className="text-gradient-neon">À propos</span> <span className="text-foreground">de B MATIC</span>
           </h1>
           <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12 text-lg leading-relaxed">
-            B MATIC est un garage automobile spécialisé dans la reprise de véhicules, l'entretien mécanique et le dépannage. Notre mission : offrir un service irréprochable, transparent et accessible à tous. Centre ouvert {horaires.centre.detail} ; dépannage 24h/24.
+            B MATIC est un centre spécialisé dans le pare-brise et le vitrage automobile, installé à Ans. Réparation d'impact, remplacement de pare-brise, de vitres et de lunette arrière : au centre ou chez vous, avec la franchise offerte. Centre ouvert {horaires.centre.detail}.
           </p>
         </AnimatedSection>
 
         <AnimatedSection delay={200}>
           <div className="relative rounded-2xl overflow-hidden mb-20 max-w-4xl mx-auto border-glow">
-            <img src={mechanicBg} alt="Garage B MATIC" className="w-full h-64 md:h-96 object-cover" width={1200} height={800} loading="lazy" />
+            <picture>
+              <source media="(max-width: 767px)" srcSet="/hero-garage-mobile.webp" type="image/webp" />
+              <source srcSet="/hero-garage.webp" type="image/webp" />
+              <img src="/hero-garage.jpg" alt="L'atelier B MATIC à Ans" className="w-full h-64 md:h-96 object-cover" width={1920} height={1072} loading="lazy" />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
           </div>
         </AnimatedSection>

@@ -1,5 +1,5 @@
 // ============================================================================
-//  Photos choisies AVANT le premier enregistrement (nouveau véhicule / actu)
+//  Photos choisies AVANT le premier enregistrement (nouvelle actualité)
 // ----------------------------------------------------------------------------
 //  Le formulaire de création garde les fichiers en mémoire (aperçu local).
 //  À l'enregistrement, il les dépose ici sous l'id créé, puis ouvre la page

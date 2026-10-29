@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { RDV_PATH } from "@/data/rdv";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 import { conseilsJsonLd } from "@/seo/schema";
@@ -39,11 +40,11 @@ const Conseils = () => {
           <div className="max-w-2xl mx-auto text-center mb-12">
             <Lightbulb className="w-9 h-9 text-neon-cyan mx-auto mb-4" />
             <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              <span className="text-gradient-neon">Nos conseils auto</span>
+              <span className="text-gradient-neon">Nos conseils pare-brise</span>
             </h1>
             <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-              Entretien, pare-brise, voyants, hiver, pneus, panne, reprise… des articles pratiques
-              pour prendre soin de votre véhicule et rouler l'esprit tranquille.
+              Impact, remplacement, caméra, vitres, assurance… des articles pratiques
+              pour savoir quoi faire quand votre vitrage est abîmé.
             </p>
           </div>
         </AnimatedSection>
@@ -94,7 +95,7 @@ const Conseils = () => {
             <span className="text-gradient-neon">Questions fréquentes</span>
           </h2>
           <p className="text-muted-foreground text-center text-sm mb-10 max-w-xl mx-auto">
-            Pare-brise, assurance, délais, paiement, reprise… les réponses aux questions les
+            Pare-brise, assurance, délais, paiement… les réponses aux questions les
             plus courantes.
           </p>
         </AnimatedSection>
@@ -125,11 +126,11 @@ const Conseils = () => {
         <AnimatedSection>
           <div className="max-w-2xl mx-auto text-center mt-16">
             <p className="text-muted-foreground mb-6">
-              Une question sur votre véhicule ? Notre équipe est là pour vous aider.
+              Un impact, une fissure, une vitre cassée ? Notre équipe vous répond.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <NeonButton to="/contact">Nous contacter</NeonButton>
-              <NeonButton to="/mecanique">Prendre rendez-vous</NeonButton>
+              <NeonButton to={RDV_PATH}>Demander un devis</NeonButton>
             </div>
           </div>
         </AnimatedSection>

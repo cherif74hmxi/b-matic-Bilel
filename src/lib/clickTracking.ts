@@ -5,6 +5,7 @@
 //  boutons, tout lien WhatsApp / téléphone / e-mail / prise de RDV du site
 //  public est compté automatiquement.
 // ============================================================================
+import { RDV_PATH } from "@/data/rdv";
 
 export type ClickKind = "whatsapp" | "phone" | "email" | "rdv";
 
@@ -17,9 +18,6 @@ export const CLICK_KIND_LABELS: Record<ClickKind, string> = {
   email: "E-mail",
 };
 
-/** Page de réservation : tout lien vers elle compte comme un clic « RDV ». */
-const RDV_PATH = "/mecanique";
-
 /** Type de clic d'un lien, ou null si ce n'est pas un lien de contact. */
 export function classifyContactLink(href: string, siteOrigin: string): ClickKind | null {
   let url: URL;
@@ -31,6 +29,7 @@ export function classifyContactLink(href: string, siteOrigin: string): ClickKind
   if (url.protocol === "tel:") return "phone";
   if (url.protocol === "mailto:") return "email";
   if (url.hostname === "wa.me" || url.hostname.endsWith("whatsapp.com")) return "whatsapp";
+  // Page de réservation : tout lien vers elle compte comme un clic « RDV ».
   if (url.origin === siteOrigin && url.pathname.replace(/\/+$/, "") === RDV_PATH) return "rdv";
   return null;
 }

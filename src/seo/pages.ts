@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 //  Chaque entrée devient un fichier HTML dont le <head> contient déjà le bon
 //  titre, la description, l'aperçu de partage et les données structurées.
-//  Véhicules et actualités (contenu en base) : voir api/share.ts et
+//  Actualités (contenu en base) : voir api/share.ts et
 //  api/sitemap-annonces.ts.
 // ============================================================================
 import type { HeadMeta } from "../../api/_lib/head";
@@ -16,7 +16,6 @@ import {
   conseilJsonLd,
   conseilsJsonLd,
   contactJsonLd,
-  depannageJsonLd,
   pareBriseJsonLd,
 } from "@/seo/schema";
 
@@ -30,7 +29,6 @@ export interface PrerenderPage {
 const JSON_LD: Partial<Record<StaticPath, () => unknown>> = {
   "/": accueilJsonLd,
   "/contact": contactJsonLd,
-  "/depannage": depannageJsonLd,
   "/pare-brise": pareBriseJsonLd,
   "/conseils": conseilsJsonLd,
 };

@@ -12,6 +12,7 @@
 // ============================================================================
 import { legalInfo } from "@/data/legal";
 import { horaires } from "@/data/horaires";
+import { RDV_PATH } from "@/data/rdv";
 
 /** Horaires du centre (source : src/data/horaires.ts). */
 export const pareBriseHoraires = horaires.centre;
@@ -35,8 +36,7 @@ export const pareBriseHero = {
   titre: "Votre pare-brise remplacé.",
   titreAccent: "Franchise offerte + jusqu'à 300 € ou un cadeau.",
   sousTitre: `Remplacement à ${zone} · 0 € à avancer · Toutes assurances · 7j/7`,
-  // Ouvre la prise de RDV avec la prestation pare-brise déjà choisie (id dans src/data/services.ts).
-  ctaPrincipal: { label: "Réserver mon créneau", to: "/mecanique?service=remplacement-pare-brise" },
+  ctaPrincipal: { label: "Demander un devis / Prendre RDV", to: RDV_PATH },
   badges: [
     "Franchise offerte + cadeau",
     "0 € à avancer",
@@ -45,6 +45,20 @@ export const pareBriseHero = {
     "Ouvert 7j/7",
   ],
 };
+
+// ------------------------------------------------------------------ Prestations
+/**
+ * Vitrages traités (données structurées « catalogue de services »). Le
+ * formulaire de rendez-vous propose les mêmes choix.
+ */
+export const pareBrisePrestations = [
+  "Réparation d'impact de pare-brise",
+  "Remplacement de pare-brise",
+  "Remplacement de vitre latérale",
+  "Remplacement de lunette arrière",
+  "Remplacement de toit ouvrant ou panoramique",
+  "Recalibrage de caméra d'aide à la conduite",
+];
 
 // ------------------------------------------------------------------ Cadeaux
 /** Dessin utilisé pour chaque cadeau (voir src/components/GiftIllustration.tsx). */
@@ -215,7 +229,7 @@ export const pareBriseFaq: PareBriseQuestion[] = [
 export const pareBriseCtaFinal = {
   titre: "Un impact ou une fissure ?",
   texte: "Réservez votre créneau : on s'occupe de l'assurance, vous choisissez votre cadeau.",
-  cta: { label: "Obtenir mon devis et mon cadeau", to: "/mecanique?service=remplacement-pare-brise" },
+  cta: { label: "Obtenir mon devis et mon cadeau", to: RDV_PATH },
 };
 
 /** Mention légale de l'offre (petits caractères, obligatoire). */

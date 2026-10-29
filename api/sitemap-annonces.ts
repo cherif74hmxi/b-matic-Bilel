@@ -1,5 +1,5 @@
 // ============================================================================
-//  Sitemap des véhicules et actualités en ligne (fonction Vercel)
+//  Sitemap des actualités en ligne (fonction Vercel)
 // ----------------------------------------------------------------------------
 //  Servi à /sitemap-annonces.xml (vercel.json). Toujours à jour : lu dans
 //  Supabase à chaque demande (mis en cache 1 h). Les pages fixes sont dans
@@ -29,12 +29,8 @@ export async function GET(request: Request): Promise<Response> {
   let entries: string[] = [];
   try {
     if (SUPABASE_URL && SUPABASE_KEY) {
-      const [vehicles, posts] = await Promise.all([
-        rows("vehicles?select=slug,updated_at&status=in.(published,sold)&order=updated_at.desc&limit=5000"),
-        rows("posts?select=slug,updated_at&status=eq.published&order=updated_at.desc&limit=5000"),
-      ]);
-      const url = (p: string, r: Row) => `  <url><loc>${base}${p}/${r.slug}</loc><lastmod>${r.updated_at.slice(0, 10)}</lastmod></url>`;
-      entries = [...vehicles.map((r) => url("/vehicules", r)), ...posts.map((r) => url("/actualites", r))];
+      const posts = await rows("posts?select=slug,updated_at&status=eq.published&order=updated_at.desc&limit=5000");
+      entries = posts.map((r) => `  <url><loc>${base}/actualites/${r.slug}</loc><lastmod>${r.updated_at.slice(0, 10)}</lastmod></url>`);
     }
   } catch {
     entries = []; // Sitemap vide plutôt qu'une erreur : Google réessaiera.

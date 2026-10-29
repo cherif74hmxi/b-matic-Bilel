@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CalendarDays, MessageCircle } from "lucide-react";
 import { legalInfo } from "@/data/legal";
+import { RDV_PATH } from "@/data/rdv";
 
 // ============================================================================
 //  MobileActionBar — barre d'action fixe en bas d'écran (mobile uniquement)
@@ -32,7 +33,7 @@ const MobileActionBar = () => {
         </a>
 
         <Link
-          to="/mecanique"
+          to={RDV_PATH}
           className={`${itemClass} bg-gradient-btn text-primary-foreground border-l border-border`}
         >
           <CalendarDays className="w-5 h-5" />

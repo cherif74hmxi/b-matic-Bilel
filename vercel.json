@@ -2,14 +2,25 @@
   "cleanUrls": true,
   "redirects": [
     { "source": "/pare-brise-assurances", "destination": "/pare-brise", "permanent": true },
-    { "source": "/faq", "destination": "/conseils", "permanent": true }
+    { "source": "/faq", "destination": "/conseils", "permanent": true },
+    { "source": "/mecanique", "destination": "/rendez-vous", "permanent": true },
+    { "source": "/reprise", "destination": "/", "permanent": true },
+    { "source": "/depannage", "destination": "/", "permanent": true },
+    { "source": "/vehicules", "destination": "/", "permanent": true },
+    { "source": "/vehicules/:slug", "destination": "/", "permanent": true },
+    { "source": "/conseils/entretien-regulier-voiture", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/plaquettes-frein-usure", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/voyants-tableau-de-bord", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/preparer-voiture-hiver", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/pneus-usure-pression-saison", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/vendre-ou-faire-reprendre-vehicule", "destination": "/conseils", "permanent": true },
+    { "source": "/conseils/que-faire-en-cas-de-panne", "destination": "/conseils", "permanent": true }
   ],
   "functions": {
     "api/share.ts": { "includeFiles": "dist/index.html" }
   },
   "rewrites": [
     { "source": "/sitemap-annonces.xml", "destination": "/api/sitemap-annonces" },
-    { "source": "/vehicules/:slug", "destination": "/api/share?kind=vehicle&slug=:slug" },
     { "source": "/actualites/:slug", "destination": "/api/share?kind=post&slug=:slug" },
     { "source": "/(.*)", "destination": "/" }
   ],

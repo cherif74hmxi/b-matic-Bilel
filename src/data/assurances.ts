@@ -7,11 +7,11 @@
 //  « Nous travaillons avec toutes les assurances, dont… ».
 //
 //  ➜ Pour ajouter / retirer un assureur : modifier simplement le tableau
-//    `assureurs` ci-dessous. L'affichage se met à jour automatiquement.
+//    `assureurs` ci-dessous. Le carrousel ET la liste du formulaire de
+//    rendez-vous (étape « Assurance », + « Autre ») se mettent à jour.
 //  ➜ Pour afficher un LOGO plus tard : importer l'image en haut du fichier et
 //    renseigner le champ `logo` de l'assureur concerné (le carrousel bascule
 //    alors automatiquement du badge texte à l'image).
-//  ➜ À COMPLÉTER / CONFIRMER par le propriétaire (ex. AXA, Baloise, AG…).
 // ============================================================================
 
 /** Phrase d'introduction affichée au-dessus du carrousel. */
@@ -28,10 +28,12 @@ export interface Assureur {
 /** Assureurs partenaires. Ordre = ordre d'affichage dans le carrousel. */
 export const assureurs: Assureur[] = [
   { nom: "Ethias" },
-  { nom: "P&V Assurances" },
-  { nom: "Belfius Assurance" },
-  { nom: "BNP Paribas Fortis Assurance" },
-  { nom: "CBC Assurance" },
-  { nom: "KBC Assurance" },
-  // À CONFIRMER / COMPLÉTER : AXA, Baloise, AG, …
+  { nom: "P&V" },
+  { nom: "Belfius" },
+  { nom: "AXA" },
+  { nom: "KBC" },
+  { nom: "CBC" },
+  { nom: "BNP Paribas Fortis" },
+  { nom: "Baloise" },
+  { nom: "AG" },
 ];

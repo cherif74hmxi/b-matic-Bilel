@@ -1,7 +1,8 @@
 // ============================================================================
 //  Scan de carte grise (Gemini, via l'Edge Function « generate-copy »)
 // ----------------------------------------------------------------------------
-//  Utilisé par le formulaire de reprise (public) ET l'admin (ajout véhicule).
+//  Utilisé par le formulaire de rendez-vous pare-brise (étape « Véhicule ») :
+//  il sert à commander le bon vitrage.
 //  · La photo est réduite et réencodée en JPEG dans le navigateur, envoyée à la
 //    fonction, lue par Gemini puis oubliée : elle n'est stockée nulle part.
 //  · Seules les caractéristiques TECHNIQUES reviennent (jamais le titulaire).
@@ -10,11 +11,32 @@
 // ============================================================================
 import { AI_ENABLED, invokeAiFunction } from "@/lib/aiCopy";
 import { toJpeg, UnsupportedImageError } from "@/lib/imageOptimize";
-import { normalizeVin, VIN_PATTERN } from "@/lib/vin";
 import { vehiculesData } from "@/data/vehicules";
-import type { Fuel } from "@/lib/vehicles";
 
 export const SCAN_ENABLED = AI_ENABLED;
+
+export type Fuel = "essence" | "diesel" | "hybride" | "hybride_rechargeable" | "electrique" | "gpl" | "autre";
+
+export const FUEL_LABELS: Record<Fuel, string> = {
+  essence: "Essence",
+  diesel: "Diesel",
+  hybride: "Hybride",
+  hybride_rechargeable: "Hybride rechargeable",
+  electrique: "Électrique",
+  gpl: "GPL",
+  autre: "Autre",
+};
+
+/** VIN valide : 17 caractères, sans I, O ni Q. */
+export const VIN_PATTERN = /^[A-HJ-NPR-Z0-9]{17}$/;
+
+/** Majuscules, sans espaces ni tirets ; O/Q → 0 et I → 1 (lettres interdites, confusions fréquentes). */
+export const normalizeVin = (vin: string) =>
+  vin
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .replace(/[OQ]/g, "0")
+    .replace(/I/g, "1");
 
 /** Grand côté de la photo envoyée (lisible par Gemini, léger sur mobile). */
 const SCAN_MAX_EDGE = 2000;

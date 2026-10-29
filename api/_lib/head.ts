@@ -4,7 +4,7 @@
 //  Utilisé AVANT l'exécution de React, là où les robots de partage (Facebook,
 //  WhatsApp, LinkedIn…) lisent la page sans JavaScript :
 //    · au build : pré-rendu des pages fixes (vite-plugin-seo.ts) ;
-//    · à la demande : fonction Vercel api/share.ts (véhicules, actualités).
+//    · à la demande : fonction Vercel api/share.ts (actualités).
 //  Une fois la page chargée, src/hooks/useSeo.ts prend le relais.
 //
 //  index.html délimite le bloc remplacé par <!--seo--> … <!--/seo-->.

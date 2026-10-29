@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import logo from "@/assets/bmatic-logo.webp";
 import { legalInfo } from "@/data/legal";
 import { horairesResume } from "@/data/horaires";
+import { RDV_PATH } from "@/data/rdv";
 
 const Footer = () => {
   const openCookieSettings = () => window.dispatchEvent(new Event("open-cookie-consent"));
@@ -17,8 +18,8 @@ const Footer = () => {
               <span className="font-heading font-bold text-lg tracking-wider">B MATIC</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Achat · Mécanique · Dépannage<br />
-              Votre garage automobile de confiance à Ans.
+              Pare-brise · Vitrages auto<br />
+              Remplacement et réparation à Ans et jusqu'à 70 km autour de Liège.
               <br />
               {horairesResume}.
             </p>
@@ -30,10 +31,7 @@ const Footer = () => {
               {[
                 { label: "Accueil", path: "/" },
                 { label: "Pare-brise & Assurances", path: "/pare-brise" },
-                { label: "Mécanique", path: "/mecanique" },
-                { label: "Reprise de véhicule", path: "/reprise" },
-                { label: "Dépannage", path: "/depannage" },
-                { label: "Véhicules d'occasion", path: "/vehicules" },
+                { label: "Demander un devis / RDV", path: RDV_PATH },
                 { label: "Actualités", path: "/actualites" },
                 { label: "Conseils", path: "/conseils" },
                 { label: "À propos", path: "/a-propos" },

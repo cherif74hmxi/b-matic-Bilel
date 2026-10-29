@@ -6,10 +6,9 @@ import {
 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import GlowCard from "@/components/GlowCard";
-import mechanicBg from "@/assets/mechanic-bg.webp";
 import { serviceCategories, findService, type Service } from "@/data/services";
 import { sendLead } from "@/lib/leads";
-import { rdvHeures, rdvRegles, rdvTextes } from "@/data/rdv";
+import { RDV_PATH, rdvHeures, rdvRegles, rdvTextes } from "@/data/rdv";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 import { addDays, bookRdv, brusselsNow, fetchTakenSlots, isSlotInWindow, slotKey } from "@/lib/rdv";
@@ -45,8 +44,8 @@ function priceNode(s: Service) {
 
 const STEPS = ["Service", "Date & heure", "Vos informations", "Confirmation"];
 
-const Mecanique = () => {
-  useSeo({ ...pagesSeo["/mecanique"] });
+const RendezVous = () => {
+  useSeo({ ...pagesSeo[RDV_PATH] });
   const [step, setStep] = useState(1);
 
   // Présélection via ?service=<id> (ex. depuis une promo de l'accueil).
@@ -275,25 +274,17 @@ const Mecanique = () => {
       <div className="container mx-auto px-4">
         <AnimatedSection>
           <h1 className="font-heading text-4xl md:text-5xl font-bold text-center mb-4">
-            <span className="text-gradient-neon">Prendre rendez-vous</span>
+            <span className="text-gradient-neon">Demander un devis</span>
           </h1>
           <p className="text-muted-foreground text-center max-w-xl mx-auto mb-6">
-            Entretien, mécanique, pare-brise ou detailing. Choisissez votre prestation, votre créneau, c'est réservé.
+            Réparation d'impact ou remplacement de pare-brise : choisissez votre prestation et votre créneau, c'est réservé.
           </p>
         </AnimatedSection>
 
         <AnimatedSection delay={100}>
-          <div className="relative rounded-2xl overflow-hidden mb-12 max-w-4xl mx-auto border-glow">
-            <img src={mechanicBg} alt="Garage mécanique B MATIC" className="w-full h-40 md:h-36 object-cover" width={1200} height={800} loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent flex items-end p-6 md:p-10">
-              <div className="flex items-center gap-3">
-                <Clock className="w-8 h-8 text-neon-cyan" />
-                <div>
-                  <p className="font-heading text-lg font-bold text-foreground">{rdvTextes.bandeauTitre}</p>
-                  <p className="text-muted-foreground text-sm">{rdvTextes.bandeauTexte}</p>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center justify-center gap-3 mb-10 text-center">
+            <Clock className="w-6 h-6 text-neon-cyan shrink-0" aria-hidden="true" />
+            <p className="text-sm"><b>{rdvTextes.bandeauTitre}</b> · <span className="text-muted-foreground">{rdvTextes.bandeauTexte}</span></p>
           </div>
         </AnimatedSection>
 
@@ -558,7 +549,7 @@ const Mecanique = () => {
                   <div className="flex gap-3.5 items-start bg-primary/5 border border-primary/20 border-l-[3px] border-l-primary rounded-lg p-4 mb-5 text-sm">
                     <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground grid place-items-center mt-0.5"><Info className="w-3.5 h-3.5" /></span>
                     <div className="leading-relaxed text-muted-foreground">
-                      Le paiement s'effectue <b className="text-foreground">sur place</b> à l'atelier. Aucun prélèvement n'est réalisé en ligne.
+                      Aucun prélèvement n'est réalisé en ligne. Un <b className="text-foreground">devis écrit</b> vous est remis avant toute intervention.
                       {svc?.priceType === "from" && <><br />Ce tarif est un <b className="text-foreground">montant de départ</b> : le prix peut varier selon le modèle. Le prix définitif est confirmé après diagnostic.</>}
                       {svc?.priceType === "devis" && <><br />Cette intervention est chiffrée <b className="text-foreground">sur devis</b> : le montant dépend du modèle et des pièces. Il vous est communiqué après diagnostic.</>}
                     </div>
@@ -606,4 +597,4 @@ const Mecanique = () => {
   );
 };
 
-export default Mecanique;
+export default RendezVous;

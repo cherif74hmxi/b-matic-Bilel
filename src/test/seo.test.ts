@@ -29,6 +29,8 @@ describe("SEO — titres et descriptions", () => {
     const accueil = JSON.stringify(pages.find((p) => p.path === "/")?.meta.jsonLd);
     expect(accueil).toContain('"AutoRepair"');
     expect(accueil).toContain('"opens":"10:00"');
+    expect(accueil).toContain('"OfferCatalog"');
+    expect(accueil).toContain('"GeoCircle"');
   });
 });
 
@@ -37,14 +39,14 @@ describe("api/_lib/head", () => {
     const html = injectHead(TEMPLATE, {
       title: 'Golf "GTI" & co',
       description: "Desc <b>",
-      url: "https://x.be/vehicules/golf",
+      url: "https://x.be/actualites/nouveaux-horaires",
       image: "https://x.be/a.jpg",
       jsonLd: { name: "</script><script>alert(1)</script>" },
     });
     expect(html).not.toContain("Ancien");
     expect(html).toContain("<title>Golf &quot;GTI&quot; &amp; co</title>");
     expect(html).toContain('content="Desc &lt;b&gt;"');
-    expect(html).toContain('<link rel="canonical" href="https://x.be/vehicules/golf" />');
+    expect(html).toContain('<link rel="canonical" href="https://x.be/actualites/nouveaux-horaires" />');
     expect(html).not.toContain("</script><script>");
   });
 
@@ -60,14 +62,14 @@ describe("api/_lib/head", () => {
   });
 });
 
-describe("api/share — fiche véhicule", () => {
+describe("api/share — actualité", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
     vi.resetModules();
   });
 
-  it("construit titre, photo et JSON-LD Car depuis Supabase", async () => {
+  it("construit titre, photo et JSON-LD Article depuis Supabase", async () => {
     // jsdom n'a pas AbortSignal.timeout (présent sur Vercel / Node 18+).
     if (!("timeout" in AbortSignal)) vi.stubGlobal("AbortSignal", Object.assign(AbortSignal, { timeout: () => new AbortController().signal }));
     vi.stubEnv("VITE_SUPABASE_URL", "https://sb.test");
@@ -78,19 +80,19 @@ describe("api/share — fiche véhicule", () => {
         new Response(
           JSON.stringify([
             {
-              slug: "vw-golf-2019", status: "published", title: "Volkswagen Golf 1.5 TSI", make: "Volkswagen",
-              model: "Golf", year: 2019, mileage_km: 58000, fuel: "essence", price_eur: 16900, description: null,
-              vehicle_photos: [{ storage_path: "v1/photo 1.webp" }],
+              slug: "nouveaux-cadeaux", title: "Nouveaux cadeaux pare-brise", excerpt: "Une Switch 2 au choix.",
+              content: "Texte", cover_path: "p1/photo 1.webp", published_at: "2026-10-29T10:00:00Z",
+              created_at: "2026-10-29T09:00:00Z", updated_at: "2026-10-29T10:00:00Z",
             },
           ]),
         ),
       ),
     );
-    const { vehicleMeta } = await import("../../api/share");
-    const meta = await vehicleMeta("vw-golf-2019", "https://www.bmatic.be");
-    expect(meta?.title).toMatch(/^Volkswagen Golf 1\.5 TSI — 16\s900\s€ \| B MATIC$/);
-    expect(meta?.description).toContain("2019 · 58");
-    expect(meta?.image).toBe("https://sb.test/storage/v1/object/public/vehicle-photos/v1/photo%201.webp");
-    expect(JSON.stringify(meta?.jsonLd)).toContain('"@type":"Car"');
+    const { postMeta } = await import("../../api/share");
+    const meta = await postMeta("nouveaux-cadeaux", "https://www.bmatic.be");
+    expect(meta?.title).toBe("Nouveaux cadeaux pare-brise — Actualités B MATIC");
+    expect(meta?.description).toBe("Une Switch 2 au choix.");
+    expect(meta?.image).toBe("https://sb.test/storage/v1/object/public/post-images/p1/photo%201.webp");
+    expect(JSON.stringify(meta?.jsonLd)).toContain('"@type":"Article"');
   });
 });

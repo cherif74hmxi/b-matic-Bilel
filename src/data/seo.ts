@@ -8,12 +8,11 @@
 //  Titre : ~60 caractères max. Description : ~155 caractères max.
 //
 //  Certaines pages ont leurs textes dans leur propre fichier de données
-//  (pare-brise, reprise, véhicules, actualités) : ils sont repris ici.
+//  (pare-brise, actualités) : ils sont repris ici.
 // ============================================================================
 import { pareBriseSeo } from "@/data/parebrise";
-import { repriseSeo } from "@/data/reprise";
-import { occasionsSeo } from "@/data/occasions";
 import { actualitesSeo } from "@/data/actualites";
+import { RDV_PATH } from "@/data/rdv";
 
 export interface PageSeo {
   title: string;
@@ -22,34 +21,29 @@ export interface PageSeo {
 
 export const pagesSeo = {
   "/": {
-    title: "B MATIC — Garage automobile à Ans (Liège) | Pare-brise, mécanique",
+    title: "B MATIC — Pare-brise à Ans (Liège) | Franchise offerte + cadeau",
     description:
-      "Garage B MATIC à Ans (Liège) : pare-brise pris en charge par l'assurance, franchise offerte, entretien à prix ferme, reprise de véhicules, dépannage 24h/24.",
+      "B MATIC, spécialiste pare-brise à Ans (Liège) : franchise offerte, 0 € à avancer, toutes assurances, jusqu'à 300 € ou un cadeau. Au centre ou à domicile, 7j/7.",
   },
-  "/mecanique": {
-    title: "Prendre rendez-vous au garage — entretien, freins | B MATIC Ans",
+  [RDV_PATH]: {
+    title: "Devis et rendez-vous pare-brise en ligne | B MATIC Ans (Liège)",
     description:
-      "Réservez en ligne votre créneau chez B MATIC à Ans : entretien, vidange, freins, diagnostic, pare-brise, detailing. 7j/7 de 10h à 19h, paiement sur place.",
-  },
-  "/depannage": {
-    title: "Dépannage et remorquage 24h/24 à Liège | B MATIC",
-    description:
-      "Panne ou accident ? B MATIC assure le dépannage et le remorquage 24h/24 et 7j/7 depuis Ans, dans la région de Liège. Un appel suffit.",
+      "Demandez votre devis pare-brise et réservez votre créneau en 2 minutes : réparation d'impact, remplacement, vitres. Au centre à Ans ou chez vous, 7j/7.",
   },
   "/conseils": {
-    title: "Conseils auto : entretien, pare-brise, pneus, panne | B MATIC",
+    title: "Conseils pare-brise : impact, remplacement, assurance | B MATIC",
     description:
-      "Conseils pratiques de B MATIC (Ans, Liège) : pare-brise et assurance, entretien, freins, voyants, hiver, pneus, panne et vente de voiture en Belgique.",
+      "Conseils de B MATIC (Ans, Liège) : réparer un impact ou remplacer le pare-brise, recalibrage de caméra, vitres latérales et prise en charge par l'assurance.",
   },
   "/a-propos": {
-    title: "À propos du garage B MATIC à Ans (Liège)",
+    title: "À propos de B MATIC, spécialiste pare-brise à Ans (Liège)",
     description:
-      "Découvrez B MATIC, garage automobile à Ans près de Liège : mécanique, pare-brise, reprise de véhicules et dépannage, avec une équipe disponible 7j/7.",
+      "Découvrez B MATIC, centre pare-brise à Ans près de Liège : remplacement et réparation de vitrages, au centre ou à domicile, avec une équipe disponible 7j/7.",
   },
   "/contact": {
-    title: "Contact et accès — garage B MATIC à Ans (Liège)",
+    title: "Contact et accès — B MATIC pare-brise à Ans (Liège)",
     description:
-      "Contactez B MATIC par téléphone, WhatsApp ou formulaire. Garage situé avenue de l'Énergie à Ans, près de Liège, ouvert 7j/7 de 10h à 19h.",
+      "Contactez B MATIC par téléphone, WhatsApp ou formulaire. Centre pare-brise avenue de l'Énergie à Ans, près de Liège, ouvert 7j/7 de 10h à 19h.",
   },
   "/mentions-legales": {
     title: "Mentions légales | B MATIC",
@@ -61,8 +55,6 @@ export const pagesSeo = {
       "Comment B MATIC traite vos données personnelles : finalités, durées de conservation, sous-traitants et vos droits (RGPD).",
   },
   "/pare-brise": { title: pareBriseSeo.title, description: pareBriseSeo.description },
-  "/reprise": repriseSeo,
-  "/vehicules": occasionsSeo,
   "/actualites": actualitesSeo,
 } satisfies Record<string, PageSeo>;
 
@@ -71,5 +63,5 @@ export type StaticPath = keyof typeof pagesSeo;
 /** Page introuvable (non indexée). */
 export const notFoundSeo: PageSeo = {
   title: "Page introuvable | B MATIC",
-  description: "Cette page n'existe pas ou a été déplacée. Retrouvez nos services depuis l'accueil.",
+  description: "Cette page n'existe pas ou a été déplacée. Retrouvez l'offre pare-brise depuis l'accueil.",
 };

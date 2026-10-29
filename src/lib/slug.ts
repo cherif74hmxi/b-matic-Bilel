@@ -1,5 +1,5 @@
 // ============================================================================
-//  Slugs (adresses de page) et chemins de miniatures — communs véhicules / actus
+//  Slugs (adresses de page) et chemins de miniatures — actualités
 // ============================================================================
 import { supabase } from "@/lib/supabase";
 
@@ -29,10 +29,10 @@ export { thumbPath } from "@/lib/contentModel";
  * Renvoie `root`, ou `root-2`, `root-3`… si le slug est déjà pris par une autre
  * ligne de `table`, ou réservé comme ancienne adresse (redirection) d'une autre fiche.
  */
-async function uniqueSlug(table: "vehicles" | "posts", root: string, excludeId?: string): Promise<string> {
+async function uniqueSlug(table: "posts", root: string, excludeId?: string): Promise<string> {
   // Préfixe raccourci : couvre aussi les variantes tronquées par withSuffix.
   const prefix = root.slice(0, SLUG_MAX - 4);
-  const kind = table === "vehicles" ? "vehicules" : "actualites";
+  const kind = "actualites";
   const [rows, redirects] = await Promise.all([
     supabase.from(table).select("id, slug").like("slug", `${prefix}%`),
     supabase.from("slug_redirects").select("target_id, old_slug").eq("kind", kind).like("old_slug", `${prefix}%`),
@@ -56,7 +56,7 @@ const isUniqueViolation = (error: unknown) => (error as { code?: string } | null
  * réessaie une fois.
  */
 export async function withFreeSlug<T>(
-  table: "vehicles" | "posts",
+  table: "posts",
   root: string,
   excludeId: string | undefined,
   write: (slug: string) => Promise<T>,

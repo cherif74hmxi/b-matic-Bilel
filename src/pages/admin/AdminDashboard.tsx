@@ -6,7 +6,6 @@ import { fr } from "date-fns/locale";
 import {
   AlertTriangle,
   Calendar,
-  Car,
   Eye,
   Inbox,
   Mail,
@@ -50,7 +49,7 @@ import {
 //  chiffres exacts quel que soit le volume (l'API Supabase limite les
 //  sélections à 1000 lignes).
 //    · période choisie : visites, pages vues, clics de contact, demandes par
-//      type et statut, pages / véhicules les plus vus, provenance ;
+//      type et statut, pages les plus vues, provenance ;
 //    · en continu : contenu en ligne et dernières demandes.
 // ============================================================================
 
@@ -63,7 +62,6 @@ const KPI_MIGRATION = "20261026000001_kpi.sql";
 const isMissingFunction = (error: unknown) => (error as { code?: string } | null)?.code === "PGRST202";
 
 interface DashboardCounts {
-  vehicles: { published: number; draft: number; sold: number };
   posts: { published: number; draft: number };
   leads: Partial<Record<LeadType, { total: number; new: number }>>;
 }
@@ -74,7 +72,6 @@ async function fetchKpis() {
   const c = data as DashboardCounts;
   const leadsByType = LEAD_TYPES.map((type) => ({ type, total: c.leads[type]?.total ?? 0, fresh: c.leads[type]?.new ?? 0 }));
   return {
-    vehicles: c.vehicles,
     posts: c.posts,
     leadsTotal: leadsByType.reduce((sum, l) => sum + l.total, 0),
     leadsNew: leadsByType.reduce((sum, l) => sum + l.fresh, 0),
@@ -581,21 +578,6 @@ const AdminDashboard = () => {
       {/* --- Classements de la période --- */}
       {s && (
         <div className="grid gap-x-6 lg:grid-cols-2">
-          <Section title="Véhicules les plus vus">
-            <RankedList
-              empty="Aucune fiche véhicule consultée sur la période."
-              rows={s.top_vehicles.map((v) => ({
-                key: v.id,
-                value: v.views,
-                label: (
-                  <Link to={`/admin/vehicules/${v.id}`} className="hover:text-neon-cyan">
-                    {v.title}
-                    {v.status === "sold" && <span className="text-muted-foreground"> · vendu</span>}
-                  </Link>
-                ),
-              }))}
-            />
-          </Section>
           <Section title="Pages les plus vues">
             <RankedList
               empty="Pas encore de visites enregistrées."
@@ -621,13 +603,6 @@ const AdminDashboard = () => {
           <ErrorBox error={kpis.error} onRetry={() => void kpis.refetch()} />
         ) : (
           <div className="grid grid-cols-2 gap-3">
-            <StatTile
-              icon={<Car className="w-4 h-4" aria-hidden="true" />}
-              label="Véhicules"
-              value={k?.vehicles.published}
-              sub={k && <>en ligne · {nf.format(k.vehicles.draft)} brouillon(s) · {nf.format(k.vehicles.sold)} vendu(s)</>}
-              to="/admin/vehicules"
-            />
             <StatTile
               icon={<Newspaper className="w-4 h-4" aria-hidden="true" />}
               label="Actualités"

@@ -1,14 +1,14 @@
 // ============================================================================
-//  B MATIC — FAQ / Conseils
+//  B MATIC — FAQ pare-brise (page /conseils)
 // ----------------------------------------------------------------------------
 //  Source unique des questions/réponses affichées dans le bloc « Questions
 //  fréquentes » en bas de la page /conseils. Elles alimentent À LA FOIS
 //  l'accordéon affiché ET les données structurées schema.org (FAQPage)
 //  injectées pour le SEO — les deux restent donc toujours synchronisées.
 //
-//  ⚠️  « À CONFIRMER » = tout engagement concret du garage (délais précis, zone
-//      géographique, durée de garantie…) n'est PAS inventé. Le propriétaire doit
-//      remplacer ces mentions par les valeurs réelles.
+//  ⚠️  « À CONFIRMER » = tout engagement concret du centre (délais précis,
+//      durée de garantie…) n'est PAS inventé. Le propriétaire doit remplacer
+//      ces mentions par les valeurs réelles.
 //
 //  ➜ Pour modifier la FAQ : éditer le tableau ci-dessous. Garder des réponses
 //    en texte simple (le rendu et le JSON-LD n'acceptent pas de HTML riche).
@@ -19,10 +19,7 @@ export type FaqCategorie =
   | "Pare-brise & assurance"
   | "Rendez-vous & délais"
   | "Zone & intervention"
-  | "Paiement"
-  | "Reprise de véhicule"
-  | "Entretien & promotions"
-  | "Garanties";
+  | "Paiement & garanties";
 
 export interface FaqItem {
   question: string;
@@ -54,7 +51,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Pare-brise & assurance",
     question: "Travaillez-vous avec mon assurance ?",
     reponse:
-      "Nous travaillons avec toutes les assurances, dont Ethias, P&V, Belfius, BNP Paribas Fortis, CBC et KBC, entre autres. Contactez-nous avec le nom de votre assureur et nous vérifions la prise en charge.",
+      "Nous travaillons avec toutes les assurances, dont Ethias, P&V, Belfius, AXA, KBC, CBC, BNP Paribas Fortis, Baloise et AG, entre autres. Indiquez-nous le nom de votre assureur et nous vérifions la prise en charge.",
   },
   {
     categorie: "Pare-brise & assurance",
@@ -63,24 +60,31 @@ export const faqItems: FaqItem[] = [
       "Souvent oui : un impact de petite taille, hors champ de vision du conducteur et non fissuré, peut être réparé par injection de résine, ce qui évite le remplacement complet. Nous évaluons l'impact avant d'intervenir.",
   },
 
+  {
+    categorie: "Pare-brise & assurance",
+    question: "Mon véhicule a une caméra d'aide à la conduite : est-ce un problème ?",
+    reponse:
+      "Non. Si votre pare-brise porte une caméra ou des capteurs (freinage d'urgence, maintien dans la voie…), le recalibrage est inclus après le remplacement, pour que ces aides fonctionnent comme à l'origine.",
+  },
+
   // --- Rendez-vous & délais --------------------------------------------------
   {
     categorie: "Rendez-vous & délais",
     question: "Comment prendre rendez-vous ?",
     reponse:
-      "Directement en ligne depuis la page « Prendre rendez-vous » : vous choisissez la prestation, la date et l'heure, puis vous renseignez vos coordonnées. Vous pouvez aussi nous appeler.",
+      "En ligne en 2 minutes depuis la page « Demander un devis » : vous indiquez la vitre à traiter, votre véhicule, votre assurance, le lieu et le créneau. Vous pouvez aussi nous appeler ou nous écrire sur WhatsApp.",
   },
   {
     categorie: "Rendez-vous & délais",
-    question: "Quels sont vos délais d'intervention ?",
+    question: "Combien de temps dure un remplacement de pare-brise ?",
     reponse:
-      "Les délais dépendent de la prestation et de la disponibilité des pièces. Les délais précis sont à confirmer avec le garage lors de la prise de rendez-vous (À CONFIRMER).",
+      "Comptez 2 h à 2 h 30 de pose, puis 2 h sans rouler, le temps que la colle sèche. La réparation d'un impact est beaucoup plus rapide.",
   },
   {
     categorie: "Rendez-vous & délais",
-    question: "Êtes-vous disponibles en dehors des heures de bureau ?",
+    question: "Quels jours êtes-vous ouverts ?",
     reponse:
-      "Notre service de dépannage est joignable 24h/24. Pour les rendez-vous à l'atelier, les créneaux proposés en ligne correspondent à nos horaires d'ouverture.",
+      "Tous les jours, de 10h à 19h, dimanche compris. Les créneaux proposés en ligne correspondent à ces horaires.",
   },
 
   // --- Zone & intervention ---------------------------------------------------
@@ -88,62 +92,20 @@ export const faqItems: FaqItem[] = [
     categorie: "Zone & intervention",
     question: "Intervenez-vous à domicile ou sur mon lieu de travail ?",
     reponse:
-      `Pour le remplacement de pare-brise, oui : à domicile ou au travail, à Liège et jusqu'à ${pareBriseRayonKm} km autour. Nous pouvons aussi venir chercher votre voiture et vous la ramener.`,
-  },
-  {
-    categorie: "Zone & intervention",
-    question: "Quelle zone géographique couvrez-vous pour le dépannage ?",
-    reponse:
-      "Nous assurons dépannage et remorquage. Le périmètre d'intervention est à confirmer avec le garage (À CONFIRMER) — appelez-nous, nous vous indiquons immédiatement si nous pouvons intervenir.",
+      `Oui : à domicile ou au travail, à Liège et jusqu'à ${pareBriseRayonKm} km autour. Nous pouvons aussi venir chercher votre voiture et vous la ramener.`,
   },
 
-  // --- Paiement --------------------------------------------------------------
+  // --- Paiement & garanties --------------------------------------------------
   {
-    categorie: "Paiement",
+    categorie: "Paiement & garanties",
     question: "Comment se passe le paiement ?",
     reponse:
-      "Le paiement s'effectue sur place, à l'atelier. Aucun prélèvement n'est réalisé en ligne lors de la prise de rendez-vous. Pour les remplacements pris en charge par l'assurance, le montant couvert est réglé directement avec l'assureur.",
+      "Lorsque la garantie bris de glace s'applique, le montant couvert est réglé directement avec votre assureur et la franchise est offerte : vous n'avancez rien. Un devis écrit vous est remis avant toute intervention.",
   },
   {
-    categorie: "Paiement",
-    question: "Les prix affichés sont-ils définitifs ?",
+    categorie: "Paiement & garanties",
+    question: "La pose est-elle garantie ?",
     reponse:
-      "Les prix des promotions sont fermes. Les tarifs « à partir de » sont des montants de départ : le prix définitif dépend du modèle et des pièces nécessaires, et vous est confirmé après diagnostic. Les prestations « sur devis » sont chiffrées au cas par cas.",
-  },
-
-  // --- Reprise de véhicule ---------------------------------------------------
-  {
-    categorie: "Reprise de véhicule",
-    question: "Rachetez-vous tous les véhicules ?",
-    reponse:
-      "Nous reprenons les véhicules toutes marques. Vous nous transmettez les caractéristiques et quelques photos via le formulaire de reprise, et nous vous faisons une proposition.",
-  },
-  {
-    categorie: "Reprise de véhicule",
-    question: "Comment est estimée la valeur de mon véhicule ?",
-    reponse:
-      "L'estimation tient compte du modèle, de l'année, du kilométrage, de l'état général et de l'entretien. Plus vous nous donnez d'informations et de photos, plus la proposition est précise.",
-  },
-
-  // --- Entretien & promotions ------------------------------------------------
-  {
-    categorie: "Entretien & promotions",
-    question: "Quelles promotions proposez-vous actuellement ?",
-    reponse:
-      "Promo entretien (vidange + filtres) à 149 €, promo plaquettes de frein (1 essieu) à 99 €, et l'offre combinée entretien + plaquettes à 239 €. Ces tarifs incluent pièces et main-d'œuvre.",
-  },
-  {
-    categorie: "Entretien & promotions",
-    question: "À quelle fréquence dois-je faire l'entretien de ma voiture ?",
-    reponse:
-      "En règle générale, une fois par an ou tous les 15 000 à 30 000 km selon le constructeur et le type de moteur. Reportez-vous au carnet d'entretien de votre véhicule ; en cas de doute, nous vous conseillons.",
-  },
-
-  // --- Garanties -------------------------------------------------------------
-  {
-    categorie: "Garanties",
-    question: "Vos interventions sont-elles garanties ?",
-    reponse:
-      "Nos interventions et les pièces posées bénéficient d'une garantie. La durée et les conditions exactes sont à confirmer avec le garage (À CONFIRMER).",
+      "Oui. Nos vitrages sont conformes à la norme européenne 43R et la pose est garantie (étanchéité et tenue) : en cas d'infiltration ou de bruit de vent, on reprend. La durée exacte de la garantie est à confirmer avec le centre (À CONFIRMER).",
   },
 ];

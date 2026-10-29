@@ -1,11 +1,14 @@
 // ============================================================================
-//  B MATIC — Règles des créneaux de rendez-vous (page /mecanique)
+//  B MATIC — Règles des créneaux de rendez-vous (page /rendez-vous)
 // ----------------------------------------------------------------------------
 //  Créneaux d'1 h, un seul véhicule à la fois, 7j/7.
 //  ⚠️  Ces valeurs sont AUSSI dans la base (supabase/migrations/
 //      20261027000001_rdv_slots.sql, fonction book_rdv) : la base refuse un
 //      créneau hors de ces règles. Les modifier aux deux endroits.
 // ============================================================================
+
+/** Adresse de la page de prise de rendez-vous / devis (liens et statistiques). */
+export const RDV_PATH = "/rendez-vous";
 
 export const rdvRegles = {
   /** Heure du premier créneau (10 → 10:00–11:00). */
@@ -35,5 +38,5 @@ export const rdvTextes = {
     "Les disponibilités en ligne ne sont pas accessibles pour le moment : choisissez un horaire, nous vous confirmerons le créneau.",
   /** Bandeau en haut de la page de réservation. */
   bandeauTitre: "Rendez-vous 7j/7, de 10h à 19h",
-  bandeauTexte: "Choisissez votre créneau en ligne. Une panne ? Le dépannage, lui, répond 24h/24.",
+  bandeauTexte: "Choisissez votre créneau en ligne : au centre à Ans ou chez vous.",
 };

@@ -71,9 +71,9 @@ export const legalInfo = {
     privacyUrl: "https://supabase.com/privacy",
   },
 
-  // Assistant de rédaction de l'espace admin (Edge Function « generate-copy »).
-  // Ne reçoit que les caractéristiques des véhicules et les sujets d'actualités
-  // saisis par le garage : aucune donnée de visiteur ou de client.
+  // Assistant IA (Edge Function « generate-copy ») : aide à la rédaction des
+  // actualités dans l'admin, et lecture facultative de la carte grise dans le
+  // formulaire de rendez-vous (photo non conservée).
   aiAssistant: {
     name: "Gemini",
     company: "Google LLC",
