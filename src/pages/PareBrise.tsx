@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Phone, Check, MapPin, Home, Building2, ChevronDown, ArrowRight } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import GiftGrid from "@/components/GiftGrid";
+import GiftCarousel from "@/components/GiftCarousel";
 import InsurerLogos from "@/components/InsurerLogos";
 import useSeo from "@/hooks/useSeo";
 import { accentuer } from "@/lib/accent";
@@ -94,7 +94,7 @@ const PareBrise = () => {
         <Section>
           <SectionTitle titre={pareBriseOffre.titre} sub={pareBriseOffre.texte} />
           <div className="max-w-5xl mx-auto">
-            <GiftGrid />
+            <GiftCarousel />
           </div>
         </Section>
 

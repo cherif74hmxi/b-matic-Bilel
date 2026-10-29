@@ -107,6 +107,11 @@ export default {
           "0%": { transform: "translateX(30px)", opacity: "0" },
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
+        // Bandeau des logos assureurs : la piste contient 2 fois la liste.
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -115,6 +120,7 @@ export default {
         "fade-in": "fade-in 0.5s ease-out forwards",
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
+        marquee: "marquee 40s linear infinite",
       },
     },
   },

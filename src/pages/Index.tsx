@@ -3,7 +3,7 @@ import {
   ArrowRight, Check, ChevronDown, Clock, HandCoins, Home, MapPin, Phone, ShieldCheck, type LucideIcon,
 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import GiftGrid from "@/components/GiftGrid";
+import GiftCarousel from "@/components/GiftCarousel";
 import HeroBackground from "@/components/HeroBackground";
 import InsurerLogos from "@/components/InsurerLogos";
 import MapEmbed from "@/components/MapEmbed";
@@ -124,7 +124,7 @@ const Index = () => {
           <AnimatedSection>
             <SectionTitle eyebrow="Offre pare-brise" titre={accueilCadeaux.titre} sub={accueilCadeaux.texte} />
             <div className="max-w-5xl mx-auto">
-              <GiftGrid />
+              <GiftCarousel />
             </div>
           </AnimatedSection>
         </div>
