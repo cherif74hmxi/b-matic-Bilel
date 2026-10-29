@@ -10,6 +10,8 @@
 // existe encore en base mais n'est plus utilisé par le site (pivot pare-brise).
 export const STORAGE_BUCKETS = {
   postImages: "post-images",
+  /** PRIVÉ : carte grise / attestation d'assurance des clients (90 jours). */
+  clientDocuments: "client-documents",
 } as const;
 
 /** Chemin de la miniature associée à une image (même nom + « _thumb »). */

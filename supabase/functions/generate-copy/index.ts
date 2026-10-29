@@ -4,7 +4,7 @@
 //  Rédaction (admin uniquement) :
 //    POST { kind: "vehicle", data: { make, model, … } }  ou  { kind: "post", data: { topic, draft } }
 //    → 200 { title, description, slug? }  (slug = simple suggestion d'adresse)
-//  Scan de carte grise (formulaire de reprise PUBLIC + admin) :
+//  Scan de carte grise (formulaire de rendez-vous PUBLIC + admin) :
 //    POST { kind: "registration", data: { image: <base64>, mime_type } }
 //    → 200 { readable, fields: { make, model, version, first_registration, fuel,
 //            power_kw, displacement_cc, vin } }   (champs techniques uniquement)

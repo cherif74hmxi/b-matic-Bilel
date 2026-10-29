@@ -85,6 +85,11 @@ export const legalInfo = {
   // (supabase/migrations/20261021000002_purge_leads.sql).
   leadsRetentionYears: 3,
 
+  // Documents ajoutés APRÈS une réservation (carte grise, attestation
+  // d'assurance), facultatifs : supprimés automatiquement passé ce délai
+  // (supabase/functions/purge-documents, appelée chaque nuit).
+  documentsRetentionDays: 90,
+
   // --- Délégué / contact RGPD -------------------------------------------
   // Adresse e-mail dédiée à l'exercice des droits (peut être l'e-mail général)
   dpoEmail: "bmatic63s@gmail.com",
