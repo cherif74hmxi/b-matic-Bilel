@@ -1,10 +1,10 @@
 {
   "4": "useSeo",
-  "5": "avatar.tsx",
+  "5": "breadcrumb.tsx",
   "6": "RdvSteps.tsx",
   "9": "AdminActualiteForm.tsx",
-  "10": "Conseils.tsx",
-  "14": "Actualites.tsx",
+  "10": "@jsquash/webp",
+  "14": "ActualiteDetail.tsx",
   "16": "App.tsx",
   "17": "posts.ts",
   "22": "select.tsx",
@@ -14,7 +14,6 @@
   "29": "imageOptimize.ts",
   "31": "AnimatedSection.tsx",
   "35": "PareBrise.tsx",
-  "37": "react",
   "39": "drawer.tsx",
   "44": "aiCopy.ts",
   "55": "Index.tsx"
