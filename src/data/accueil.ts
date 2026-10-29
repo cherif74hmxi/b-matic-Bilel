@@ -6,6 +6,8 @@
 //    src/data/parebrise.ts : une seule source pour l'accueil et /pare-brise.
 //  · Les horaires viennent de src/data/horaires.ts.
 //  Les icônes sont des noms d'icônes lucide-react (voir ICONS dans Index.tsx).
+//  Titres : les mots entre [crochets] s'affichent en violet B MATIC (un
+//  accent par titre au plus).
 // ============================================================================
 import { horaires } from "@/data/horaires";
 import { RDV_PATH } from "@/data/rdv";
@@ -26,12 +28,12 @@ export const accueilArguments = [
 ] as const;
 
 export const accueilCadeaux = {
-  titre: "Un cadeau au choix pour votre pare-brise",
+  titre: "Un [cadeau au choix] pour votre pare-brise",
   texte: "En plus de la prise en charge de votre franchise*, jusqu'à 300 € ou l'un de ces cadeaux pour tout pare-brise remplacé.",
 };
 
 export const accueilAssureurs = {
-  titre: "Votre assureur, c'est nous qui l'appelons",
+  titre: "Votre assureur, [c'est nous qui l'appelons]",
   texte: "Bris de vitre ou omnium : on vérifie votre couverture et on gère le dossier. Vous n'avez aucun document à envoyer.",
 };
 

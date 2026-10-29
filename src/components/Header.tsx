@@ -19,11 +19,11 @@ const Header = () => {
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `font-body text-[15px] font-medium transition-colors duration-200 whitespace-nowrap ${
-      isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+      isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
     }`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border border-t-[3px] border-t-primary">
       <div className="container mx-auto flex items-center justify-between gap-4 py-3 px-4">
         <Link to="/" onClick={close} className="flex items-center gap-3 shrink-0" aria-label="B MATIC, accueil">
           <img src={logo} alt="" className="h-10 w-auto rounded" />
@@ -69,7 +69,7 @@ const Header = () => {
                 {link.label}
               </NavLink>
             ))}
-            <a href={legalInfo.phoneHref} className="flex items-center gap-2 text-sm text-muted-foreground py-3">
+            <a href={legalInfo.phoneHref} className="flex items-center gap-2 text-sm font-semibold text-primary py-3">
               <Phone className="w-4 h-4" aria-hidden="true" />
               {legalInfo.phone}
             </a>

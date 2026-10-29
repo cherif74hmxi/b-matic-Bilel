@@ -8,6 +8,8 @@
 //
 //  Assureurs partenaires : liste à part dans src/data/assurances.ts.
 //  Photos des cadeaux : public/cadeaux/ (fond transparent, voir `image`).
+//  Titres de section : les mots entre [crochets] s'affichent en violet B MATIC
+//  (un accent par titre au plus).
 //
 //  ⚠️  FRANCHISE : elle n'est PAS toujours gratuite. Ne jamais écrire
 //      « franchise offerte » sans condition : réutiliser `franchiseCondition`
@@ -82,7 +84,7 @@ export interface PareBriseCadeau {
 }
 
 export const pareBriseOffre = {
-  titre: "Vous choisissez votre cadeau",
+  titre: "Vous choisissez [votre cadeau]",
   texte: "En plus de la prise en charge de votre franchise*, jusqu'à 300 € ou le cadeau de votre choix pour tout pare-brise remplacé.",
   note: "Un cadeau au choix parmi :",
 };
@@ -118,7 +120,7 @@ export const pareBriseCompris = {
 
 // ------------------------------------------------------------------ Étapes
 export const pareBriseEtapes = {
-  titre: "Comment ça marche",
+  titre: "Comment [ça marche]",
   etapes: [
     { titre: "Vous prenez rendez-vous", texte: "Par le formulaire ou par téléphone. On commande le vitrage." },
     { titre: "On remplace", texte: "Au centre ou chez vous, avec un vitrage homologué." },
@@ -128,7 +130,7 @@ export const pareBriseEtapes = {
 
 // ------------------------------------------------------------------ Lieu
 export const pareBriseLieu = {
-  titre: "Au centre ou chez vous",
+  titre: "Au centre [ou chez vous]",
   centre: {
     titre: "Au centre, à Ans",
     texte: `Ouvert ${pareBriseHoraires.detail}.`,
@@ -157,14 +159,14 @@ export const pareBriseLieu = {
 
 // ------------------------------------------------------------------ Liberté de choix
 export const pareBriseLiberte = {
-  titre: "Vous pouvez choisir votre réparateur.",
+  titre: "Vous pouvez [choisir votre réparateur].",
   texte: franchiseCondition,
   puces: ["Démarches faites avec vous", "Devis écrit avant intervention", "Cadeau au choix"],
 };
 
 // ------------------------------------------------------------------ Qualité
 export const pareBriseQualite = {
-  titre: "Vitrages homologués, posés pour durer.",
+  titre: "Vitrages homologués, [posés pour durer].",
   paragraphes: [
     "Nos vitrages sont conformes à la norme européenne 43R : vision et sécurité d'origine, capteurs compris.",
     "La pose est garantie (étanchéité et tenue) : en cas d'infiltration ou de bruit de vent, on reprend.",
@@ -174,7 +176,7 @@ export const pareBriseQualite = {
 
 // ------------------------------------------------------------------ Assurances
 export const pareBriseAssurances = {
-  titre: "Votre assureur, c'est nous qui l'appelons.",
+  titre: "Votre assureur, [c'est nous qui l'appelons].",
   points: [
     "Déclaration du sinistre faite avec vous au téléphone : aucun document à envoyer.",
     "Pris en charge si votre contrat comprend le bris de vitre ou une omnium.",

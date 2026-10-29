@@ -43,12 +43,12 @@ const ChoiceButton = ({
     className={`relative w-full min-h-14 flex rounded-xl border px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
       compact && visual ? "flex-col items-center gap-2 text-center" : "items-center gap-3.5"
     } ${compact && !visual ? "justify-center text-center" : ""} ${
-      selected ? "border-primary bg-primary/[0.04] ring-1 ring-primary" : "border-border bg-card hover:border-foreground/30"
+      selected ? "border-primary bg-primary-soft ring-1 ring-primary" : "border-border bg-card hover:border-primary/50"
     }`}
   >
     {visual && <span className={`shrink-0 ${compact ? "w-12 h-[84px]" : "w-10 h-[70px]"}`}>{visual}</span>}
     {Icon && !visual && (
-      <span className="shrink-0 w-10 h-10 rounded-lg grid place-items-center bg-muted text-foreground">
+      <span className="shrink-0 w-10 h-10 rounded-lg grid place-items-center bg-primary-soft text-primary">
         <Icon className="w-5 h-5" aria-hidden="true" />
       </span>
     )}

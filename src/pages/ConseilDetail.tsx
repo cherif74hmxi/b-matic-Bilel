@@ -19,7 +19,7 @@ const Bloc = ({ bloc }: { bloc: ConseilBloc }) => {
       <ul className="space-y-2.5 pl-1">
         {bloc.liste.map((item) => (
           <li key={item} className="flex gap-3">
-            <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-foreground/60 shrink-0" aria-hidden="true" />
+            <span className="mt-2.5 w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
             <span>{item}</span>
           </li>
         ))}
@@ -79,7 +79,7 @@ const ConseilDetail = () => {
           <AnimatedSection>
             <Link
               to="/conseils"
-              className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+              className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
             >
               <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Tous les conseils
             </Link>
@@ -93,7 +93,7 @@ const ConseilDetail = () => {
               />
             ) : (
               <div className="w-full aspect-[21/9] md:aspect-[16/6] bg-muted grid place-items-center rounded-2xl mb-8" aria-hidden="true">
-                <conseil.icon className="w-14 h-14 text-muted-foreground" />
+                <conseil.icon className="w-14 h-14 text-primary" />
               </div>
             )}
 
@@ -143,7 +143,7 @@ const ConseilDetail = () => {
                 <li key={c.slug}>
                   <Link
                     to={`/conseils/${c.slug}`}
-                    className="group flex md:flex-col gap-4 h-full bg-card border border-border rounded-xl p-4 hover:border-foreground/30 transition-colors"
+                    className="group flex md:flex-col gap-4 h-full bg-card border border-border rounded-xl p-4 hover:border-primary/50 transition-colors"
                   >
                     {c.image ? (
                       <ConseilPhoto
@@ -154,13 +154,13 @@ const ConseilDetail = () => {
                       />
                     ) : (
                       <span className="w-12 h-12 shrink-0 rounded-lg bg-muted grid place-items-center" aria-hidden="true">
-                        <c.icon className="w-6 h-6 text-muted-foreground" />
+                        <c.icon className="w-6 h-6 text-primary" />
                       </span>
                     )}
                     <span className="flex flex-col gap-1.5">
                       <span className="eyebrow !text-[11px]">{c.categorie}</span>
                       <span className="font-heading text-sm font-bold leading-snug">{c.titre}</span>
-                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-foreground">
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground group-hover:text-primary">
                         Lire <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                       </span>
                     </span>

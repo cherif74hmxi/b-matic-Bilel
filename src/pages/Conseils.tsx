@@ -54,7 +54,7 @@ const Conseils = () => {
           {conseils.map((c, i) => (
             <AnimatedSection key={c.slug} delay={i * 100}>
               <Link to={`/conseils/${c.slug}`} className="block h-full group">
-                <GlowCard className="flex flex-col h-full !p-0 overflow-hidden transition-colors group-hover:border-foreground/30">
+                <GlowCard className="flex flex-col h-full !p-0 overflow-hidden transition-colors group-hover:border-primary/50">
                   {/* Vignette : photo de l'article, sinon fond neutre + icône */}
                   {c.image ? (
                     <ConseilPhoto
@@ -65,7 +65,7 @@ const Conseils = () => {
                     />
                   ) : (
                     <div className="w-full aspect-[16/10] bg-muted grid place-items-center">
-                      <c.icon className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
+                      <c.icon className="w-10 h-10 text-primary" aria-hidden="true" />
                     </div>
                   )}
                   <div className="flex flex-col flex-1 p-6">
@@ -109,7 +109,7 @@ const Conseils = () => {
               <Accordion type="single" collapsible className="w-full">
                 {items.map((item, i) => (
                   <AccordionItem key={i} value={`${categorie}-${i}`}>
-                    <AccordionTrigger className="text-left text-sm md:text-base font-semibold text-foreground hover:no-underline hover:text-foreground">
+                    <AccordionTrigger className="text-left text-sm md:text-base font-semibold text-foreground hover:no-underline hover:text-primary">
                       {item.question}
                     </AccordionTrigger>
                     <AccordionContent className="text-muted-foreground text-sm leading-relaxed">

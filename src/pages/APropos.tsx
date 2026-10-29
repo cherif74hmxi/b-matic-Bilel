@@ -40,8 +40,8 @@ const APropos = () => {
           {advantages.map((a, i) => (
             <AnimatedSection key={a.title} delay={i * 150}>
               <GlowCard className="text-center">
-                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                  <a.icon className="w-5 h-5 text-foreground" />
+                <div className="w-12 h-12 rounded-xl bg-primary-soft flex items-center justify-center mx-auto mb-4">
+                  <a.icon className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="font-heading text-lg font-semibold mb-3 text-foreground">{a.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{a.desc}</p>

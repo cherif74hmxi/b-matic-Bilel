@@ -4,12 +4,16 @@
 
 @layer base {
   /* ==========================================================================
-     Thème CLAIR (par défaut) — sobre et éditorial.
+     Thème CLAIR (par défaut) — esprit « leader du marché » (Carglass, 123
+     Pare-Brise…) aux couleurs du logo B MATIC.
      --------------------------------------------------------------------------
-     Couleurs PLEINES : encre marine, gris, blanc. Le dégradé néon B MATIC
-     (--gradient-neon, classe .text-gradient-neon) est un ACCENT PONCTUEL :
-     un seul par écran (ex. un mot-clé du titre de l'accueil), jamais sur
-     plusieurs titres, libellés ou textes.
+     · Fond blanc, beaucoup d'air, texte encre foncée.
+     · UNE couleur de marque : le VIOLET du logo (--primary, #7B39EB) →
+       boutons, liens, icônes, mots accentués des titres, petits aplats
+       (--primary-soft). Un accent fort par section, appliqué partout pareil.
+     · UN accent secondaire : le CYAN du logo (--highlight, assombri pour être
+       lisible sur blanc) → coches, pastilles, petits repères.
+     · Jamais de dégradé sur un texte (le logo garde le sien).
 
      ↩ Revenir au thème SOMBRE d'origine : ajouter data-theme="sombre" sur la
        balise <html> de index.html (et remettre theme-color à #08080c).
@@ -18,26 +22,32 @@
     color-scheme: light;
 
     --background: 0 0% 100%;
-    --foreground: 224 33% 12%;
+    --foreground: 250 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 33% 12%;
+    --card-foreground: 250 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 33% 12%;
+    --popover-foreground: 250 30% 12%;
 
-    /* Marine B MATIC : boutons, sélection, liens. */
-    --primary: 224 55% 21%;
+    /* Violet du logo (contraste 5,9:1 sur blanc : texte et boutons OK). */
+    --primary: 262 82% 57%;
     --primary-foreground: 0 0% 100%;
+    --primary-hover: 262 72% 48%;
+    --primary-soft: 262 100% 97%;
 
-    --secondary: 220 20% 96%;
-    --secondary-foreground: 224 33% 12%;
+    /* Cyan du logo, assombri (coches, pastilles). */
+    --highlight: 199 89% 36%;
+    --highlight-soft: 199 95% 95%;
 
-    --muted: 220 22% 96.5%;
-    --muted-foreground: 220 9% 38%;
+    --secondary: 250 25% 96%;
+    --secondary-foreground: 250 30% 12%;
 
-    --accent: 220 22% 95%;
-    --accent-foreground: 224 33% 12%;
+    --muted: 250 25% 97%;
+    --muted-foreground: 250 10% 40%;
+
+    --accent: 262 100% 97%;
+    --accent-foreground: 262 60% 38%;
 
     --destructive: 0 72% 44%;
     --destructive-foreground: 0 0% 100%;
@@ -46,37 +56,37 @@
     --success: 152 70% 28%;
     --warning: 28 90% 36%;
 
-    --border: 220 14% 88%;
-    --input: 220 14% 88%;
-    --ring: 224 55% 35%;
+    --border: 250 15% 89%;
+    --input: 250 15% 85%;
+    --ring: 262 82% 57%;
 
     --radius: 0.75rem;
 
-    /* Néons : réservés à l'accent ponctuel et à l'espace admin. */
+    /* Néons : thème sombre et espace admin uniquement. */
     --neon-blue: 205 90% 46%;
-    --neon-purple: 270 72% 54%;
+    --neon-purple: 262 82% 57%;
     --neon-pink: 322 78% 50%;
-    --neon-cyan: 192 95% 34%;
-    --gift-tile: 220 22% 96.5%;
-    --gift-tile-ink: 224 33% 12%;
+    --neon-cyan: 199 89% 36%;
+    --gift-tile: 250 25% 97%;
+    --gift-tile-ink: 250 30% 12%;
 
     --gradient-neon: linear-gradient(120deg, hsl(270 80% 55%), hsl(320 80% 52%), hsl(205 100% 48%));
     --gradient-card: linear-gradient(hsl(0 0% 100%), hsl(0 0% 100%));
-    --gradient-btn: linear-gradient(hsl(224 55% 21%), hsl(224 55% 21%));
+    --gradient-btn: linear-gradient(hsl(262 82% 57%), hsl(262 82% 57%));
 
-    --glow-purple: 0 1px 2px hsl(224 30% 20% / 0.06);
-    --glow-blue: 0 1px 2px hsl(224 30% 20% / 0.06);
-    --glow-pink: 0 1px 2px hsl(224 30% 20% / 0.06);
-    --glow-card: 0 1px 2px hsl(224 30% 20% / 0.05), 0 8px 24px -16px hsl(224 30% 20% / 0.18);
+    --glow-purple: 0 1px 2px hsl(250 30% 20% / 0.06);
+    --glow-blue: 0 1px 2px hsl(250 30% 20% / 0.06);
+    --glow-pink: 0 1px 2px hsl(250 30% 20% / 0.06);
+    --glow-card: 0 1px 2px hsl(250 30% 20% / 0.05), 0 8px 24px -16px hsl(250 30% 20% / 0.18);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 224 33% 12%;
-    --sidebar-primary: 224 55% 21%;
+    --sidebar-foreground: 250 30% 12%;
+    --sidebar-primary: 262 82% 57%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 22% 95%;
-    --sidebar-accent-foreground: 224 33% 12%;
-    --sidebar-border: 220 14% 88%;
-    --sidebar-ring: 224 55% 35%;
+    --sidebar-accent: 262 100% 97%;
+    --sidebar-accent-foreground: 250 30% 12%;
+    --sidebar-border: 250 15% 89%;
+    --sidebar-ring: 262 82% 57%;
   }
 
   /* Thème SOMBRE néon d'origine (avant octobre 2026). */
@@ -94,6 +104,11 @@
 
     --primary: 270 80% 60%;
     --primary-foreground: 0 0% 100%;
+    --primary-hover: 270 80% 52%;
+    --primary-soft: 270 40% 14%;
+
+    --highlight: 190 95% 55%;
+    --highlight-soft: 200 50% 14%;
 
     --secondary: 200 100% 50%;
     --secondary-foreground: 0 0% 100%;
@@ -206,18 +221,29 @@
     box-shadow: 0 0 8px hsl(270 80% 60% / 0.6);
   }
 
-  /* Boutons : couleur pleine, typo de texte (Inter), pas d'effet lumineux. */
+  /* Boutons : violet B MATIC plein (action principale) ou contour violet. */
   .btn-main {
-    @apply inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg shadow-sm shadow-primary/25 transition-colors duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 border border-border bg-background text-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center gap-2 border border-primary/40 bg-background text-primary font-body font-semibold text-[15px] px-6 py-3 rounded-lg transition-colors duration-200 hover:bg-primary-soft hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
-  /* Surtitre de section : petit, gris, espacé (jamais en couleur). */
+  /* Surtitre de section : petit, espacé, couleur de marque. */
   .eyebrow {
-    @apply font-body text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground;
+    @apply font-body text-xs font-semibold uppercase tracking-[0.14em] text-primary;
+  }
+
+  /* Pastille d'accent secondaire (cyan du logo). */
+  .pill-highlight {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-highlight-soft text-highlight font-body text-xs font-semibold uppercase tracking-[0.1em] px-3 py-1.5;
+  }
+
+  /* Carte Leaflet (MapEmbed) : laisse voir l'adresse pendant le chargement. */
+  .bm-map.leaflet-container {
+    background: transparent;
+    font: inherit;
   }
 
   .legal-prose h2 {
@@ -230,7 +256,7 @@
     @apply mb-3;
   }
   .legal-prose a {
-    @apply text-primary underline underline-offset-2 hover:text-foreground transition-colors;
+    @apply text-primary underline underline-offset-2 hover:text-primary-hover transition-colors;
   }
   .legal-prose strong {
     @apply text-foreground font-semibold;

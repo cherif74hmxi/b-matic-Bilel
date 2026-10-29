@@ -51,7 +51,7 @@ const Actualites = () => {
               <li key={post.id}>
                 <Link
                   to={`/actualites/${post.slug}`}
-                  className="group flex flex-col h-full rounded-2xl overflow-hidden bg-gradient-card border border-border hover:border-foreground/30 transition-colors"
+                  className="group flex flex-col h-full rounded-2xl overflow-hidden bg-gradient-card border border-border hover:border-primary/50 transition-colors"
                 >
                   <div className="aspect-[16/9] bg-muted overflow-hidden">
                     {post.cover_path ? (
@@ -66,7 +66,7 @@ const Actualites = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-muted grid place-items-center">
-                        <Newspaper className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
+                        <Newspaper className="w-10 h-10 text-primary" aria-hidden="true" />
                       </div>
                     )}
                   </div>

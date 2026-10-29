@@ -26,7 +26,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="eyebrow mb-4 text-foreground">Liens rapides</h4>
+            <h4 className="eyebrow mb-4">Liens rapides</h4>
             <ul className="space-y-2">
               {[
                 { label: "Accueil", path: "/" },
@@ -38,7 +38,7 @@ const Footer = () => {
                 { label: "Contact", path: "/contact" },
               ].map((l) => (
                 <li key={l.path}>
-                  <Link to={l.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link to={l.path} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -47,20 +47,20 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="eyebrow mb-4 text-foreground">Informations légales</h4>
+            <h4 className="eyebrow mb-4">Informations légales</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/mentions-legales" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/mentions-legales" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Mentions légales
                 </Link>
               </li>
               <li>
-                <Link to="/politique-de-confidentialite" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/politique-de-confidentialite" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Politique de confidentialité
                 </Link>
               </li>
               <li>
-                <button onClick={openCookieSettings} className="text-sm text-muted-foreground hover:text-foreground transition-colors text-left">
+                <button onClick={openCookieSettings} className="text-sm text-muted-foreground hover:text-primary transition-colors text-left">
                   Gérer mes cookies
                 </button>
               </li>
@@ -68,19 +68,19 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="eyebrow mb-4 text-foreground">Contact</h4>
+            <h4 className="eyebrow mb-4">Contact</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
+                <MapPin className="w-4 h-4 mt-0.5 text-primary shrink-0" />
                 <span>{legalInfo.address}</span>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
-                <a href={legalInfo.phoneHref} className="hover:text-foreground transition-colors">{legalInfo.phone}</a>
+                <Phone className="w-4 h-4 text-primary shrink-0" />
+                <a href={legalInfo.phoneHref} className="hover:text-primary transition-colors">{legalInfo.phone}</a>
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
-                <a href={`mailto:${legalInfo.email}`} className="min-w-0 break-all hover:text-foreground transition-colors">{legalInfo.email}</a>
+                <Mail className="w-4 h-4 text-primary shrink-0" />
+                <a href={`mailto:${legalInfo.email}`} className="min-w-0 break-all hover:text-primary transition-colors">{legalInfo.email}</a>
               </li>
             </ul>
           </div>

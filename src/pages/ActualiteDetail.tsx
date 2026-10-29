@@ -74,7 +74,7 @@ const ActualiteDetail = () => {
   });
 
   const back = (
-    <Link to="/actualites" className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-muted-foreground hover:text-foreground mb-4">
+    <Link to="/actualites" className="inline-flex items-center gap-1.5 min-h-[44px] text-sm text-muted-foreground hover:text-primary mb-4">
       <ArrowLeft className="w-4 h-4" aria-hidden="true" /> {actualitesTextes.retour}
     </Link>
   );
