@@ -8,13 +8,13 @@ const StepProgress = ({ step, labels }: { step: number; labels: readonly string[
   return (
     <div className="mb-6">
       <div className="flex items-baseline justify-between gap-3 text-sm mb-2">
-        <span className="font-heading text-xs uppercase tracking-wider text-primary font-bold">
+        <span className="eyebrow !text-foreground">
           Étape {step} sur {total}
         </span>
         <span className="text-muted-foreground font-medium">{labels[step - 1]}</span>
       </div>
       <div
-        className="h-2 rounded-full bg-muted overflow-hidden"
+        className="h-1.5 rounded-full bg-muted overflow-hidden"
         role="progressbar"
         aria-valuemin={1}
         aria-valuemax={total}
@@ -22,7 +22,7 @@ const StepProgress = ({ step, labels }: { step: number; labels: readonly string[
         aria-valuetext={`Étape ${step} sur ${total} : ${labels[step - 1]}`}
       >
         <div
-          className="h-full rounded-full bg-gradient-neon transition-[width] duration-500 ease-out"
+          className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
           style={{ width: `${(step / total) * 100}%` }}
         />
       </div>

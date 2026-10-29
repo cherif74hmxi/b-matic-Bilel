@@ -9,9 +9,16 @@
 - Backend : **Supabase** (Auth, Postgres, Storage), en place depuis la Phase 2 (voir *Supabase* plus bas).
 
 ## Charte graphique (à respecter absolument)
-- Thème sombre **néon B MATIC** : dégradé violet/rose/bleu (`--gradient-neon`).
-- Polices **Orbitron** (titres) + **Inter** (texte).
-- Réutiliser les composants existants : `GlowCard`, `NeonButton`, classes `.btn-main` / `.btn-ghost`.
+- Direction **sobre et éditoriale** (le site ne doit pas « faire IA ») : fond clair, couleurs
+  **pleines** — marine (`primary`) et gris (`muted`, `border`). Beaucoup d'air.
+- Le dégradé **néon B MATIC** (`.text-gradient-neon`) est **UN SEUL accent ponctuel** par écran
+  (aujourd'hui : un mot-clé du titre de l'accueil, + le logo). Jamais sur plusieurs titres,
+  labels ou textes ; pas de lueurs (glow), pas de `text-neon-*`.
+- Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation). Sur-titres : `.eyebrow`.
+- Réutiliser les composants existants : `GlowCard` (carte sobre), `NeonButton`, classes
+  `.btn-main` / `.btn-ghost`. Le thème sombre néon reste disponible via `data-theme="sombre"`.
+- Images : `public/conseils/` (WebP 480→1600 + JPG pour l'OG), `public/assureurs/` (logos
+  rognés, affichés par `InsurerLogos`), `public/cadeaux/` (photos détourées, `GiftGrid`).
 - Voir `src/index.css` et `tailwind.config.ts` pour les tokens.
 
 ## Règles de travail

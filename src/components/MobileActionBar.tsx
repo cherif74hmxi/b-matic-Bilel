@@ -28,7 +28,7 @@ const MobileActionBar = () => {
           rel="noopener noreferrer"
           className={`${itemClass} text-foreground`}
         >
-          <MessageCircle className="w-5 h-5 text-neon-cyan" />
+          <MessageCircle className="w-5 h-5 text-primary" />
           Contacter sur WhatsApp
         </a>
 

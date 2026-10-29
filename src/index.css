@@ -4,75 +4,79 @@
 
 @layer base {
   /* ==========================================================================
-     Thème CLAIR (par défaut) — fond clair, accents néon B MATIC conservés.
+     Thème CLAIR (par défaut) — sobre et éditorial.
      --------------------------------------------------------------------------
+     Couleurs PLEINES : encre marine, gris, blanc. Le dégradé néon B MATIC
+     (--gradient-neon, classe .text-gradient-neon) est un ACCENT PONCTUEL :
+     un seul par écran (ex. un mot-clé du titre de l'accueil), jamais sur
+     plusieurs titres, libellés ou textes.
+
      ↩ Revenir au thème SOMBRE d'origine : ajouter data-theme="sombre" sur la
        balise <html> de index.html (et remettre theme-color à #08080c).
-       Tout le site lit ces tokens : aucune autre modification nécessaire.
      ========================================================================== */
   :root {
     color-scheme: light;
 
-    --background: 252 45% 98%;
-    --foreground: 250 35% 12%;
+    --background: 0 0% 100%;
+    --foreground: 224 33% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 250 35% 12%;
+    --card-foreground: 224 33% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 250 35% 12%;
+    --popover-foreground: 224 33% 12%;
 
-    --primary: 270 70% 52%;
+    /* Marine B MATIC : boutons, sélection, liens. */
+    --primary: 224 55% 21%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 205 90% 45%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 20% 96%;
+    --secondary-foreground: 224 33% 12%;
 
-    --muted: 252 35% 94%;
-    --muted-foreground: 250 12% 38%;
+    --muted: 220 22% 96.5%;
+    --muted-foreground: 220 9% 38%;
 
-    --accent: 320 75% 48%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 22% 95%;
+    --accent-foreground: 224 33% 12%;
 
-    --destructive: 0 72% 46%;
+    --destructive: 0 72% 44%;
     --destructive-foreground: 0 0% 100%;
 
     /* Messages de réussite / d'avertissement (formulaires) */
-    --success: 152 70% 30%;
-    --warning: 28 90% 38%;
+    --success: 152 70% 28%;
+    --warning: 28 90% 36%;
 
-    --border: 255 28% 88%;
-    --input: 255 28% 90%;
-    --ring: 270 70% 52%;
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 224 55% 35%;
 
     --radius: 0.75rem;
 
-    /* Néons un peu plus profonds sur fond clair (lisibilité des textes). */
+    /* Néons : réservés à l'accent ponctuel et à l'espace admin. */
     --neon-blue: 205 90% 46%;
     --neon-purple: 270 72% 54%;
     --neon-pink: 322 78% 50%;
     --neon-cyan: 192 95% 34%;
-    /* Tuile claire des cadeaux pare-brise (fond + texte) */
-    --gift-tile: 262 60% 96%;
-    --gift-tile-ink: 250 35% 14%;
+    --gift-tile: 220 22% 96.5%;
+    --gift-tile-ink: 224 33% 12%;
 
-    --gradient-neon: linear-gradient(135deg, hsl(270 80% 58%), hsl(320 80% 54%), hsl(200 100% 50%));
-    --gradient-card: linear-gradient(160deg, hsl(0 0% 100%), hsl(262 50% 98%));
-    --gradient-btn: linear-gradient(135deg, hsl(270 80% 55%), hsl(320 70% 50%));
+    --gradient-neon: linear-gradient(120deg, hsl(270 80% 55%), hsl(320 80% 52%), hsl(205 100% 48%));
+    --gradient-card: linear-gradient(hsl(0 0% 100%), hsl(0 0% 100%));
+    --gradient-btn: linear-gradient(hsl(224 55% 21%), hsl(224 55% 21%));
 
-    --glow-purple: 0 8px 24px -8px hsl(270 80% 55% / 0.35);
-    --glow-blue: 0 8px 24px -8px hsl(200 100% 45% / 0.35);
-    --glow-pink: 0 8px 24px -8px hsl(320 80% 50% / 0.35);
-    --glow-card: 0 12px 32px -14px hsl(265 60% 40% / 0.22), 0 1px 2px hsl(265 40% 30% / 0.06);
+    --glow-purple: 0 1px 2px hsl(224 30% 20% / 0.06);
+    --glow-blue: 0 1px 2px hsl(224 30% 20% / 0.06);
+    --glow-pink: 0 1px 2px hsl(224 30% 20% / 0.06);
+    --glow-card: 0 1px 2px hsl(224 30% 20% / 0.05), 0 8px 24px -16px hsl(224 30% 20% / 0.18);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 250 35% 12%;
-    --sidebar-primary: 270 70% 52%;
+    --sidebar-foreground: 224 33% 12%;
+    --sidebar-primary: 224 55% 21%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 252 35% 94%;
-    --sidebar-accent-foreground: 250 35% 12%;
-    --sidebar-border: 255 28% 88%;
-    --sidebar-ring: 270 70% 52%;
+    --sidebar-accent: 220 22% 95%;
+    --sidebar-accent-foreground: 224 33% 12%;
+    --sidebar-border: 220 14% 88%;
+    --sidebar-ring: 224 55% 35%;
   }
 
   /* Thème SOMBRE néon d'origine (avant octobre 2026). */
@@ -189,7 +193,7 @@
   }
 
   .border-glow {
-    border: 1px solid hsl(270 80% 60% / 0.3);
+    border: 1px solid hsl(var(--border));
   }
 
   .border-glow-blue {
@@ -202,12 +206,18 @@
     box-shadow: 0 0 8px hsl(270 80% 60% / 0.6);
   }
 
+  /* Boutons : couleur pleine, typo de texte (Inter), pas d'effet lumineux. */
   .btn-main {
-    @apply inline-flex items-center justify-center gap-2 bg-gradient-btn text-primary-foreground font-heading text-xs uppercase tracking-wider px-7 py-3.5 rounded-full transition-all duration-300 hover:opacity-90 hover:shadow-[0_0_25px_hsl(270_80%_60%/0.5)] disabled:opacity-45 disabled:cursor-not-allowed disabled:shadow-none;
+    @apply inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg transition-colors duration-200 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 border border-border text-foreground font-heading text-xs uppercase tracking-wider px-7 py-3.5 rounded-full transition-colors duration-300 hover:border-muted-foreground hover:bg-muted;
+    @apply inline-flex items-center justify-center gap-2 border border-border bg-background text-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Surtitre de section : petit, gris, espacé (jamais en couleur). */
+  .eyebrow {
+    @apply font-body text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground;
   }
 
   .legal-prose h2 {
@@ -220,7 +230,7 @@
     @apply mb-3;
   }
   .legal-prose a {
-    @apply text-neon-cyan underline underline-offset-2 hover:text-neon-blue transition-colors;
+    @apply text-primary underline underline-offset-2 hover:text-foreground transition-colors;
   }
   .legal-prose strong {
     @apply text-foreground font-semibold;
@@ -246,62 +256,6 @@
    Performance prioritaire : transform/opacity uniquement (GPU), aucune image
    lourde. Tout est désactivé/figé sous prefers-reduced-motion (bloc en bas).
    ========================================================================== */
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-
-/* --- Carrousel d'assureurs (marquee défilant en continu) ------------------ */
-.insurer-marquee {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-          mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-}
-.insurer-marquee__track {
-  display: flex;
-  width: max-content;
-  animation: marquee 32s linear infinite;
-}
-.insurer-marquee:hover .insurer-marquee__track {
-  animation-play-state: paused;
-}
-
-/* --- Tuile claire des cadeaux pare-brise (pictos néon, voir GiftIllustration) */
-.gift-tile {
-  background: hsl(var(--gift-tile));
-  color: hsl(var(--gift-tile-ink));
-  box-shadow: 0 0 24px hsl(270 80% 60% / 0.18);
-}
-
-/* --- Bouton « sparkle » (CTA pare-brise) ----------------------------------- */
-/*  Reflet lumineux qui balaie le bouton toutes les ~3 s + halo qui respire.
-    transform/opacity uniquement ; figé sous reduced-motion (bloc ci-dessous). */
-@keyframes sparkle-sweep {
-  0%, 60% { transform: translateX(-120%) skewX(-20deg); }
-  100%    { transform: translateX(220%) skewX(-20deg); }
-}
-@keyframes sparkle-glow {
-  0%, 100% { box-shadow: 0 0 12px hsl(270 80% 60% / 0.35); }
-  50%      { box-shadow: 0 0 26px hsl(320 85% 60% / 0.6); }
-}
-.btn-sparkle {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  animation: sparkle-glow 3.2s ease-in-out infinite;
-}
-.btn-sparkle::after {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 45%;
-  background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.55), transparent);
-  pointer-events: none;
-  z-index: -1;
-  animation: sparkle-sweep 3.2s ease-in-out infinite;
-}
 
 /* --- Scanner de carte grise (RegistrationScanner) ------------------------- */
 /*  Les coins « respirent » (invite à reculer pour tout cadrer), une ligne
@@ -340,23 +294,4 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  /* Carrousel → liste statique centrée (pas de défilement ni de duplicata). */
-  .insurer-marquee {
-    overflow: visible;
-    -webkit-mask-image: none;
-            mask-image: none;
-  }
-  .insurer-marquee__track {
-    flex-wrap: wrap;
-    width: auto;
-    justify-content: center;
-    animation: none;
-  }
-  .insurer-marquee__dup { display: none; }
-  .insurer-marquee__track > div {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.625rem;
-  }
-  .btn-sparkle::after { display: none; }
 }

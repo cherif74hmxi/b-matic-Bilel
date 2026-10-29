@@ -5,9 +5,11 @@ interface GlowCardProps {
   className?: string;
 }
 
+// Carte de base du site : fond plein, bordure fine, aucune lueur (le nom est
+// historique, il date du thème néon).
 const GlowCard = ({ children, className = "" }: GlowCardProps) => {
   return (
-    <div className={`bg-gradient-card border-glow rounded-xl p-6 glow-card hover:shadow-[0_0_40px_hsl(270_80%_60%/0.25)] transition-all duration-500 hover:-translate-y-1 ${className}`}>
+    <div className={`bg-card border border-border rounded-xl p-6 ${className}`}>
       {children}
     </div>
   );

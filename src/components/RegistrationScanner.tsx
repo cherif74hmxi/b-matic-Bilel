@@ -22,7 +22,7 @@ const DocSketch = () => (
 );
 
 const Corner = ({ className }: { className: string }) => (
-  <span className={`absolute w-7 h-7 border-neon-cyan drop-shadow-[0_0_6px_hsl(var(--neon-cyan))] ${className}`} aria-hidden="true" />
+  <span className={`absolute w-7 h-7 border-primary ${className}`} aria-hidden="true" />
 );
 
 const RegistrationScanner = ({
@@ -86,14 +86,14 @@ const RegistrationScanner = ({
             <div className="scan-line" aria-hidden="true" />
             <div className="absolute inset-x-0 bottom-3 flex justify-center" role="status">
               <span className="inline-flex items-center gap-2 rounded-full bg-background/85 px-3 py-1.5 text-xs font-medium">
-                <Loader2 className="w-4 h-4 animate-spin text-neon-cyan" aria-hidden="true" /> {scanTextes.lecture}
+                <Loader2 className="w-4 h-4 animate-spin text-primary" aria-hidden="true" /> {scanTextes.lecture}
               </span>
             </div>
           </>
         )}
       </div>
       <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-2">
-        <MoveDiagonal className="scan-hint w-3.5 h-3.5 text-neon-cyan shrink-0" aria-hidden="true" /> {scanTextes.indice}
+        <MoveDiagonal className="scan-hint w-3.5 h-3.5 text-primary shrink-0" aria-hidden="true" /> {scanTextes.indice}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 max-w-md mx-auto">
@@ -114,7 +114,7 @@ const RegistrationScanner = ({
         </p>
       )}
       <p className="flex gap-2 items-start text-xs text-muted-foreground mt-4 max-w-md mx-auto">
-        <ShieldCheck className="w-4 h-4 shrink-0 text-neon-cyan" aria-hidden="true" /> {scanTextes.confidentialite}
+        <ShieldCheck className="w-4 h-4 shrink-0 text-primary" aria-hidden="true" /> {scanTextes.confidentialite}
       </p>
     </div>
   );

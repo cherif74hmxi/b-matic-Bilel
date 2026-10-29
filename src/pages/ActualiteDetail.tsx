@@ -96,7 +96,7 @@ const ActualiteDetail = () => {
       <div className="pt-24 pb-20 container mx-auto px-4 text-center max-w-md">
         <NoIndex />
         <h1 className="font-heading text-2xl font-bold mb-4">
-          <span className="text-gradient-neon">{actualitesTextes.introuvable}</span>
+          {actualitesTextes.introuvable}
         </h1>
         <NeonButton to="/actualites">{actualitesTextes.retour}</NeonButton>
       </div>
@@ -133,7 +133,7 @@ const ActualiteDetail = () => {
           {formatPostDate(post)}
         </time>
         <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-bold leading-tight mt-2 mb-6">
-          <span className="text-gradient-neon">{post.title}</span>
+          {post.title}
         </h1>
         <div className="space-y-5 text-foreground/90 leading-relaxed whitespace-pre-line">
           {paragraphs(post.content).map((p, i) => (

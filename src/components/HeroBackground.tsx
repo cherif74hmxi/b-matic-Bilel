@@ -29,8 +29,6 @@ const HeroBackground = () => (
     <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/10 md:via-background/70" />
     {/* Plus dense en bas (raccord avec la section suivante). */}
     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-    {/* Légère teinte néon B MATIC (violet / rose / bleu). */}
-    <div className="absolute inset-0 opacity-20 mix-blend-color" style={{ background: "var(--gradient-neon)" }} />
   </div>
 );
 

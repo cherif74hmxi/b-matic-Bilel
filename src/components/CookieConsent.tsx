@@ -38,11 +38,11 @@ const CookieConsent = () => {
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="flex items-start gap-3 flex-1">
-          <Cookie className="w-6 h-6 text-neon-purple shrink-0 mt-0.5" />
+          <Cookie className="w-6 h-6 text-foreground shrink-0 mt-0.5" />
           <p className="text-sm text-muted-foreground leading-relaxed">
             Ce site utilise uniquement des cookies strictement nécessaires à son bon
             fonctionnement — aucun suivi publicitaire.{" "}
-            <Link to="/politique-de-confidentialite" className="text-neon-cyan underline underline-offset-2 hover:text-neon-blue">
+            <Link to="/politique-de-confidentialite" className="text-primary underline underline-offset-2 hover:text-foreground">
               En savoir plus
             </Link>
           </p>

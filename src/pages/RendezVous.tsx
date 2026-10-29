@@ -140,7 +140,7 @@ const RendezVous = () => {
       <div ref={top} className="pt-24 pb-16 scroll-mt-20">
         <div className="container mx-auto px-4 max-w-2xl">
           <div className="text-center mb-8 animate-fade-in">
-            <div className="w-16 h-16 rounded-full bg-gradient-neon text-primary-foreground grid place-items-center mx-auto mb-5 shadow-lg">
+            <div className="w-14 h-14 rounded-full bg-success/10 text-success grid place-items-center mx-auto mb-5">
               <CalendarCheck className="w-8 h-8" aria-hidden="true" />
             </div>
             <h1 className="font-heading text-2xl md:text-3xl font-bold mb-3">
@@ -178,12 +178,12 @@ const RendezVous = () => {
       <div className="container mx-auto px-4 max-w-2xl">
         <header className="text-center mb-6">
           <h1 className="font-heading text-2xl md:text-4xl font-bold leading-tight" style={{ textWrap: "balance" }}>
-            <span className="text-gradient-neon">{rdvIntro.titre}</span>
+            {rdvIntro.titre}
           </h1>
           <p className="text-muted-foreground mt-2 text-sm md:text-base">{rdvIntro.texte}</p>
         </header>
 
-        <form onSubmit={onSubmit} noValidate className="relative rounded-2xl border border-border bg-card/60 p-5 md:p-8 shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.25)]">
+        <form onSubmit={onSubmit} noValidate className="relative rounded-2xl border border-border bg-card p-5 md:p-8">
           <StepProgress step={step} labels={rdvEtapes} />
 
           {message && (

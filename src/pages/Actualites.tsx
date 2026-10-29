@@ -18,7 +18,7 @@ const Actualites = () => {
         <AnimatedSection>
           <div className="max-w-2xl mb-8">
             <h1 className="font-heading text-3xl md:text-5xl font-bold mb-3">
-              <span className="text-gradient-neon">{actualitesTextes.titre}</span>
+              {actualitesTextes.titre}
             </h1>
             <p className="text-muted-foreground">{actualitesTextes.texte}</p>
           </div>
@@ -51,7 +51,7 @@ const Actualites = () => {
               <li key={post.id}>
                 <Link
                   to={`/actualites/${post.slug}`}
-                  className="group flex flex-col h-full rounded-2xl overflow-hidden bg-gradient-card border border-border hover:border-neon-purple/60 hover:shadow-[0_0_25px_hsl(270_80%_60%/0.25)] transition-all"
+                  className="group flex flex-col h-full rounded-2xl overflow-hidden bg-gradient-card border border-border hover:border-foreground/30 transition-colors"
                 >
                   <div className="aspect-[16/9] bg-muted overflow-hidden">
                     {post.cover_path ? (
@@ -65,8 +65,8 @@ const Actualites = () => {
                         className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-neon grid place-items-center">
-                        <Newspaper className="w-12 h-12 text-primary-foreground" aria-hidden="true" />
+                      <div className="w-full h-full bg-muted grid place-items-center">
+                        <Newspaper className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
                       </div>
                     )}
                   </div>
@@ -76,7 +76,7 @@ const Actualites = () => {
                     </time>
                     <h2 className="font-heading text-lg font-semibold leading-snug mt-1.5">{post.title}</h2>
                     <p className="text-sm text-muted-foreground mt-2 line-clamp-3">{post.excerpt || autoExcerpt(post.content)}</p>
-                    <span className="inline-flex items-center gap-1.5 text-sm text-neon-cyan mt-auto pt-4">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-primary mt-auto pt-4">
                       {actualitesTextes.lire} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                     </span>
                   </div>

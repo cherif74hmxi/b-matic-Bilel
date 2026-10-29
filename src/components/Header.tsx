@@ -18,12 +18,12 @@ const Header = () => {
   const close = () => setMenuOpen(false);
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `font-body text-sm uppercase tracking-widest transition-colors duration-300 whitespace-nowrap ${
+    `font-body text-[15px] font-medium transition-colors duration-200 whitespace-nowrap ${
       isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
     }`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="container mx-auto flex items-center justify-between gap-4 py-3 px-4">
         <Link to="/" onClick={close} className="flex items-center gap-3 shrink-0" aria-label="B MATIC, accueil">
           <img src={logo} alt="" className="h-10 w-auto rounded" />
@@ -45,7 +45,7 @@ const Header = () => {
           <a
             href={legalInfo.phoneHref}
             aria-label={`Appeler le ${legalInfo.phone}`}
-            className="btn-main !min-h-11 !px-3 lg:!px-5 text-sm"
+            className="btn-main !min-h-11 !px-3 lg:!px-4 !text-sm"
           >
             <Phone className="w-4 h-4" aria-hidden="true" />
             <span className="hidden lg:inline">{legalInfo.phone}</span>
@@ -62,7 +62,7 @@ const Header = () => {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto bg-background/95 backdrop-blur-xl border-t border-border animate-fade-in">
+        <div className="md:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto bg-background border-t border-border animate-fade-in">
           <nav className="flex flex-col p-4 gap-1" aria-label="Navigation principale">
             {navLinks.map((link) => (
               <NavLink key={link.path} to={link.path} onClick={close} className={(s) => `${linkClass(s)} py-3`}>

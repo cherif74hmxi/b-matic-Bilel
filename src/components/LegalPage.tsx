@@ -9,7 +9,7 @@ interface LegalPageProps {
 
 /**
  * Mise en page commune aux pages légales (politique de confidentialité,
- * mentions légales). Applique la charte néon et une typographie lisible.
+ * mentions légales). Typographie sobre et lisible.
  */
 const LegalPage = ({ title, updated, children }: LegalPageProps) => {
   return (
@@ -17,7 +17,7 @@ const LegalPage = ({ title, updated, children }: LegalPageProps) => {
       <div className="container mx-auto px-4 max-w-3xl">
         <AnimatedSection>
           <h1 className="font-heading text-3xl md:text-4xl font-bold text-center mb-3">
-            <span className="text-gradient-neon">{title}</span>
+            {title}
           </h1>
           {updated && (
             <p className="text-muted-foreground text-center text-sm mb-12">

@@ -9,7 +9,7 @@ const Footer = () => {
   const openCookieSettings = () => window.dispatchEvent(new Event("open-cookie-consent"));
 
   return (
-    <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
+    <footer className="border-t border-border bg-muted/60">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
@@ -26,7 +26,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-sm uppercase tracking-wider mb-4 text-foreground">Liens rapides</h4>
+            <h4 className="eyebrow mb-4 text-foreground">Liens rapides</h4>
             <ul className="space-y-2">
               {[
                 { label: "Accueil", path: "/" },
@@ -47,7 +47,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-sm uppercase tracking-wider mb-4 text-foreground">Informations légales</h4>
+            <h4 className="eyebrow mb-4 text-foreground">Informations légales</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/mentions-legales" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -68,25 +68,25 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-heading text-sm uppercase tracking-wider mb-4 text-foreground">Contact</h4>
+            <h4 className="eyebrow mb-4 text-foreground">Contact</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 mt-0.5 text-neon-purple shrink-0" />
+                <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground shrink-0" />
                 <span>{legalInfo.address}</span>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-neon-purple shrink-0" />
+                <Phone className="w-4 h-4 text-muted-foreground shrink-0" />
                 <a href={legalInfo.phoneHref} className="hover:text-foreground transition-colors">{legalInfo.phone}</a>
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-neon-purple shrink-0" />
+                <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
                 <a href={`mailto:${legalInfo.email}`} className="min-w-0 break-all hover:text-foreground transition-colors">{legalInfo.email}</a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="neon-line mt-10 mb-6" />
+        <div className="border-t border-border mt-10 mb-6" />
         <p className="text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} B MATIC — Tous droits réservés.
         </p>

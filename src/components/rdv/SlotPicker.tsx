@@ -115,7 +115,7 @@ const SlotPicker = ({
                 aria-pressed={c.key === date}
                 className={`h-11 rounded-lg text-sm font-medium grid place-items-center transition-all ${
                   c.key === date
-                    ? "bg-gradient-neon text-primary-foreground font-bold shadow-md"
+                    ? "bg-primary text-primary-foreground font-bold"
                     : c.free
                       ? "bg-card border border-border hover:border-primary hover:text-primary"
                       : "text-muted-foreground/40"
@@ -148,8 +148,8 @@ const SlotPicker = ({
                 role="radio"
                 aria-checked={h === hour}
                 onClick={() => onChange(date, h)}
-                className={`h-12 rounded-xl border-2 text-[15px] font-semibold transition-all ${
-                  h === hour ? "bg-gradient-neon border-transparent text-primary-foreground shadow-md" : "bg-card border-border hover:border-primary"
+                className={`h-12 rounded-xl border text-[15px] font-semibold transition-all ${
+                  h === hour ? "bg-primary border-primary text-primary-foreground" : "bg-card border-border hover:border-foreground/40"
                 }`}
               >
                 {heureLabel(h)}
