@@ -37,7 +37,24 @@ const PolitiqueConfidentialite = () => {
       <p>Nous collectons uniquement les données que vous nous transmettez volontairement via nos formulaires :</p>
       <ul>
         <li><strong>Formulaire de contact :</strong> nom, adresse e-mail, numéro de téléphone et contenu de votre message.</li>
-        <li><strong>Demande de devis / prise de rendez-vous pare-brise :</strong> prénom, nom, e-mail, téléphone, prestation choisie, date et heure souhaitées, et informations sur votre véhicule (numéro de châssis / VIN ou photo de la carte grise).</li>
+        <li>
+          <strong>Demande de devis / prise de rendez-vous pare-brise :</strong> prénom, nom, e-mail,
+          téléphone, besoin (pare-brise, vitre…), véhicule (plaque d'immatriculation, ou marque,
+          modèle et année), couverture bris de glace et <strong>nom</strong> de votre assureur
+          (jamais de numéro de contrat), lieu d'intervention (au centre, ou code postal pour une
+          intervention à domicile ou au travail), date et heure choisies.
+        </li>
+        <li>
+          <strong>Documents facultatifs, après la réservation :</strong> sur l'écran de
+          confirmation, vous pouvez, si vous le souhaitez et avec votre accord explicite, nous
+          transmettre une photo ou un PDF de votre <strong>carte grise</strong> et de votre{" "}
+          <strong>attestation d'assurance</strong>, pour préparer le dossier avec votre assureur.
+          Ces documents sont stockés dans un espace <strong>privé</strong> (aucun lien public),
+          consultable uniquement par notre équipe, et <strong>supprimés automatiquement après{" "}
+          {legalInfo.documentsRetentionDays} jours</strong>. Les photos sont réencodées dans votre
+          navigateur avant l'envoi, ce qui retire leurs métadonnées (dont la position GPS). Vous
+          pouvez aussi simplement les apporter le jour du rendez-vous.
+        </li>
         <li>
           <strong>Scan de la carte grise (facultatif, formulaire de rendez-vous) :</strong> si vous choisissez
           cette option, la photo de votre carte grise est transmise à notre assistant de lecture
@@ -55,8 +72,8 @@ const PolitiqueConfidentialite = () => {
       </ul>
       <p>
         Les demandes envoyées via ces formulaires nous parviennent par e-mail et sont
-        également enregistrées dans notre espace de gestion sécurisé (hors fichiers joints,
-        transmis uniquement par e-mail), accessible aux seules personnes habilitées.
+        également enregistrées dans notre espace de gestion sécurisé, accessible aux seules
+        personnes habilitées.
       </p>
       <p>
         <strong>Statistiques de fréquentation :</strong> nous comptons les pages consultées
@@ -95,6 +112,11 @@ const PolitiqueConfidentialite = () => {
             </td>
           </tr>
           <tr>
+            <td>Préparer le dossier d'assurance avec les documents que vous avez choisi de transmettre (carte grise, attestation d'assurance)</td>
+            <td>Votre consentement (art. 6.1.a), retirable à tout moment sur simple demande</td>
+            <td>{legalInfo.documentsRetentionDays} jours au maximum, puis suppression automatique</td>
+          </tr>
+          <tr>
             <td>Lire la carte grise (scan facultatif) et limiter les abus de ce service</td>
             <td>Votre demande (mesures précontractuelles, art. 6.1.b) ; intérêt légitime à protéger le service (art. 6.1.f) pour l'empreinte d'IP</td>
             <td>Photo : non conservée (traitement immédiat). Empreinte d'IP : 24 heures</td>
@@ -127,7 +149,8 @@ const PolitiqueConfidentialite = () => {
         </li>
         <li>
           <strong>{legalInfo.database.name}</strong> ({legalInfo.database.company}) — hébergement
-          de la base de données (demandes reçues, statistiques de fréquentation, contenus du site).
+          de la base de données et des fichiers (demandes reçues, documents facultatifs transmis
+          après un rendez-vous, statistiques de fréquentation, contenus du site).
           Serveurs situés : {legalInfo.database.region}. Ce prestataire est établi aux États-Unis ;
           tout transfert éventuel hors de l'Union européenne est encadré par des garanties
           appropriées (clauses contractuelles types). Voir leur politique :{" "}
@@ -164,8 +187,9 @@ const PolitiqueConfidentialite = () => {
       <h2>6. Sécurité</h2>
       <p>
         Les formulaires sont transmis via une connexion chiffrée (HTTPS). L'accès aux demandes
-        enregistrées est réservé aux administrateurs authentifiés et protégé par des règles
-        d'accès au niveau de la base de données. Nous mettons en œuvre
+        enregistrées et aux documents transmis est réservé aux administrateurs authentifiés et
+        protégé par des règles d'accès au niveau de la base de données ; les documents ne sont
+        consultables que par des liens temporaires (quelques minutes). Nous mettons en œuvre
         des mesures techniques et organisationnelles raisonnables pour protéger vos données
         contre tout accès, perte ou divulgation non autorisés.
       </p>

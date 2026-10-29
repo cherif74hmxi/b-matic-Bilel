@@ -36,7 +36,4 @@ export const rdvTextes = {
   /** Agenda injoignable : la demande part quand même, le garage confirme. */
   agendaIndisponible:
     "Les disponibilités en ligne ne sont pas accessibles pour le moment : choisissez un horaire, nous vous confirmerons le créneau.",
-  /** Bandeau en haut de la page de réservation. */
-  bandeauTitre: "Rendez-vous 7j/7, de 10h à 19h",
-  bandeauTexte: "Choisissez votre créneau en ligne : au centre à Ans ou chez vous.",
 };

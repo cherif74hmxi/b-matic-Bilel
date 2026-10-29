@@ -55,13 +55,13 @@ Tests must match `src/**/*.{test,spec}.{ts,tsx}`. `playwright.config.ts` uses Lo
 
 ## Architecture
 
-- **Routing**: `src/App.tsx` declares every route (French slugs such as `/a-propos`, `/reprise`, `/mecanique`, `/depannage`, `/mentions-legales`, `/politique-de-confidentialite`) inside a single `Layout` (Header / main / Footer / CookieConsent). To add a page, create it in `src/pages/`, register the route in `App.tsx`, and add a link in `Header`/`Footer` if needed.
+- **Routing**: `src/App.tsx` declares every route (French slugs such as `/pare-brise`, `/rendez-vous`, `/actualites`, `/conseils`, `/contact`, `/mentions-legales`, `/politique-de-confidentialite`; old slugs redirect via `legacyRedirects` and `vercel.json`) inside a single `Layout` (Header / main / Footer / CookieConsent). To add a page, create it in `src/pages/`, register the route in `App.tsx`, and add a link in `Header`/`Footer` if needed.
 - **Path alias**: `@/` → `src/` (configured in both `vite.config.ts` and `vitest.config.ts`).
 - **Data modules (`src/data/`) are the single source of truth for editable content**:
   - `legal.ts`: company identity, contact info (email/phone/WhatsApp), host and GDPR authority. Used by Contact, Footer, MentionsLegales and PolitiqueConfidentialite. The `[ ... ]` placeholders are meant to be filled in by the business owner. `country` (`"BE"`/`"FR"`) selects the supervisory authority.
-  - `services.ts`: the service catalogue for the booking page (`/mecanique`). `priceType` is `"fixe"`, `"from"` or `"devis"`, and it drives how prices are displayed and submitted. Most prices are marked "À CONFIRMER".
-  - `vehicules.ts`: make/model data for the buy-back form (`/reprise`).
-- **Forms**: Contact, Reprise and Mecanique `fetch` Formspree endpoints directly. Each form manages its own `{ status, message }` state with a mandatory GDPR consent checkbox. Mecanique sends `FormData` when a registration-document file (carte grise: JPG/PNG/PDF, ≤5 MB) is attached, and JSON otherwise.
+  - `rendezvous.ts`: texts and choices of the multi-step quote/booking form (`/rendez-vous`, page `RendezVous.tsx`, steps in `components/rdv/`, logic in `lib/rendezvous.ts`). Slot rules are in `rdv.ts`, insurers in `assurances.ts`.
+  - `vehicules.ts`: make/model list used to normalise the registration-document scan.
+- **Forms**: Contact and RendezVous post to Formspree and to `leads` (Supabase). Every form has a mandatory GDPR consent checkbox. The booking form reserves the slot through the `book_rdv` RPC; sensitive documents (carte grise, insurance certificate) are only offered, optionally, on the confirmation screen and go to the private `client-documents` bucket (purged after 90 days by the `purge-documents` Edge Function).
 - **UI**: `src/components/ui/` holds generated shadcn/ui primitives, so avoid hand-editing them. The site's own look comes from the custom components `GlowCard`, `NeonButton` and `AnimatedSection` (an IntersectionObserver fade-in with a `delay` prop), plus the Tailwind theme tokens `neon-{blue,purple,pink,cyan}`, `text-gradient-neon`, `font-heading`/`font-body` and the `glow-pulse` animation, defined in `tailwind.config.ts` and `src/index.css`. Pages tend to use raw Tailwind and these components more than shadcn primitives.
 - `CookieConsent` stores the user's choice in `localStorage` (inside try/catch).
 
