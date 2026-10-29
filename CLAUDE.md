@@ -9,14 +9,22 @@
 - Backend : **Supabase** (Auth, Postgres, Storage), en place depuis la Phase 2 (voir *Supabase* plus bas).
 
 ## Charte graphique (à respecter absolument)
-- Direction **sobre et éditoriale** (le site ne doit pas « faire IA ») : fond clair, couleurs
-  **pleines** — marine (`primary`) et gris (`muted`, `border`). Beaucoup d'air.
-- Le dégradé **néon B MATIC** (`.text-gradient-neon`) est **UN SEUL accent ponctuel** par écran
-  (aujourd'hui : un mot-clé du titre de l'accueil, + le logo). Jamais sur plusieurs titres,
-  labels ou textes ; pas de lueurs (glow), pas de `text-neon-*`.
-- Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation). Sur-titres : `.eyebrow`.
-- Réutiliser les composants existants : `GlowCard` (carte sobre), `NeonButton`, classes
-  `.btn-main` / `.btn-ghost`. Le thème sombre néon reste disponible via `data-theme="sombre"`.
+- Esprit **« leader du marché »** (Carglass, 123 Pare-Brise…) aux **couleurs du logo** :
+  fond blanc, beaucoup d'air, très lisible, pro et rassurant. Pas de site sombre.
+- **Couleur de marque : le violet du logo** (`primary`, #7B39EB) appliqué partout pareil :
+  boutons/CTA, liens, icônes (dans un carré `bg-primary-soft`), sur-titres `.eyebrow`, mots
+  accentués des titres, petits aplats (`bg-primary-soft`), bloc CTA final. Un accent fort
+  par section.
+- **Accent secondaire : le cyan du logo** (`highlight`, assombri) : coches, `.pill-highlight`.
+- Mots accentués d'un titre : les écrire entre **[crochets]** dans `src/data/*`
+  (rendu par `accentuer()` de `src/lib/accent.tsx`).
+- **Jamais de dégradé sur un texte** (`.text-gradient-neon` n'est plus utilisé ; le logo garde
+  le sien). Pas de lueurs (glow).
+- Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation).
+- Réutiliser les composants existants : `GlowCard`, `NeonButton`, classes `.btn-main`
+  (violet plein) / `.btn-ghost` (contour violet). Thème sombre néon : `data-theme="sombre"`.
+- Carte du centre : `MapEmbed` (OpenStreetMap / Leaflet, aucun cookie) ; position dans
+  `src/data/legal.ts` → `mapsCoords`.
 - Images : `public/conseils/` (WebP 480→1600 + JPG pour l'OG), `public/assureurs/` (logos
   rognés, affichés par `InsurerLogos`), `public/cadeaux/` (photos détourées, `GiftGrid`).
 - Voir `src/index.css` et `tailwind.config.ts` pour les tokens.

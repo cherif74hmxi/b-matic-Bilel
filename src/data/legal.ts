@@ -25,8 +25,12 @@ export const legalInfo = {
     region: "Liège",
     country: "BE",
   },
-  // Adresse cherchée sur Google Maps (carte + bouton « Itinéraire »).
+  // Adresse envoyée à Google Maps par le bouton « Itinéraire ».
   mapsQuery: "Avenue de l'Énergie 25, 4432 Ans, Belgique",
+  // Position du repère sur la carte OpenStreetMap (accueil, contact).
+  // À affiner si besoin : sur Google Maps, clic droit sur le bâtiment →
+  // cliquer sur les coordonnées affichées (latitude, longitude) pour les copier.
+  mapsCoords: { lat: 50.6742, lng: 5.5247 },
   // SIÈGE SOCIAL (mentions légales uniquement)
   registeredOffice: "Valerius De Saedeleerstraat 93, 9300 Aalst, Belgique",
   // Numéro d'entreprise (BCE)

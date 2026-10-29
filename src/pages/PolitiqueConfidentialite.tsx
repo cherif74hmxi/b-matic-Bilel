@@ -160,12 +160,17 @@ const PolitiqueConfidentialite = () => {
           <strong>{legalInfo.host.name}</strong> — hébergement du site.
         </li>
         <li>
-          <strong>Google Maps</strong> (Google Ireland Ltd.) — carte interactive affichée sur les
-          pages Accueil et Contact, <strong>uniquement si vous cliquez sur « Afficher la carte »</strong>.
-          Avant ce clic, aucun échange n'a lieu avec Google. Après ce clic, Google reçoit votre
-          adresse IP et les informations techniques de votre navigateur. Le bouton
-          « Itinéraire » ouvre simplement Google Maps dans un nouvel onglet. Voir leur politique :{" "}
-          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>.
+          <strong>OpenStreetMap</strong> (OpenStreetMap Foundation, Royaume-Uni) — fonds de la
+          carte du centre affichée sur les pages Accueil et Contact. Comme pour toute image
+          chargée depuis un autre site, leurs serveurs reçoivent votre adresse IP et les
+          informations techniques de votre navigateur ; <strong>aucun cookie n'est déposé</strong>.
+          Voir leur politique :{" "}
+          <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">osmfoundation.org</a>.
+          Le bouton « Itinéraire » ouvre Google Maps dans un nouvel onglet,{" "}
+          <strong>uniquement si vous cliquez dessus</strong> : la politique de Google s'applique
+          alors (
+          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>
+          ).
         </li>
         <li>
           <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
@@ -192,10 +197,8 @@ const PolitiqueConfidentialite = () => {
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
       </p>
       <p>
-        <strong>Carte Google Maps :</strong> elle n'est chargée que si vous cliquez sur
-        « Afficher la carte ». Ce clic vaut accord : Google peut alors déposer ses propres
-        cookies, sous sa responsabilité. Si vous ne cliquez pas, aucun cookie Google n'est
-        déposé ; l'adresse du centre reste affichée en texte.
+        <strong>Carte :</strong> la carte du centre (OpenStreetMap) ne dépose aucun cookie et
+        ne nécessite donc aucun consentement.
       </p>
 
       <h2>6. Sécurité</h2>
