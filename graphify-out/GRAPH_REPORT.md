@@ -1,376 +1,338 @@
-# Graph Report - b-matic-Bilel  (2026-10-22)
+# Graph Report - b-matic-Bilel  (2026-10-29)
 
 ## Corpus Check
-- 203 files · ~111,844 words
+- 190 files · ~93,528 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 7 file(s) not represented in the graph (top: .css 2, .example 1, (none) 1)
 
 ## Summary
-- 1356 nodes · 3448 edges · 68 communities (60 shown, 8 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.9)
+- 1242 nodes · 2909 edges · 61 communities (51 shown, 10 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 26 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `cd149e81`
+- Built from commit: `8d13ed44`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- schema.ts
-- dependencies
-- carousel.tsx
-- sidebar.tsx
-- hooks/use-toast.ts
-- cn
-- navigation-menu.tsx
-- command.tsx
-- devDependencies
-- package.json
-- compilerOptions
-- components.json
-- form.tsx
-- compilerOptions
-- chart.tsx
-- AdminDashboard.tsx
-- PareBrise.tsx
-- compilerOptions
-- utils.ts
-- Graphify — graphe de connaissances du projet
-- Vehicules.tsx
-- kpi.ts
-- pagination.tsx
-- VehiclePhotos.tsx
-- scripts
-- share.ts
-- slug.ts
-- conseils.ts
-- input-otp.tsx
-- Mecanique.tsx
-- lucide-react
+- UI Cards & Menus Radix
+- Dépendances runtime
+- Primitives Radix UI
+- Instructions projet & RGPD
+- Pages & composants animés
+- SlotPicker.tsx
+- RdvSteps.tsx
+- SEO & balises head
+- Sidebar & Sheet UI
 - AdminActualiteForm.tsx
-- VehicleActions.tsx
-- AdminVehicules.tsx
-- useSeo
-- AdminVehiculeForm.tsx
-- App.tsx
-- @jsquash/webp
-- B MATIC — Cahier des charges V2 (évolution du site)
-- Reprise.tsx
-- navigation-menu.tsx
-- README.md
-- TrafficChart.tsx
-- ContactClickTracker.tsx
-- vitest
-- leads.ts
-- vite-env.d.ts
-- dropdown-menu.tsx
-- vin.ts
-- index.ts
-- imageOptimize.ts
-- Index.tsx
-- drawer.tsx
-- aiCopy.ts
-- B MATIC — Instructions projet (lues automatiquement par Claude Code)
-- sheet.tsx
-- eslint.config.js
+- Footer, horaires & cadeaux
+- Edge function IA (Gemini)
+- Logo & layout admin
+- Toasts
+- Actualités & accueil
+- Admin : en-têtes & statuts
+- Routage App.tsx
+- posts.ts
+- package.json
+- Carte grise & dialogues
+- DevDependencies & lint
+- Actions admin véhicules/articles
+- select.tsx
+- tabs.tsx
+- Image Open Graph B MATIC (partage social)
+- Site, pages & prérendu
+- tsconfig.app
+- AdminDashboard.tsx
+- Conseils & data source unique
 - registrationScan.ts
-- Reprise
-- LeadType
-- vercel.json
-- main.tsx
-- @radix-ui/react-aspect-ratio
-- @radix-ui/react-collapsible
-- tailwindcss
-- @testing-library/jest-dom
+- Alertes & toggles UI
+- components.json shadcn
+- Formulaires react-hook-form
+- Boutons & calendrier
+- Carousel
+- lucide-react
+- tsconfig.node
+- Génération de texte IA
+- Graphiques recharts
+- tsconfig racine
+- Sheet UI
+- Navigation menu UI
+- Drawer UI
+- Scripts npm
+- Index.tsx
+- Breadcrumb UI
+- Configuration Vercel
+- ESLint
+- Polices & point d entrée
+- Avatar UI
+- Photo hero garage
+- Thème & Sonner
+- Types Vite
+- Aspect ratio UI
+- Collapsible UI
+- Tailwind
+- Setup tests
+- Placeholder SVG
+- README Lovable
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 228 edges
-2. `react` - 87 edges
-3. `lucide-react` - 57 edges
-4. `useSeo()` - 50 edges
-5. `react-router-dom` - 37 edges
-6. `AnimatedSection()` - 29 edges
-7. `VehicleForm()` - 27 edges
-8. `thumbPath()` - 22 edges
-9. `PostForm()` - 21 edges
-10. `AdminDashboard()` - 20 edges
+1. `cn()` - 226 edges
+2. `react` - 79 edges
+3. `lucide-react` - 51 edges
+4. `useSeo()` - 38 edges
+5. `react-router-dom` - 30 edges
+6. `PostForm()` - 21 edges
+7. `AdminDashboard()` - 20 edges
+8. `compilerOptions` - 19 edges
+9. `AnimatedSection()` - 18 edges
+10. `PostActionsMenu()` - 18 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `8. Plan par phases` --references--> `Vehicle`  [INFERRED]
-  docs/PROJET-V2.md → src/lib/contentModel.ts
-- `Architecture` --references--> `AnimatedSection()`  [INFERRED]
-  CLAUDE.md → src/components/AnimatedSection.tsx
-- `Architecture` --references--> `GlowCard()`  [INFERRED]
-  CLAUDE.md → src/components/GlowCard.tsx
-- `Architecture` --references--> `NeonButton()`  [INFERRED]
-  CLAUDE.md → src/components/NeonButton.tsx
-- `6. Améliorations UX` --references--> `RegistrationScanner()`  [INFERRED]
-  docs/PROJET-V2.md → src/components/RegistrationScanner.tsx
+- `Logo B MATIC (PNG, public)` --semantically_similar_to--> `Logo B MATIC (WebP, assets)`  [INFERRED] [semantically similar]
+  public/logo.png → src/assets/bmatic-logo.webp
+- `Mobile-first global` --semantically_similar_to--> `Regles de travail (mobile-first, RGPD, build avant commit)`  [INFERRED] [semantically similar]
+  docs/PROJET-V2.md → CLAUDE.md
+- `Logo B MATIC (WebP, assets)` --conceptually_related_to--> `Identité visuelle B MATIC : voiture de sport stylisée, circuits et engrenages, dégradé bleu/violet/rose sur fond blanc`  [INFERRED]
+  src/assets/bmatic-logo.webp → public/logo.png
+- `PrerenderPage` --references--> `injectHead()`  [EXTRACTED]
+  vite-plugin-seo.ts → api/_lib/head.ts
+- `index.html (point d'entree Vite et meta SEO)` --conceptually_related_to--> `SEO (FAQ, donnees structurees, SEO local)`  [INFERRED]
+  index.html → docs/PROJET-V2.md
 
 ## Import Cycles
 - None detected.
 
-## Communities (68 total, 8 thin omitted)
+## Hyperedges (group relationships)
+- **Ajout vehicule assiste (VIN, photos guidees, description IA)** — docs_projet_v2_espace_admin, docs_projet_v2_vin_nhtsa, docs_projet_v2_photos_guidees, docs_projet_v2_assistant_ia [EXTRACTED 1.00]
+- **Offre pare-brise (page, donnees, cadeaux, assureurs)** — docs_projet_v2_page_pare_brise, src_data_parebrise, docs_projet_v2_data_assurances, docs_projet_v2_gift_illustration [EXTRACTED 1.00]
+- **Stack backend Supabase (Auth, schema, RLS, Edge Functions)** — claude_supabase_backend, claude_supabase_schema, claude_rls_policy, docs_projet_v2_edge_functions [INFERRED 0.85]
 
-### Community 0 - "schema.ts"
-Cohesion: 0.20
-Nodes (22): HeadMeta, conseils, conseilTexte(), pagesSeo, absoluteUrl(), siteUrl, JSON_LD, pageUrl() (+14 more)
+## Communities (61 total, 10 thin omitted)
 
-### Community 1 - "dependencies"
+### Community 0 - "UI Cards & Menus Radix"
+Cohesion: 0.07
+Nodes (47): @radix-ui/react-context-menu, @radix-ui/react-dropdown-menu, @radix-ui/react-menubar, react-resizable-panels, Card, CardContent, CardDescription, CardFooter (+39 more)
+
+### Community 1 - "Dépendances runtime"
 Cohesion: 0.04
 Nodes (57): dependencies, class-variance-authority, clsx, cmdk, date-fns, @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities (+49 more)
 
-### Community 2 - "carousel.tsx"
+### Community 2 - "Primitives Radix UI"
+Cohesion: 0.06
+Nodes (25): input-otp, @radix-ui/react-checkbox, @radix-ui/react-hover-card, @radix-ui/react-popover, @radix-ui/react-progress, @radix-ui/react-radio-group, @radix-ui/react-scroll-area, @radix-ui/react-slider (+17 more)
+
+### Community 3 - "Instructions projet & RGPD"
+Cohesion: 0.06
+Nodes (43): CLAUDE.md (instructions projet B MATIC), Modules src/data (source unique du contenu editable), Formulaires Formspree (Contact, Reprise, Mecanique), src/data/legal.ts (identite legale et contacts), Routage App.tsx et Layout unique, Backend Supabase (Auth, Postgres, Storage, RLS), Schema Supabase (admins, vehicles, vehicle_photos, posts, page_views, leads), Composants UI maison (GlowCard, NeonButton, AnimatedSection) (+35 more)
+
+### Community 4 - "Pages & composants animés"
+Cohesion: 0.11
+Nodes (32): react, AnimatedSection(), AnimatedSectionProps, GlowCard(), GlowCardProps, LegalPage(), LegalPageProps, NeonButton() (+24 more)
+
+### Community 5 - "SlotPicker.tsx"
 Cohesion: 0.16
-Nodes (16): embla-carousel-react, Button, Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem (+8 more)
+Nodes (24): date-fns, AdminPageHeader(), AdminPageHeaderProps, MONTHS, pad(), SlotPicker(), ymd(), rdvHeures (+16 more)
 
-### Community 3 - "sidebar.tsx"
+### Community 6 - "RdvSteps.tsx"
+Cohesion: 0.08
+Nodes (67): ChoiceButton(), ChoiceGroup(), DocumentsUpload(), errorMessage(), PieceState, AssuranceStep(), besoinIcons, BesoinStep() (+59 more)
+
+### Community 7 - "SEO & balises head"
+Cohesion: 0.08
+Nodes (25): clipDescription(), escapeAttr(), HeadMeta, headTags(), injectHead(), jsonLdScript(), SITE_NAME, GET() (+17 more)
+
+### Community 8 - "Sidebar & Sheet UI"
 Cohesion: 0.07
-Nodes (30): Input, Separator, Sidebar, SidebarContent, SidebarContext, SidebarFooter, SidebarGroup, SidebarGroupAction (+22 more)
+Nodes (30): Input, Separator, SidebarContent, SidebarContext, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent (+22 more)
 
-### Community 4 - "hooks/use-toast.ts"
+### Community 9 - "AdminActualiteForm.tsx"
+Cohesion: 0.11
+Nodes (27): AiAssistButton(), SlugSuggestion(), Field(), FormSection(), adminInputClass, adminSelectClass, adminTextareaClass, SaveBar() (+19 more)
+
+### Community 10 - "Footer, horaires & cadeaux"
+Cohesion: 0.11
+Nodes (27): PareBrise, GiftIllustration(), shapes, FaqCategorie, FaqItem, faqItems, GiftIllustrationKey, pareBriseAccueil (+19 more)
+
+### Community 11 - "Edge function IA (Gemini)"
+Cohesion: 0.07
+Nodes (28): allowed, BadRequest, callGemini(), callsByUser, cleanRegistration(), cleanSlug(), clientIp(), consumeScanQuota() (+20 more)
+
+### Community 12 - "Logo & layout admin"
+Cohesion: 0.17
+Nodes (23): Identité visuelle B MATIC : voiture de sport stylisée, circuits et engrenages, dégradé bleu/violet/rose sur fond blanc, Logo B MATIC (PNG, public), Logo B MATIC (WebP, assets), AdminLayout(), navItems, AccessDenied(), AdminLoading(), CheckError() (+15 more)
+
+### Community 13 - "Toasts"
 Cohesion: 0.12
 Nodes (25): @radix-ui/react-toast, Toast, ToastAction, ToastActionElement, ToastClose, ToastDescription, ToastProps, ToastTitle (+17 more)
 
-### Community 5 - "cn"
-Cohesion: 0.06
-Nodes (56): @radix-ui/react-context-menu, @radix-ui/react-menubar, @radix-ui/react-select, @radix-ui/react-tabs, Breadcrumb, BreadcrumbEllipsis(), BreadcrumbItem, BreadcrumbLink (+48 more)
+### Community 14 - "Actualités & accueil"
+Cohesion: 0.21
+Nodes (17): @tanstack/react-query, actualitesSeo, actualitesTextes, autoExcerpt(), dateFr, formatPostDate(), getPublicPost(), listPublicPosts() (+9 more)
 
-### Community 6 - "navigation-menu.tsx"
-Cohesion: 0.14
-Nodes (15): class-variance-authority, @radix-ui/react-toggle, @radix-ui/react-toggle-group, Alert, AlertDescription, AlertTitle, alertVariants, Badge() (+7 more)
+### Community 15 - "Admin : en-têtes & statuts"
+Cohesion: 0.26
+Nodes (10): PostStatusBadge(), fmt, ViewsCount(), ContentKind, ContentViews, fetchContentViews(), useContentViews(), listPosts() (+2 more)
 
-### Community 7 - "command.tsx"
-Cohesion: 0.11
-Nodes (19): cmdk, @radix-ui/react-dialog, CarteGriseModal(), Command, CommandDialog(), CommandDialogProps, CommandEmpty, CommandGroup (+11 more)
+### Community 16 - "Routage App.tsx"
+Cohesion: 0.09
+Nodes (22): ActualiteDetail, Actualites, AdminApp, App(), APropos, Conseils, Contact, legacyRedirects (+14 more)
 
-### Community 8 - "devDependencies"
+### Community 17 - "posts.ts"
+Cohesion: 0.24
+Nodes (16): Post, POST_STATUS_LABELS, PostStatus, thumbPath(), bucket(), createPost(), deletePost(), removePostCover() (+8 more)
+
+### Community 18 - "package.json"
+Cohesion: 0.07
+Nodes (28): name, private, type, version, autoprefixer, clsx, @dnd-kit/core, @dnd-kit/sortable (+20 more)
+
+### Community 19 - "Carte grise & dialogues"
+Cohesion: 0.12
+Nodes (18): cmdk, @radix-ui/react-dialog, Command, CommandDialog(), CommandDialogProps, CommandEmpty, CommandGroup, CommandInput (+10 more)
+
+### Community 20 - "DevDependencies & lint"
 Cohesion: 0.09
 Nodes (23): devDependencies, autoprefixer, eslint, @eslint/js, eslint-plugin-react-hooks, eslint-plugin-react-refresh, globals, jsdom (+15 more)
 
-### Community 9 - "package.json"
-Cohesion: 0.07
-Nodes (26): name, private, type, version, autoprefixer, clsx, @dnd-kit/core, @dnd-kit/sortable (+18 more)
+### Community 21 - "Actions admin véhicules/articles"
+Cohesion: 0.22
+Nodes (14): @radix-ui/react-alert-dialog, PostActionsMenu(), AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader() (+6 more)
 
-### Community 10 - "compilerOptions"
+### Community 22 - "select.tsx"
+Cohesion: 0.28
+Nodes (8): @radix-ui/react-select, SelectContent, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger
+
+### Community 23 - "tabs.tsx"
+Cohesion: 0.40
+Nodes (4): @radix-ui/react-tabs, TabsContent, TabsList, TabsTrigger
+
+### Community 25 - "Site, pages & prérendu"
+Cohesion: 0.21
+Nodes (21): pareBriseFaq, pareBriseLieu, absoluteUrl(), siteUrl, JSON_LD, pageUrl(), prerenderPages(), accueilJsonLd() (+13 more)
+
+### Community 26 - "tsconfig.app"
 Cohesion: 0.10
 Nodes (20): compilerOptions, allowImportingTsExtensions, isolatedModules, jsx, lib, module, moduleDetection, moduleResolution (+12 more)
 
-### Community 11 - "components.json"
+### Community 27 - "AdminDashboard.tsx"
+Cohesion: 0.06
+Nodes (63): @testing-library/react, METRIC_LABELS, nf, niceMax(), plural(), TrafficChart(), TrafficChartProps, TrafficMetric (+55 more)
+
+### Community 28 - "Conseils & data source unique"
+Cohesion: 0.24
+Nodes (13): ConseilDetail, cadeaux, Conseil, ConseilBloc, conseils, conseilsLies(), conseilTexte(), findConseil() (+5 more)
+
+### Community 29 - "registrationScan.ts"
+Cohesion: 0.07
+Nodes (43): @jsquash/webp, Corner(), DocSketch(), RegistrationScanner(), scanTextes, marques, vehiculesData, invokeAiFunction() (+35 more)
+
+### Community 30 - "Alertes & toggles UI"
+Cohesion: 0.16
+Nodes (13): class-variance-authority, Alert, AlertDescription, AlertTitle, alertVariants, Badge(), BadgeProps, badgeVariants (+5 more)
+
+### Community 32 - "components.json shadcn"
 Cohesion: 0.12
 Nodes (16): aliases, components, hooks, lib, ui, utils, rsc, $schema (+8 more)
 
-### Community 12 - "form.tsx"
+### Community 33 - "Formulaires react-hook-form"
 Cohesion: 0.18
 Nodes (14): @radix-ui/react-label, react-hook-form, FormControl, FormDescription, FormFieldContext, FormFieldContextValue, FormItem, FormItemContext (+6 more)
 
-### Community 13 - "compilerOptions"
+### Community 34 - "Boutons & calendrier"
+Cohesion: 0.18
+Nodes (13): @radix-ui/react-slot, ButtonProps, buttonVariants, Calendar(), CalendarProps, Pagination(), PaginationContent, PaginationEllipsis() (+5 more)
+
+### Community 36 - "Carousel"
+Cohesion: 0.17
+Nodes (15): embla-carousel-react, Button, Carousel, CarouselApi, CarouselContent, CarouselContext, CarouselContextProps, CarouselItem (+7 more)
+
+### Community 37 - "lucide-react"
+Cohesion: 0.31
+Nodes (10): lucide-react, react-router-dom, CookieConsent(), Footer(), Header(), navLinks, Layout(), MobileActionBar() (+2 more)
+
+### Community 38 - "tsconfig.node"
 Cohesion: 0.12
 Nodes (15): compilerOptions, allowImportingTsExtensions, isolatedModules, lib, module, moduleDetection, moduleResolution, noEmit (+7 more)
 
-### Community 14 - "chart.tsx"
+### Community 44 - "Génération de texte IA"
+Cohesion: 0.17
+Nodes (15): sonner, @supabase/supabase-js, bucket(), LeadDocuments(), pieceLabel(), AI_LIMITS, compact(), CopyRequest (+7 more)
+
+### Community 45 - "Graphiques recharts"
 Cohesion: 0.24
 Nodes (11): recharts, ChartConfig, ChartContainer, ChartContext, ChartContextProps, ChartLegendContent, ChartStyle(), ChartTooltipContent (+3 more)
 
-### Community 15 - "AdminDashboard.tsx"
-Cohesion: 0.17
-Nodes (19): fetchPeriodStats(), fetchTraffic(), AdminDashboard(), chipClass(), CLICK_ICONS, ErrorBox(), fetchKpis(), fetchRecentLeads() (+11 more)
-
-### Community 16 - "PareBrise.tsx"
-Cohesion: 0.08
-Nodes (36): 4. Pages & fonctionnalités à livrer, Admin (propriétaire, connecté), Public (visiteurs), GiftIllustration(), shapes, AssureurBadge(), AssureursGroup(), InsurerMarquee() (+28 more)
-
-### Community 17 - "compilerOptions"
+### Community 48 - "tsconfig racine"
 Cohesion: 0.18
 Nodes (10): compilerOptions, allowJs, noImplicitAny, noUnusedLocals, noUnusedParameters, paths, skipLibCheck, strictNullChecks (+2 more)
 
-### Community 18 - "utils.ts"
-Cohesion: 0.05
-Nodes (35): @radix-ui/react-avatar, @radix-ui/react-checkbox, @radix-ui/react-hover-card, @radix-ui/react-popover, @radix-ui/react-progress, @radix-ui/react-radio-group, @radix-ui/react-scroll-area, @radix-ui/react-slider (+27 more)
-
-### Community 19 - "Graphify — graphe de connaissances du projet"
-Cohesion: 0.33
-Nodes (5): Graphify — graphe de connaissances du projet, Installation sur ta machine (une seule fois), Reconstruire le graphe après des changements de code, Utilisation au quotidien, Voir le graphe
-
-### Community 20 - "Vehicules.tsx"
-Cohesion: 0.06
-Nodes (85): ActualiteDetail, Actualites, VehicleActionsMenuProps, HomeLatest(), SeeAll(), SoldBadge(), VehicleCard(), Chip() (+77 more)
-
-### Community 21 - "kpi.ts"
-Cohesion: 0.19
-Nodes (14): date-fns, allowedBuckets(), BUCKET_LABELS, day(), defaultBucket(), MAX_HOUR_DAYS, Period, periodDays() (+6 more)
-
-### Community 22 - "pagination.tsx"
-Cohesion: 0.15
-Nodes (13): @radix-ui/react-slot, react-day-picker, ButtonProps, Calendar(), CalendarProps, Pagination(), PaginationContent, PaginationEllipsis() (+5 more)
-
-### Community 23 - "VehiclePhotos.tsx"
-Cohesion: 0.26
-Nodes (19): Pending, SortablePhoto(), StagedPhoto, StagedVehiclePhotos(), VehiclePhotos(), thumbPath(), optimizeImage(), bucket() (+11 more)
-
-### Community 24 - "scripts"
-Cohesion: 0.25
-Nodes (8): scripts, build, build:dev, dev, lint, preview, test, test:watch
-
-### Community 25 - "share.ts"
-Cohesion: 0.10
-Nodes (25): clipDescription(), escapeAttr(), headTags(), injectHead(), jsonLdScript(), SITE_NAME, FUEL, GET() (+17 more)
-
-### Community 26 - "slug.ts"
-Cohesion: 0.36
-Nodes (7): isUniqueViolation(), SLUG_MAX, uniqueSlug(), withFreeSlug(), withSuffix(), createVehicle(), updateVehicle()
-
-### Community 27 - "conseils.ts"
-Cohesion: 0.21
-Nodes (13): ConseilDetail, cadeaux, Conseil, ConseilBloc, conseilsLies(), findConseil(), prixEntretien, prixPlaquettes (+5 more)
-
-### Community 28 - "input-otp.tsx"
-Cohesion: 0.33
-Nodes (5): input-otp, InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot
-
-### Community 29 - "Mecanique.tsx"
-Cohesion: 0.10
-Nodes (36): Mecanique, AdminPageHeader(), AdminPageHeaderProps, rdvHeures, rdvRegles, rdvTextes, findService(), PriceType (+28 more)
-
-### Community 30 - "lucide-react"
-Cohesion: 0.20
-Nodes (13): Architecture, lucide-react, CookieConsent(), Footer(), Header(), navLinksAfter, navLinksBefore, serviceSubLinks (+5 more)
-
-### Community 31 - "AdminActualiteForm.tsx"
-Cohesion: 0.16
-Nodes (26): POST_STATUS_LABELS, PostStatus, canDecodeImage(), bucket(), createPost(), PostInput, postPublishBlocker(), removePostCover() (+18 more)
-
-### Community 32 - "VehicleActions.tsx"
+### Community 50 - "Sheet UI"
 Cohesion: 0.24
-Nodes (19): PostActionsMenu(), badgeStyles, useVehicleStatusMutation(), VehicleActionsMenu(), AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription (+11 more)
+Nodes (9): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle, sheetVariants (+1 more)
 
-### Community 33 - "AdminVehicules.tsx"
-Cohesion: 0.09
-Nodes (42): react-router-dom, @supabase/supabase-js, AdminLayout(), navItems, PostStatusBadge(), AccessDenied(), AdminLoading(), CheckError() (+34 more)
-
-### Community 34 - "useSeo"
-Cohesion: 0.13
-Nodes (25): Charte graphique (à respecter absolument), 1. Contexte & état actuel, APropos, AnimatedSection(), AnimatedSectionProps, GlowCard(), LegalPage(), LegalPageProps (+17 more)
-
-### Community 35 - "AdminVehiculeForm.tsx"
-Cohesion: 0.10
-Nodes (29): AiAssistButton(), SlugSuggestion(), Field(), FormSection(), adminInputClass, adminSelectClass, adminTextareaClass, SaveBar() (+21 more)
-
-### Community 37 - "App.tsx"
-Cohesion: 0.09
-Nodes (23): next-themes, AdminApp, App(), Conseils, Contact, Depannage, MentionsLegales, NotFound (+15 more)
-
-### Community 38 - "@jsquash/webp"
-Cohesion: 0.50
-Nodes (3): @jsquash/webp, Job, scope
-
-### Community 39 - "B MATIC — Cahier des charges V2 (évolution du site)"
-Cohesion: 0.15
-Nodes (12): 10. Actions à la charge du propriétaire (hors code), 2. Objectifs, 3. Décisions techniques (actées), 5.1 Offre pare-brise (page `/pare-brise` + bloc sur l'accueil), 5.2 Assureurs partenaires (carrousel, liste dans `src/data/assurances.ts`), 5.3 Emplacements photos guidés (ajout véhicule, façon leboncoin), 5.4 Promotions (déjà dans `src/data/services.ts`), 5. Contenus spécifiques (+4 more)
-
-### Community 40 - "Reprise.tsx"
-Cohesion: 0.14
-Nodes (19): repriseChoix, repriseConsentement, repriseEtapes, repriseEtats, repriseIntro, repriseMessages, reprisePhotos, ReprisePhotoSlot (+11 more)
-
-### Community 41 - "navigation-menu.tsx"
+### Community 52 - "Navigation menu UI"
 Cohesion: 0.28
 Nodes (8): @radix-ui/react-navigation-menu, NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle, NavigationMenuViewport
 
-### Community 43 - "TrafficChart.tsx"
-Cohesion: 0.21
-Nodes (12): @testing-library/react, METRIC_LABELS, nf, niceMax(), plural(), TrafficChart(), TrafficChartProps, TrafficMetric (+4 more)
-
-### Community 44 - "ContactClickTracker.tsx"
-Cohesion: 0.31
-Nodes (7): ContactClickTracker(), externalReferrerHost(), PageViewTracker(), classifyContactLink(), CLICK_KIND_LABELS, CLICK_KINDS, insertPublicRow()
-
-### Community 45 - "vitest"
-Cohesion: 0.20
-Nodes (3): vitest, insertPublicRow, lead
-
-### Community 46 - "leads.ts"
-Cohesion: 0.28
-Nodes (8): clip(), LEAD_STATUS_LABELS, LEAD_STATUSES, LEAD_TYPE_LABELS, LEAD_TYPES, LeadSubmission, sendLead(), submitLead()
-
-### Community 49 - "dropdown-menu.tsx"
-Cohesion: 0.25
-Nodes (7): @radix-ui/react-dropdown-menu, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuShortcut(), DropdownMenuSubContent, DropdownMenuSubTrigger
-
-### Community 50 - "vin.ts"
-Cohesion: 0.19
-Nodes (16): WMI_MAKES, clean(), decodeVin(), knownMakes, makeFromWmi(), mapFuel(), mapGearbox(), mapVpicResult() (+8 more)
-
-### Community 51 - "index.ts"
-Cohesion: 0.08
-Nodes (27): allowed, BadRequest, callGemini(), callsByUser, cleanRegistration(), cleanSlug(), clientIp(), consumeScanQuota() (+19 more)
-
-### Community 52 - "imageOptimize.ts"
-Cohesion: 0.18
-Nodes (17): canvasOf(), decode(), Decoded, encodeWebp(), fitWithin(), getWorker(), jobs, MAX_EDGE (+9 more)
-
-### Community 53 - "Index.tsx"
-Cohesion: 0.15
-Nodes (18): carMask, clamp01(), HeroGarage(), SCENE, accueilConseils, accueilEngagements(), accueilHero, accueilOffresFlash (+10 more)
-
-### Community 54 - "drawer.tsx"
+### Community 53 - "Drawer UI"
 Cohesion: 0.25
 Nodes (7): vaul, DrawerContent, DrawerDescription, DrawerFooter(), DrawerHeader(), DrawerOverlay, DrawerTitle
 
-### Community 55 - "aiCopy.ts"
-Cohesion: 0.18
-Nodes (12): sonner, @tanstack/react-query, AI_LIMITS, compact(), CopyRequest, generateCopy(), GeneratedCopy, invokeAiFunction() (+4 more)
+### Community 54 - "Scripts npm"
+Cohesion: 0.25
+Nodes (8): scripts, build, build:dev, dev, lint, preview, test, test:watch
 
-### Community 56 - "B MATIC — Instructions projet (lues automatiquement par Claude Code)"
-Cohesion: 0.18
-Nodes (10): B MATIC — Instructions projet (lues automatiquement par Claude Code), Commands, Graphify, Infos, Langue, Project, Projet, Règles de travail (+2 more)
+### Community 55 - "Index.tsx"
+Cohesion: 0.14
+Nodes (19): HeroBackground(), AssureurBadge(), AssureursGroup(), InsurerMarquee(), accueilArguments, accueilAssureurs, accueilCadeaux, accueilCtaFinal (+11 more)
 
-### Community 57 - "sheet.tsx"
-Cohesion: 0.28
-Nodes (8): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle, sheetVariants
+### Community 56 - "Breadcrumb UI"
+Cohesion: 0.25
+Nodes (7): Breadcrumb, BreadcrumbEllipsis(), BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator()
 
-### Community 58 - "eslint.config.js"
-Cohesion: 0.33
-Nodes (5): @eslint/js, eslint-plugin-react-hooks, eslint-plugin-react-refresh, globals, typescript-eslint
-
-### Community 59 - "registrationScan.ts"
-Cohesion: 0.21
-Nodes (15): 6. Améliorations UX, Corner(), DocSketch(), RegistrationScanner(), blobToBase64(), fold(), matchIn(), RawScan (+7 more)
-
-### Community 60 - "Reprise"
-Cohesion: 0.17
-Nodes (15): Camera(), CarTopView(), outlineProps, Point, Shot, SHOTS, SlotIllustration(), zoneProps (+7 more)
-
-### Community 61 - "LeadType"
-Cohesion: 0.40
-Nodes (6): ClickKind, PeriodStats, LeadStatus, LeadType, DashboardCounts, Lead
-
-### Community 62 - "vercel.json"
+### Community 57 - "Configuration Vercel"
 Cohesion: 0.25
 Nodes (7): includeFiles, cleanUrls, functions, api/share.ts, headers, redirects, rewrites
 
-### Community 63 - "main.tsx"
+### Community 58 - "ESLint"
+Cohesion: 0.33
+Nodes (5): @eslint/js, eslint-plugin-react-hooks, eslint-plugin-react-refresh, globals, typescript-eslint
+
+### Community 60 - "Polices & point d entrée"
 Cohesion: 0.40
 Nodes (3): @fontsource/inter, @fontsource/orbitron, react-dom
 
+### Community 61 - "Avatar UI"
+Cohesion: 0.40
+Nodes (4): @radix-ui/react-avatar, Avatar, AvatarFallback, AvatarImage
+
+### Community 62 - "Photo hero garage"
+Cohesion: 0.67
+Nodes (4): Hero garage photo (JPG) - modern workshop interior, Homepage hero background: clean, bright modern garage workshop with two vehicles on lifts, mechanic at diagnostic cart, grey/steel palette, polished epoxy floor, skylight, Hero garage photo (WebP mobile), Hero garage photo (WebP desktop)
+
+### Community 64 - "Thème & Sonner"
+Cohesion: 0.50
+Nodes (3): next-themes, Toaster(), ToasterProps
+
 ## Knowledge Gaps
-- **11 isolated node(s):** `tailwindcss-animate`, `@playwright/test`, `@tailwindcss/typography`, `@types/node`, `@types/react` (+6 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 390 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **32 isolated node(s):** `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `tailwindcss-animate`, `@playwright/test` (+27 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 360 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `utils.ts` to `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `cn`, `navigation-menu.tsx`, `command.tsx`, `package.json`, `form.tsx`, `chart.tsx`, `AdminDashboard.tsx`, `PareBrise.tsx`, `Vehicules.tsx`, `pagination.tsx`, `VehiclePhotos.tsx`, `input-otp.tsx`, `Mecanique.tsx`, `lucide-react`, `AdminActualiteForm.tsx`, `VehicleActions.tsx`, `AdminVehicules.tsx`, `useSeo`, `AdminVehiculeForm.tsx`, `App.tsx`, `Reprise.tsx`, `navigation-menu.tsx`, `TrafficChart.tsx`, `ContactClickTracker.tsx`, `dropdown-menu.tsx`, `Index.tsx`, `drawer.tsx`, `sheet.tsx`, `registrationScan.ts`, `Reprise`?**
-  _High betweenness centrality (0.235) - this node is a cross-community bridge._
-- **What connects `tailwindcss-animate`, `@playwright/test`, `@tailwindcss/typography` to the rest of the system?**
-  _11 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `dependencies` be split into smaller, more focused modules?**
+- **Why does `react` connect `Pages & composants animés` to `UI Cards & Menus Radix`, `Primitives Radix UI`, `SlotPicker.tsx`, `RdvSteps.tsx`, `Sidebar & Sheet UI`, `AdminActualiteForm.tsx`, `Footer, horaires & cadeaux`, `Logo & layout admin`, `Toasts`, `Actualités & accueil`, `Routage App.tsx`, `package.json`, `Carte grise & dialogues`, `Actions admin véhicules/articles`, `select.tsx`, `tabs.tsx`, `AdminDashboard.tsx`, `registrationScan.ts`, `Alertes & toggles UI`, `Formulaires react-hook-form`, `Boutons & calendrier`, `Carousel`, `lucide-react`, `Graphiques recharts`, `Sheet UI`, `Navigation menu UI`, `Drawer UI`, `Breadcrumb UI`, `Avatar UI`?**
+  _High betweenness centrality (0.227) - this node is a cross-community bridge._
+- **What connects `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities` to the rest of the system?**
+  _32 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `UI Cards & Menus Radix` be split into smaller, more focused modules?**
+  _Cohesion score 0.06821480406386067 - nodes in this community are weakly interconnected._
+- **Why does `lucide-react` connect `lucide-react` to `UI Cards & Menus Radix`, `Primitives Radix UI`, `Pages & composants animés`, `SlotPicker.tsx`, `RdvSteps.tsx`, `Sidebar & Sheet UI`, `AdminActualiteForm.tsx`, `Footer, horaires & cadeaux`, `Logo & layout admin`, `Toasts`, `Actualités & accueil`, `Admin : en-têtes & statuts`, `package.json`, `Carte grise & dialogues`, `Actions admin véhicules/articles`, `select.tsx`, `AdminDashboard.tsx`, `Conseils & data source unique`, `registrationScan.ts`, `Boutons & calendrier`, `Carousel`, `Génération de texte IA`, `Sheet UI`, `Navigation menu UI`, `Index.tsx`, `Breadcrumb UI`?**
+  _High betweenness centrality (0.189) - this node is a cross-community bridge._
+- **Should `Dépendances runtime` be split into smaller, more focused modules?**
   _Cohesion score 0.03508771929824561 - nodes in this community are weakly interconnected._
-- **Why does `lucide-react` connect `lucide-react` to `carousel.tsx`, `sidebar.tsx`, `hooks/use-toast.ts`, `cn`, `command.tsx`, `package.json`, `AdminDashboard.tsx`, `PareBrise.tsx`, `utils.ts`, `Vehicules.tsx`, `pagination.tsx`, `VehiclePhotos.tsx`, `conseils.ts`, `input-otp.tsx`, `Mecanique.tsx`, `AdminActualiteForm.tsx`, `VehicleActions.tsx`, `AdminVehicules.tsx`, `useSeo`, `AdminVehiculeForm.tsx`, `Reprise.tsx`, `navigation-menu.tsx`, `dropdown-menu.tsx`, `Index.tsx`, `sheet.tsx`, `registrationScan.ts`?**
-  _High betweenness centrality (0.135) - this node is a cross-community bridge._
-- **Should `sidebar.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.07017543859649122 - nodes in this community are weakly interconnected._
-- **Why does `dependencies` connect `dependencies` to `package.json`?**
-  _High betweenness centrality (0.089) - this node is a cross-community bridge._
-- **Should `hooks/use-toast.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12183908045977011 - nodes in this community are weakly interconnected._
+- **Why does `dependencies` connect `Dépendances runtime` to `package.json`?**
+  _High betweenness centrality (0.085) - this node is a cross-community bridge._
+- **Should `Primitives Radix UI` be split into smaller, more focused modules?**
+  _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
