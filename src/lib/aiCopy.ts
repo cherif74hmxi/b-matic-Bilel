@@ -2,7 +2,6 @@
 //  Rédaction assistée (Gemini) — appel de l'Edge Function « generate-copy »
 //  La clé Gemini reste un secret Supabase : le navigateur n'envoie que le JWT
 //  de l'admin connecté et le sujet de l'actualité.
-//  (Scan de carte grise, même fonction : voir src/lib/registrationScan.ts.)
 //  Activation : VITE_AI_ENABLED=true dans .env, une fois la fonction déployée.
 // ============================================================================
 import { FunctionsHttpError } from "@supabase/supabase-js";
@@ -38,7 +37,7 @@ const compact = <T extends object>(o: T) =>
   Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined && v !== null && v !== "")) as T;
 
 /**
- * Appel de l'Edge Function « generate-copy » (rédaction ou scan de carte grise).
+ * Appel de l'Edge Function « generate-copy » (rédaction des actualités).
  * En cas d'erreur, lève une Error portant le message en français renvoyé par la
  * fonction (401, 403, 400, 429, 502…), sinon `fallback`.
  */

@@ -13,12 +13,3 @@ describe("durée de conservation des demandes", () => {
     expect(Number(match![1])).toBe(legalInfo.leadsRetentionYears);
   });
 });
-
-describe("durée de conservation des documents clients", () => {
-  it("legal.ts et l'Edge Function de purge concordent", () => {
-    const ts = readFileSync(resolve(__dirname, "../../supabase/functions/purge-documents/index.ts"), "utf8");
-    const match = ts.match(/const RETENTION_DAYS = (\d+);/);
-    expect(match).not.toBeNull();
-    expect(Number(match![1])).toBe(legalInfo.documentsRetentionDays);
-  });
-});

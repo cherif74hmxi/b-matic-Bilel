@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildDetails, documentPath, emptyRdvForm, formatPlate, isInZone, isPlateValid, isPostalCodeValid,
-  isStepValid, longDate, newReference, type RdvForm,
+  buildDetails, emptyRdvForm, formatPlate, isInZone, isPlateValid, isPostalCodeValid,
+  isStepValid, longDate, type RdvForm,
 } from "@/lib/rendezvous";
 
 const complet: RdvForm = {
@@ -43,7 +43,10 @@ describe("formulaire de rendez-vous — validation", () => {
     expect(isStepValid({ ...complet, sousChoix: "" }, 1)).toBe(false);
     expect(isStepValid({ ...complet, besoin: "toit", sousChoix: "" }, 1)).toBe(true);
     expect(isStepValid({ ...complet, vehiculeMode: "manuel" }, 2)).toBe(false);
-    expect(isStepValid({ ...complet, vehiculeMode: "manuel", marque: "Peugeot", modele: "208" }, 2)).toBe(true);
+    // Sans plaque : marque + modèle + année obligatoires.
+    expect(isStepValid({ ...complet, vehiculeMode: "manuel", marque: "Peugeot", modele: "208" }, 2)).toBe(false);
+    expect(isStepValid({ ...complet, vehiculeMode: "manuel", marque: "Peugeot", modele: "208", annee: "1950" }, 2)).toBe(false);
+    expect(isStepValid({ ...complet, vehiculeMode: "manuel", marque: "Peugeot", modele: "208", annee: "2019" }, 2)).toBe(true);
     expect(isStepValid({ ...complet, assureur: "" }, 3)).toBe(false);
     expect(isStepValid({ ...complet, couverture: "inconnu", assureur: "" }, 3)).toBe(true);
     expect(isStepValid({ ...complet, codePostal: "40" }, 4)).toBe(false);
@@ -54,8 +57,8 @@ describe("formulaire de rendez-vous — validation", () => {
 });
 
 describe("formulaire de rendez-vous — envoi", () => {
-  it("détails de la demande : jamais de champ vide, référence incluse", () => {
-    const d = buildDetails(complet, "ref");
+  it("détails de la demande : jamais de champ vide", () => {
+    const d = buildDetails(complet);
     expect(d).toMatchObject({
       Service: "Pare-brise — Remplacer",
       Plaque: "1-ABC-123",
@@ -63,21 +66,12 @@ describe("formulaire de rendez-vous — envoi", () => {
       Assureur: "AXA",
       "Code postal": "4000",
       Heure: "10:00",
-      "Référence dossier": "ref",
     });
     expect(Object.values(d).every(Boolean)).toBe(true);
-    expect(buildDetails({ ...complet, couverture: "non" }, "ref").Assureur).toBeUndefined();
+    expect(buildDetails({ ...complet, couverture: "non" }).Assureur).toBeUndefined();
   });
 
   it("date en toutes lettres", () => {
     expect(longDate("2026-10-30")).toBe("vendredi 30 octobre 2026");
-  });
-
-  it("chemin des documents accepté par la règle du bucket", () => {
-    const ref = newReference();
-    // Même expression que public.client_document_upload_allowed (migration 20261029000001).
-    const regle = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/(carte-grise|assurance)-[0-9]{10,16}\.(jpg|png|webp|pdf)$/;
-    expect(documentPath(ref, "carte-grise", "jpg")).toMatch(regle);
-    expect(documentPath(ref, "assurance", "pdf")).toMatch(regle);
   });
 });

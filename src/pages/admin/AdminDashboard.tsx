@@ -20,7 +20,6 @@ import { toast } from "sonner";
 import useSeo from "@/hooks/useSeo";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import TrafficChart, { type TrafficMetric } from "@/components/admin/TrafficChart";
-import LeadDocuments from "@/components/admin/LeadDocuments";
 import { supabase } from "@/lib/supabase";
 import { CLICK_KINDS, CLICK_KIND_LABELS, type ClickKind } from "@/lib/clickTracking";
 import {
@@ -233,10 +232,6 @@ const formatDetailValue = (value: unknown) =>
 
 const LeadCard = ({ lead, onStatusChange }: { lead: Lead; onStatusChange: (status: LeadStatus) => void }) => {
   const details = Object.entries(lead.details ?? {}).filter(([, v]) => v !== null && v !== "");
-  // Demande du formulaire de rendez-vous : le client a pu déposer des documents.
-  const reference = typeof lead.details?.["Référence dossier"] === "string" ? (lead.details["Référence dossier"] as string) : "";
-  // Documents chargés seulement quand le détail est ouvert.
-  const [open, setOpen] = useState(false);
   return (
     <li className="min-w-0 bg-gradient-card border border-border rounded-xl p-4">
       <div className="flex items-start justify-between gap-3">
@@ -281,7 +276,7 @@ const LeadCard = ({ lead, onStatusChange }: { lead: Lead; onStatusChange: (statu
       </div>
 
       {(lead.message || details.length > 0) && (
-        <details className="mt-3 text-sm" onToggle={(e) => setOpen(e.currentTarget.open)}>
+        <details className="mt-3 text-sm">
           <summary className="cursor-pointer text-muted-foreground min-h-[32px] flex items-center">Voir le détail</summary>
           {lead.message && <p className="mt-2 whitespace-pre-line break-words">{lead.message}</p>}
           {details.length > 0 && (
@@ -294,7 +289,6 @@ const LeadCard = ({ lead, onStatusChange }: { lead: Lead; onStatusChange: (statu
               ))}
             </dl>
           )}
-          {open && reference && <LeadDocuments reference={reference} />}
         </details>
       )}
     </li>

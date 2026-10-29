@@ -1,17 +1,13 @@
 // ============================================================================
 //  Formulaire de devis / rendez-vous pare-brise — état, validation, envoi
 // ----------------------------------------------------------------------------
-//  Fonctions pures (testées dans src/test/rendezvous.test.ts) + dépôt des
-//  documents facultatifs APRÈS la réservation (bucket privé client-documents,
-//  voir supabase/migrations/20261029000001_client_documents.sql).
+//  Fonctions pures, testées dans src/test/rendezvous.test.ts. Aucun document
+//  n'est collecté : le véhicule se renseigne à la main (plaque, ou marque +
+//  modèle + année).
 // ============================================================================
-import { STORAGE_BUCKETS } from "@/lib/contentModel";
 import { rdvAssurance, rdvBesoins, rdvLieu, type BesoinId, type CouvertureId, type LieuId } from "@/data/rendezvous";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export type VehiculeMode = "plaque" | "scan" | "manuel";
+export type VehiculeMode = "plaque" | "manuel";
 
 export interface RdvForm {
   besoin: BesoinId | "";
@@ -21,8 +17,6 @@ export interface RdvForm {
   marque: string;
   modele: string;
   annee: string;
-  /** Rempli uniquement par le scan de la carte grise. */
-  vin: string;
   couverture: CouvertureId | "";
   /** Nom d'un assureur de la liste, ou « Autre ». */
   assureur: string;
@@ -48,7 +42,6 @@ export const emptyRdvForm: RdvForm = {
   marque: "",
   modele: "",
   annee: "",
-  vin: "",
   couverture: "",
   assureur: "",
   assureurAutre: "",
@@ -83,7 +76,6 @@ export function formatPlate(plate: string): string {
 }
 
 export function isYearValid(year: string): boolean {
-  if (!year) return true; // facultative
   const y = Number(year);
   return /^\d{4}$/.test(year) && y >= 1970 && y <= new Date().getFullYear() + 1;
 }
@@ -113,6 +105,7 @@ export function isStepValid(f: RdvForm, step: number): boolean {
     }
     case 2:
       if (f.vehiculeMode === "plaque") return isPlateValid(f.plaque);
+      // Sans plaque : marque + modèle + année.
       return f.marque.trim().length >= 2 && f.modele.trim().length >= 1 && isYearValid(f.annee);
     case 3:
       if (!f.couverture) return false;
@@ -192,91 +185,17 @@ export function recapRows(f: RdvForm): [string, string][] {
  * Champs enregistrés avec la demande (leads.details), lus dans l'espace admin.
  * « Service » est affiché tel quel dans l'agenda admin.
  */
-export function buildDetails(f: RdvForm, reference: string): Record<string, string> {
+export function buildDetails(f: RdvForm): Record<string, string> {
   const details: Record<string, string> = {
     "Service": serviceLabel(f),
     "Véhicule": f.vehiculeMode === "plaque" ? "" : vehiculeLabel(f),
     "Plaque": f.vehiculeMode === "plaque" ? formatPlate(f.plaque) : "",
-    "VIN (scan)": f.vin,
     "Couverture bris de glace": couvertureLabel(f),
     "Assureur": f.couverture === "non" ? "" : assureurLabel(f),
     "Lieu": f.lieu === "centre" ? "Au centre" : f.lieu === "domicile" ? "À domicile / au travail" : "",
     "Code postal": f.lieu === "domicile" ? f.codePostal.trim() + (isInZone(f.codePostal) ? "" : " (zone à confirmer)") : "",
     "Date": f.date ? longDate(f.date) : "",
     "Heure": f.hour !== null ? heureLabel(f.hour) : "",
-    "Référence dossier": reference,
   };
   return Object.fromEntries(Object.entries(details).filter(([, v]) => v));
 }
-
-// ---------------------------------------------------------------- Référence dossier
-
-/** UUID v4 aléatoire : nom du dossier des documents (impossible à deviner). */
-export function newReference(): string {
-  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
-  const b = crypto.getRandomValues(new Uint8Array(16));
-  b[6] = (b[6] & 0x0f) | 0x40;
-  b[8] = (b[8] & 0x3f) | 0x80;
-  const h = Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
-  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
-}
-
-// ---------------------------------------------------------------- Documents (après réservation)
-
-export type PieceId = "carte-grise" | "assurance";
-export const DOCUMENT_MAX_BYTES = 10 * 1024 * 1024;
-/** Grand côté des photos de documents : lisible, léger sur mobile. */
-const DOCUMENT_MAX_EDGE = 2400;
-
-export class DocumentError extends Error {
-  constructor(public reason: "format" | "taille" | "envoi") {
-    super(reason);
-  }
-}
-
-/** Chemin accepté par la règle d'accès du bucket : « <ref>/<pièce>-<horodatage>.<ext> ». */
-export const documentPath = (reference: string, piece: PieceId, ext: "jpg" | "pdf", now = Date.now()) =>
-  `${reference}/${piece}-${now}.${ext}`;
-
-/**
- * Prépare puis dépose un document dans le dossier de la demande. Les photos
- * sont réencodées en JPEG (métadonnées EXIF, dont le GPS, retirées).
- */
-export async function uploadDocument(reference: string, piece: PieceId, file: File): Promise<void> {
-  let body: Blob;
-  let ext: "jpg" | "pdf";
-  if (file.type === "application/pdf") {
-    body = file;
-    ext = "pdf";
-  } else if (file.type.startsWith("image/") || !file.type) {
-    const { toJpeg } = await import("@/lib/imageOptimize");
-    try {
-      body = await toJpeg(file, DOCUMENT_MAX_EDGE, 0.85);
-    } catch {
-      throw new DocumentError("format");
-    }
-    ext = "jpg";
-  } else {
-    throw new DocumentError("format");
-  }
-  if (body.size > DOCUMENT_MAX_BYTES) throw new DocumentError("taille");
-  if (!SUPABASE_URL || !SUPABASE_KEY) throw new DocumentError("envoi");
-
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKETS.clientDocuments}/${documentPath(reference, piece, ext)}`, {
-    method: "POST",
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": ext === "pdf" ? "application/pdf" : "image/jpeg",
-      "x-upsert": "false",
-    },
-    body,
-  }).catch(() => null);
-  if (!res?.ok) throw new DocumentError("envoi");
-}
-
-/**
- * Scan de carte grise disponible ? Même interrupteur que lib/aiCopy
- * (AI_ENABLED), lu ici pour ne pas charger supabase-js avec la page.
- */
-export const SCAN_ENABLED = import.meta.env.VITE_AI_ENABLED === "true";

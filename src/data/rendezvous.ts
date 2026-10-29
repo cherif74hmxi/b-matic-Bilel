@@ -15,7 +15,7 @@ export const rdvEtapes = ["Besoin", "Véhicule", "Assurance", "Lieu", "Créneau"
 
 export const rdvIntro = {
   titre: "Devis et rendez-vous pare-brise",
-  texte: "6 petites étapes, 2 minutes. Aucun document à envoyer maintenant.",
+  texte: "6 petites étapes, 2 minutes. Aucun document à envoyer.",
 };
 
 // ------------------------------------------------------------------ Étape 1
@@ -79,21 +79,20 @@ export const rdvBesoins: Besoin[] = [
 // ------------------------------------------------------------------ Étape 2
 export const rdvVehicule = {
   titre: "Votre véhicule",
-  texte: "Pour commander le bon vitrage. Aucun document lourd à envoyer ici.",
+  texte: "Pour commander le bon vitrage. Aucun document à envoyer.",
   modes: {
     plaque: "Plaque",
-    scan: "Scanner ma carte grise",
-    manuel: "Saisie manuelle",
+    manuel: "Marque et modèle",
   },
   plaqueLabel: "Numéro de plaque",
   plaquePlaceholder: "1-ABC-123",
   plaqueAide: "Le plus rapide : on retrouve votre modèle exact.",
   plaqueInvalide: "Vérifiez la plaque (lettres et chiffres).",
-  scanFacultatif: "Facultatif : la photo n'est pas conservée.",
   marque: "Marque",
   modele: "Modèle",
   annee: "Année",
-  manuelAide: "Marque et modèle suffisent. L'année nous aide à choisir le bon vitrage.",
+  manuelAide: "Marque, modèle et année : de quoi choisir le bon vitrage.",
+  anneeInvalide: "Année invalide.",
 };
 
 // ------------------------------------------------------------------ Étape 3
@@ -168,26 +167,4 @@ export const rdvConfirmation = {
     `Merci ${prenom}. Votre créneau du ${quand} est réservé. Nous vous appelons si un détail doit être précisé.`,
   texteDemande: (prenom: string) =>
     `Merci ${prenom}. Votre demande est enregistrée : nous vous rappelons rapidement pour confirmer le créneau.`,
-};
-
-// ------------------------------------------------------------------ Documents (après réservation)
-export const rdvDocuments = {
-  titre: "Gagnez du temps : ajoutez vos documents",
-  texte: "Facultatif. Avec ces deux documents, nous préparons votre dossier d'assurance avant le rendez-vous.",
-  pieces: [
-    { id: "carte-grise", label: "Carte grise", aide: "Certificat d'immatriculation, recto" },
-    { id: "assurance", label: "Attestation d'assurance", aide: "Carte verte ou attestation de votre assureur" },
-  ] as const,
-  formats: "Photo ou PDF, 10 Mo maximum.",
-  consentement: (jours: number) =>
-    `J'accepte que B MATIC conserve ces documents pour traiter mon dossier avec mon assureur, ${jours} jours au maximum.`,
-  rassurance: (jours: number) =>
-    `Stockage sécurisé, accessible uniquement à notre équipe et supprimé automatiquement après ${jours} jours. Vous pouvez aussi simplement les apporter le jour du rendez-vous.`,
-  bouton: "Ajouter",
-  remplacer: "Remplacer",
-  envoi: "Envoi…",
-  ok: "Bien reçu",
-  formatRefuse: "Format non accepté : photo (JPG, PNG) ou PDF.",
-  tropLourd: "Fichier trop lourd : 10 Mo maximum.",
-  echec: "Envoi impossible pour le moment. Apportez simplement ce document le jour du rendez-vous.",
 };

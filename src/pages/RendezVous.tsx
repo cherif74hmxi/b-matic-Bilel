@@ -9,10 +9,9 @@ import { rdvConfirmation, rdvCoordonnees, rdvEtapes, rdvIntro } from "@/data/ren
 import { bookRdv } from "@/lib/rdv";
 import { sendLead } from "@/lib/leads";
 import {
-  buildDetails, emptyRdvForm, heureLabel, isStepValid, longDate, newReference, type RdvForm,
+  buildDetails, emptyRdvForm, heureLabel, isStepValid, longDate, type RdvForm,
 } from "@/lib/rendezvous";
 import StepProgress from "@/components/rdv/StepProgress";
-import DocumentsUpload from "@/components/rdv/DocumentsUpload";
 import {
   AssuranceStep, BesoinStep, CoordonneesStep, CreneauStep, LieuStep, Recap, VehiculeStep,
 } from "@/components/rdv/RdvSteps";
@@ -21,8 +20,8 @@ import {
 //  /rendez-vous — devis et rendez-vous pare-brise, un écran par étape
 // ----------------------------------------------------------------------------
 //  1 Besoin · 2 Véhicule · 3 Assurance · 4 Lieu · 5 Créneau · 6 Coordonnées,
-//  puis confirmation. Les documents (carte grise, attestation d'assurance) ne
-//  sont proposés QU'APRÈS la réservation, et restent facultatifs.
+//  puis confirmation. Aucun document n'est demandé : le garage contacte
+//  lui-même l'assureur.
 //  Envoi : réservation + demande dans Supabase (book_rdv), puis e-mail
 //  Formspree. Agenda injoignable → double envoi classique (sendLead),
 //  « créneau à confirmer ».
@@ -38,8 +37,6 @@ const RendezVous = () => {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<RdvForm>(emptyRdvForm);
   const update = useCallback((patch: Partial<RdvForm>) => setForm((f) => ({ ...f, ...patch })), []);
-  // Nom du dossier des documents : tiré une fois, enregistré avec la demande.
-  const [reference] = useState(newReference);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
@@ -65,7 +62,7 @@ const RendezVous = () => {
 
     setSending(true);
     setMessage("");
-    const details = buildDetails(form, reference);
+    const details = buildDetails(form);
     const name = `${form.prenom.trim()} ${form.nom.trim()}`;
     const sendMail = (extra: Record<string, string> = {}) =>
       fetch(FORMSPREE_URL, {
@@ -156,8 +153,6 @@ const RendezVous = () => {
           <div className="mb-8">
             <Recap form={form} />
           </div>
-
-          {!form.website && <DocumentsUpload reference={reference} />}
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
             <a href={legalInfo.phoneHref} className="btn-ghost min-h-12">

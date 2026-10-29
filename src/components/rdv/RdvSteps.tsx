@@ -1,7 +1,7 @@
-import { lazy, Suspense, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
-  Building2, Camera, CircleHelp, Hash, Home, Info, Keyboard, MapPin, ShieldCheck, Loader2,
+  Building2, CircleHelp, Hash, Home, Info, Keyboard, MapPin, ShieldCheck,
 } from "lucide-react";
 import { assureurs } from "@/data/assurances";
 import {
@@ -9,9 +9,8 @@ import {
 } from "@/data/rendezvous";
 import {
   formatPlate, isEmailValid, isInZone, isPhoneValid, isPlateValid, isPostalCodeValid, isYearValid,
-  recapRows, SCAN_ENABLED, type RdvForm, type VehiculeMode,
+  recapRows, type RdvForm, type VehiculeMode,
 } from "@/lib/rendezvous";
-import type { RegistrationScan } from "@/lib/registrationScan";
 import ChoiceButton, { ChoiceGroup } from "@/components/rdv/ChoiceButton";
 import GlassDiagram from "@/components/rdv/GlassDiagram";
 import SlotPicker from "@/components/rdv/SlotPicker";
@@ -23,9 +22,6 @@ import SlotPicker from "@/components/rdv/SlotPicker";
 //  la validation (lib/rendezvous → isStepValid) et l'envoi.
 //  Textes : src/data/rendezvous.ts.
 // ============================================================================
-
-// Scanner chargé à la demande (il embarque le client Supabase).
-const RegistrationScanner = lazy(() => import("@/components/RegistrationScanner"));
 
 export interface StepProps {
   form: RdvForm;
@@ -110,22 +106,13 @@ export const BesoinStep = ({ form, update }: StepProps) => {
 export const VehiculeStep = ({ form, update }: StepProps) => {
   const modes: { id: VehiculeMode; label: string; icon: typeof Hash }[] = [
     { id: "plaque", label: rdvVehicule.modes.plaque, icon: Hash },
-    ...(SCAN_ENABLED ? [{ id: "scan" as const, label: rdvVehicule.modes.scan, icon: Camera }] : []),
     { id: "manuel", label: rdvVehicule.modes.manuel, icon: Keyboard },
   ];
-  const onScan = (scan: RegistrationScan) =>
-    update({
-      vehiculeMode: "manuel",
-      marque: scan.make ?? form.marque,
-      modele: scan.model ?? form.modele,
-      annee: scan.year ? String(scan.year) : form.annee,
-      vin: scan.vin ?? "",
-    });
 
   return (
     <>
       <StepTitle titre={rdvVehicule.titre} texte={rdvVehicule.texte} />
-      <div role="tablist" aria-label="Comment indiquer votre véhicule" className={`grid gap-2 mb-6 ${modes.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+      <div role="tablist" aria-label="Comment indiquer votre véhicule" className="grid grid-cols-2 gap-2 mb-6">
         {modes.map((m) => (
           <button
             key={m.id}
@@ -160,22 +147,8 @@ export const VehiculeStep = ({ form, update }: StepProps) => {
         </Field>
       )}
 
-      {form.vehiculeMode === "scan" && (
-        <Suspense
-          fallback={
-            <div className="grid place-items-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-primary" aria-label="Chargement" />
-            </div>
-          }
-        >
-          <RegistrationScanner onResult={onScan} onError={() => update({ vehiculeMode: "manuel" })} />
-          <p className="text-xs text-muted-foreground text-center mt-3">{rdvVehicule.scanFacultatif}</p>
-        </Suspense>
-      )}
-
       {form.vehiculeMode === "manuel" && (
         <div className="grid gap-4">
-          {form.vin && <Notice icon={ShieldCheck}>Carte grise lue : vérifiez les champs ci-dessous.</Notice>}
           <div className="grid grid-cols-2 gap-3">
             <Field label={rdvVehicule.marque} htmlFor="rdv-marque">
               <input id="rdv-marque" value={form.marque} onChange={(e) => update({ marque: e.target.value.slice(0, 40) })} placeholder="Ex. Peugeot" className={inputClass} />
@@ -184,7 +157,7 @@ export const VehiculeStep = ({ form, update }: StepProps) => {
               <input id="rdv-modele" value={form.modele} onChange={(e) => update({ modele: e.target.value.slice(0, 60) })} placeholder="Ex. 208" className={inputClass} />
             </Field>
           </div>
-          <Field label={`${rdvVehicule.annee} (facultatif)`} htmlFor="rdv-annee" error={!isYearValid(form.annee) && form.annee.length === 4 && "Année invalide."}>
+          <Field label={rdvVehicule.annee} htmlFor="rdv-annee" error={!isYearValid(form.annee) && form.annee.length === 4 && rdvVehicule.anneeInvalide}>
             <input
               id="rdv-annee"
               value={form.annee}
