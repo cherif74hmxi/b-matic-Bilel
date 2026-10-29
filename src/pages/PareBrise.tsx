@@ -224,11 +224,11 @@ const PareBrise = () => {
 
         {/* --------------------------------------------------------- CTA final */}
         <AnimatedSection>
-          <section className="max-w-5xl mx-auto bg-primary text-primary-foreground rounded-2xl px-4 py-10 sm:px-6 md:px-14 md:py-14 text-center">
+          <section className="max-w-5xl mx-auto bg-brand text-brand-foreground rounded-2xl px-4 py-10 sm:px-6 md:px-14 md:py-14 text-center">
             <h2 className="font-heading text-2xl md:text-3xl font-bold mb-3">{pareBriseCtaFinal.titre}</h2>
-            <p className="text-primary-foreground/85 mb-8 max-w-xl mx-auto">{pareBriseCtaFinal.texte}</p>
+            <p className="text-brand-foreground/85 mb-8 max-w-xl mx-auto">{pareBriseCtaFinal.texte}</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to={pareBriseCtaFinal.cta.to} className="btn-main min-h-[52px] !bg-white !text-primary hover:!bg-white/90 !px-4 sm:!px-6">
+              <Link to={pareBriseCtaFinal.cta.to} className="btn-main min-h-[52px] !bg-white !text-brand hover:!bg-white/90 !px-4 sm:!px-6">
                 {pareBriseCtaFinal.cta.label} <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
               <a href={legalInfo.phoneHref} className="btn-ghost min-h-[52px] !bg-transparent !text-white !border-white/50 hover:!bg-white/10">

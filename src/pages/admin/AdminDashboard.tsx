@@ -248,8 +248,8 @@ const LeadCard = ({ lead, onStatusChange }: { lead: Lead; onStatusChange: (statu
           id={`lead-status-${lead.id}`}
           value={lead.status}
           onChange={(e) => onStatusChange(e.target.value as LeadStatus)}
-          className={`shrink-0 min-h-[40px] rounded-lg border bg-input px-2 text-sm ${
-            lead.status === "new" ? "border-neon-cyan text-neon-cyan" : "border-border text-foreground"
+          className={`shrink-0 min-h-[40px] rounded-lg border bg-background px-2 text-sm ${
+            lead.status === "new" ? "border-neon-cyan text-neon-cyan" : "border-input text-foreground"
           }`}
         >
           {LEAD_STATUSES.map((s) => (
@@ -299,7 +299,7 @@ const LeadCard = ({ lead, onStatusChange }: { lead: Lead; onStatusChange: (statu
 //  Sélecteur de période
 // ---------------------------------------------------------------------------
 
-const dateInputClass = "min-h-[44px] rounded-lg border border-border bg-input px-3 text-sm";
+const dateInputClass = "min-h-[44px] rounded-lg border border-input bg-background px-3 text-sm text-foreground";
 
 const PeriodPicker = ({
   preset,

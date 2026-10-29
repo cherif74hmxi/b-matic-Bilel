@@ -44,7 +44,7 @@ const AdminLayout = () => {
       <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col bg-card/60 border-r border-border p-4">
         <Link to="/admin" className="flex items-center gap-2 px-2 mb-8" onClick={guardLinkClick}>
           <img src={logo} alt="B MATIC" className="h-10 w-auto rounded" />
-          <span className="font-heading text-xs uppercase tracking-widest text-gradient-neon">Admin</span>
+          <span className="font-heading text-xs uppercase tracking-widest text-primary">Admin</span>
         </Link>
         <nav aria-label="Navigation admin" className="flex flex-col gap-1">
           {navItems.map(({ to, label, icon: Icon, end }) => (
@@ -84,7 +84,7 @@ const AdminLayout = () => {
       >
         <Link to="/admin" className="flex items-center gap-2" onClick={guardLinkClick}>
           <img src={logo} alt="B MATIC" className="h-10 w-auto rounded" />
-          <span className="font-heading text-[11px] uppercase tracking-widest text-gradient-neon">Admin</span>
+          <span className="font-heading text-[11px] uppercase tracking-widest text-primary">Admin</span>
         </Link>
         <Link
           to="/"

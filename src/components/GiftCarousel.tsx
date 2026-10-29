@@ -73,7 +73,7 @@ const GiftCarousel = () => {
               aria-roledescription="diapositive"
               aria-label={`${i + 1} sur ${pareBriseCadeaux.length} : ${c.nom}`}
             >
-              <div className="h-full rounded-2xl bg-muted p-4 md:p-5 flex flex-col">
+              <div className="h-full rounded-2xl bg-[hsl(var(--gift-tile))] text-[hsl(var(--gift-tile-ink))] p-4 md:p-5 flex flex-col">
                 {/* Zone d'image de taille fixe : l'objet est centré et contenu dedans. */}
                 <div className="relative aspect-[4/3]">
                   <img

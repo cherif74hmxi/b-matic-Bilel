@@ -22,7 +22,17 @@
   le sien). Pas de lueurs (glow).
 - Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation).
 - Réutiliser les composants existants : `GlowCard`, `NeonButton`, classes `.btn-main`
-  (violet plein) / `.btn-ghost` (contour violet). Thème sombre néon : `data-theme="sombre"`.
+  (violet plein) / `.btn-ghost` (contour violet).
+- **Deux thèmes, clair par défaut** : bouton soleil / lune du menu (`ThemeToggle`), choix
+  mémorisé dans localStorage (`src/lib/theme.ts`, préférence d'affichage = pas de consentement),
+  appliqué avant l'affichage par le script en tête de `index.html` (même clé, testé).
+  Sombre = `data-theme="sombre"` sur `<html>` (tokens dans `src/index.css`).
+- **Toujours des tokens, jamais de couleur en dur** (`bg-background`, `text-foreground`,
+  `bg-card`, `border-border`/`border-input`…) pour que les deux thèmes suivent.
+  Aplats pleins avec texte blanc (boutons, bloc CTA, créneau choisi) → **`brand`**
+  (violet exact du logo dans les deux thèmes). Textes, icônes, bordures et fonds doux →
+  **`primary`** (éclairci en sombre pour rester lisible). Exceptions voulues : tuiles blanches
+  des logos assureurs, bouton blanc du bloc CTA.
 - Carte du centre : `MapEmbed` (iframe Google Maps affichée directement, adresse
   `src/data/legal.ts` → `mapsQuery`) + bouton « Itinéraire ».
 - Images : `public/conseils/` (WebP 480→1600 + JPG pour l'OG), `public/assureurs/` (logos

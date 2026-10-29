@@ -58,7 +58,7 @@ const CookieConsent = () => {
           <button
             type="button"
             onClick={() => choose("accepted")}
-            className="flex-1 sm:flex-none bg-gradient-btn text-primary-foreground rounded-full px-6 py-2.5 text-xs font-heading uppercase tracking-wider hover:opacity-90 transition-all"
+            className="flex-1 sm:flex-none bg-gradient-btn text-brand-foreground rounded-full px-6 py-2.5 text-xs font-heading uppercase tracking-wider hover:opacity-90 transition-all"
           >
             Accepter
           </button>

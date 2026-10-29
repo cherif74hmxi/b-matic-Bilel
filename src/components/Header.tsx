@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import logo from "@/assets/bmatic-logo.webp";
 import { legalInfo } from "@/data/legal";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Navigation volontairement courte (pivot pare-brise). Le logo ramène à
 // l'accueil ; les autres pages (à propos, légal) sont dans le pied de page.
@@ -41,6 +42,8 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-1 shrink-0">
+          {/* Thème clair / sombre (mobile et ordinateur). */}
+          <ThemeToggle />
           {/* Téléphone toujours visible : c'est l'action la plus rapide sur mobile. */}
           <a
             href={legalInfo.phoneHref}

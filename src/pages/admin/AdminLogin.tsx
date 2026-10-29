@@ -7,7 +7,7 @@ import { useAdminSession } from "@/hooks/useAdminSession";
 import { AccessDenied, AdminLoading, CheckError } from "@/components/admin/RequireAdmin";
 
 const inputClass =
-  "w-full min-h-[48px] bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-base";
+  "w-full min-h-[48px] bg-background border border-input rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-base";
 
 const AdminLogin = () => {
   useSeo({ title: "Connexion — Admin B MATIC" });
@@ -48,7 +48,7 @@ const AdminLogin = () => {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <img src={logo} alt="B MATIC" className="h-16 w-auto rounded mb-4" />
-          <h1 className="font-heading text-lg font-bold uppercase tracking-widest text-gradient-neon">Espace admin</h1>
+          <h1 className="font-heading text-lg font-bold uppercase tracking-widest text-foreground">Espace admin</h1>
         </div>
 
         <form

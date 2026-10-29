@@ -138,7 +138,7 @@ export const PostActionsMenu = ({
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel className="min-h-[44px]">Annuler</AlertDialogCancel>
-            <AlertDialogAction className="min-h-[44px] bg-neon-pink text-white hover:bg-neon-pink/90" onClick={() => deleteMutation.mutate()}>
+            <AlertDialogAction className="min-h-[44px] bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={() => deleteMutation.mutate()}>
               Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>

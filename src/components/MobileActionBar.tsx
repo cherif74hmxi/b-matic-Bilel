@@ -13,7 +13,7 @@ import { RDV_PATH } from "@/data/rdv";
 
 const MobileActionBar = () => {
   const itemClass =
-    "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] px-2 text-center leading-tight text-[11px] font-heading uppercase tracking-wider transition-colors";
+    "flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[56px] px-2 text-center leading-tight text-xs font-body font-semibold transition-colors";
 
   return (
     <nav
@@ -34,7 +34,7 @@ const MobileActionBar = () => {
 
         <Link
           to={RDV_PATH}
-          className={`${itemClass} bg-gradient-btn text-primary-foreground border-l border-border`}
+          className={`${itemClass} bg-brand text-brand-foreground border-l border-border`}
         >
           <CalendarDays className="w-5 h-5" />
           Prendre RDV

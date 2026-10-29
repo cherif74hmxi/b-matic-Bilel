@@ -59,7 +59,7 @@ const ChoiceButton = ({
     {!compact && (
       <span
         className={`shrink-0 w-5 h-5 rounded-full border grid place-items-center transition-colors ${
-          selected ? "bg-primary border-primary text-primary-foreground" : "border-foreground/30"
+          selected ? "bg-brand border-brand text-brand-foreground" : "border-foreground/30"
         }`}
         aria-hidden="true"
       >

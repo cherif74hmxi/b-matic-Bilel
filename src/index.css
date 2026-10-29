@@ -4,19 +4,22 @@
 
 @layer base {
   /* ==========================================================================
-     Thème CLAIR (par défaut) — esprit « leader du marché » (Carglass, 123
-     Pare-Brise…) aux couleurs du logo B MATIC.
+     Thèmes CLAIR (par défaut) et SOMBRE — esprit « leader du marché »
+     (Carglass, 123 Pare-Brise…) aux couleurs du logo B MATIC.
      --------------------------------------------------------------------------
-     · Fond blanc, beaucoup d'air, texte encre foncée.
-     · UNE couleur de marque : le VIOLET du logo (--primary, #7B39EB) →
-       boutons, liens, icônes, mots accentués des titres, petits aplats
-       (--primary-soft). Un accent fort par section, appliqué partout pareil.
-     · UN accent secondaire : le CYAN du logo (--highlight, assombri pour être
-       lisible sur blanc) → coches, pastilles, petits repères.
-     · Jamais de dégradé sur un texte (le logo garde le sien).
+     · --brand   : le VIOLET du logo (#7B39EB), identique dans les 2 thèmes,
+                   texte blanc dessus (5,9:1) → boutons pleins, bloc CTA,
+                   créneau / choix sélectionné.
+     · --primary : violet d'ACCENT adapté au fond → liens, icônes, mots
+                   accentués, bordures, sur-titres. = brand en clair ;
+                   éclairci en sombre pour rester lisible (6:1).
+     · --highlight : le CYAN du logo (coches, pastilles), adapté au fond.
+     · Jamais de dégradé sur un texte, jamais de couleur en dur dans les
+       composants : toujours ces jetons (sinon un des thèmes casse).
 
-     ↩ Revenir au thème SOMBRE d'origine : ajouter data-theme="sombre" sur la
-       balise <html> de index.html (et remettre theme-color à #08080c).
+     Bascule : bouton soleil / lune du menu (src/components/ThemeToggle.tsx),
+     choix mémorisé dans localStorage et appliqué avant l'affichage par le
+     script en tête de index.html (data-theme="sombre" sur <html>).
      ========================================================================== */
   :root {
     color-scheme: light;
@@ -30,7 +33,12 @@
     --popover: 0 0% 100%;
     --popover-foreground: 250 30% 12%;
 
-    /* Violet du logo (contraste 5,9:1 sur blanc : texte et boutons OK). */
+    /* Violet du logo, plein (boutons, bloc CTA) : identique dans les 2 thèmes. */
+    --brand: 262 82% 57%;
+    --brand-foreground: 0 0% 100%;
+    --brand-hover: 262 72% 48%;
+
+    /* Violet d'accent (texte, icônes, bordures) : en clair = le violet du logo. */
     --primary: 262 82% 57%;
     --primary-foreground: 0 0% 100%;
     --primary-hover: 262 72% 48%;
@@ -62,17 +70,19 @@
 
     --radius: 0.75rem;
 
-    /* Néons : thème sombre et espace admin uniquement. */
-    --neon-blue: 205 90% 46%;
+    /* Couleurs du logo pour l'espace admin (statuts, alertes, graphiques). */
+    --neon-blue: 229 80% 52%;
     --neon-purple: 262 82% 57%;
-    --neon-pink: 322 78% 50%;
+    --neon-pink: 292 90% 40%;
     --neon-cyan: 199 89% 36%;
+
+    /* Tuiles des cadeaux (photos détourées : fond clair dans les 2 thèmes). */
     --gift-tile: 250 25% 97%;
     --gift-tile-ink: 250 30% 12%;
 
     --gradient-neon: linear-gradient(120deg, hsl(270 80% 55%), hsl(320 80% 52%), hsl(205 100% 48%));
     --gradient-card: linear-gradient(hsl(0 0% 100%), hsl(0 0% 100%));
-    --gradient-btn: linear-gradient(hsl(262 82% 57%), hsl(262 82% 57%));
+    --gradient-btn: linear-gradient(hsl(var(--brand)), hsl(var(--brand)));
 
     --glow-purple: 0 1px 2px hsl(250 30% 20% / 0.06);
     --glow-blue: 0 1px 2px hsl(250 30% 20% / 0.06);
@@ -89,70 +99,79 @@
     --sidebar-ring: 262 82% 57%;
   }
 
-  /* Thème SOMBRE néon d'origine (avant octobre 2026). */
+  /* ==========================================================================
+     Thème SOMBRE — même identité : encre violette très foncée, violet et cyan
+     du logo éclaircis pour les textes et icônes (contrastes ≥ 4,5:1 partout),
+     boutons pleins dans le violet exact du logo.
+     ========================================================================== */
   :root[data-theme="sombre"] {
     color-scheme: dark;
 
-    --background: 240 20% 4%;
-    --foreground: 220 20% 95%;
+    --background: 250 28% 7%;
+    --foreground: 250 20% 95%;
 
-    --card: 240 18% 8%;
-    --card-foreground: 220 20% 95%;
+    --card: 250 24% 10.5%;
+    --card-foreground: 250 20% 95%;
 
-    --popover: 240 18% 8%;
-    --popover-foreground: 220 20% 95%;
+    --popover: 250 24% 10.5%;
+    --popover-foreground: 250 20% 95%;
 
-    --primary: 270 80% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 270 80% 52%;
-    --primary-soft: 270 40% 14%;
+    --brand: 262 82% 57%;
+    --brand-foreground: 0 0% 100%;
+    --brand-hover: 262 82% 63%;
 
-    --highlight: 190 95% 55%;
-    --highlight-soft: 200 50% 14%;
+    --primary: 262 90% 72%;
+    --primary-foreground: 252 45% 9%;
+    --primary-hover: 262 92% 80%;
+    --primary-soft: 262 45% 17%;
 
-    --secondary: 200 100% 50%;
-    --secondary-foreground: 0 0% 100%;
+    --highlight: 190 85% 60%;
+    --highlight-soft: 195 60% 14%;
 
-    --muted: 240 15% 15%;
-    --muted-foreground: 220 10% 60%;
+    --secondary: 250 20% 15%;
+    --secondary-foreground: 250 20% 95%;
 
-    --accent: 320 80% 55%;
-    --accent-foreground: 0 0% 100%;
+    --muted: 250 22% 14%;
+    --muted-foreground: 250 12% 70%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --accent: 262 45% 17%;
+    --accent-foreground: 262 92% 86%;
 
-    --success: 142 70% 55%;
-    --warning: 40 95% 65%;
+    --destructive: 0 85% 68%;
+    --destructive-foreground: 252 45% 9%;
 
-    --border: 260 30% 25%;
-    --input: 260 20% 18%;
-    --ring: 270 80% 60%;
+    --success: 152 55% 55%;
+    --warning: 38 95% 62%;
 
-    --neon-blue: 200 100% 55%;
-    --neon-purple: 270 80% 60%;
-    --neon-pink: 320 80% 55%;
-    --neon-cyan: 185 100% 50%;
-    --gift-tile: 260 45% 96%;
-    --gift-tile-ink: 250 35% 14%;
+    --border: 250 18% 21%;
+    --input: 250 18% 26%;
+    --ring: 262 90% 72%;
 
-    --gradient-neon: linear-gradient(135deg, hsl(270 80% 60%), hsl(320 80% 55%), hsl(200 100% 55%));
-    --gradient-card: linear-gradient(160deg, hsl(240 18% 10%), hsl(260 25% 12%));
-    --gradient-btn: linear-gradient(135deg, hsl(270 80% 55%), hsl(320 70% 50%));
+    --neon-blue: 228 90% 74%;
+    --neon-purple: 262 90% 72%;
+    --neon-pink: 292 85% 72%;
+    --neon-cyan: 190 85% 60%;
 
-    --glow-purple: 0 0 20px hsl(270 80% 60% / 0.4);
-    --glow-blue: 0 0 20px hsl(200 100% 55% / 0.4);
-    --glow-pink: 0 0 20px hsl(320 80% 55% / 0.4);
-    --glow-card: 0 0 30px hsl(270 80% 60% / 0.15), inset 0 0 30px hsl(270 80% 60% / 0.05);
+    --gift-tile: 250 25% 92%;
+    --gift-tile-ink: 250 30% 12%;
 
-    --sidebar-background: 240 18% 8%;
-    --sidebar-foreground: 220 20% 95%;
-    --sidebar-primary: 270 80% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 15% 15%;
-    --sidebar-accent-foreground: 220 20% 95%;
-    --sidebar-border: 260 30% 25%;
-    --sidebar-ring: 270 80% 60%;
+    --gradient-neon: linear-gradient(120deg, hsl(270 80% 62%), hsl(320 80% 60%), hsl(205 100% 58%));
+    --gradient-card: linear-gradient(hsl(250 24% 10.5%), hsl(250 24% 10.5%));
+    --gradient-btn: linear-gradient(hsl(var(--brand)), hsl(var(--brand)));
+
+    --glow-purple: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --glow-blue: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --glow-pink: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --glow-card: 0 1px 2px hsl(0 0% 0% / 0.35), 0 10px 28px -16px hsl(0 0% 0% / 0.6);
+
+    --sidebar-background: 250 24% 10.5%;
+    --sidebar-foreground: 250 20% 95%;
+    --sidebar-primary: 262 90% 72%;
+    --sidebar-primary-foreground: 252 45% 9%;
+    --sidebar-accent: 262 45% 17%;
+    --sidebar-accent-foreground: 250 20% 95%;
+    --sidebar-border: 250 18% 21%;
+    --sidebar-ring: 262 90% 72%;
   }
 }
 
@@ -221,9 +240,9 @@
     box-shadow: 0 0 8px hsl(270 80% 60% / 0.6);
   }
 
-  /* Boutons : violet B MATIC plein (action principale) ou contour violet. */
+  /* Boutons : violet du logo plein (action principale) ou contour violet. */
   .btn-main {
-    @apply inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg shadow-sm shadow-primary/25 transition-colors duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 bg-brand text-brand-foreground font-body font-semibold text-[15px] px-6 py-3 rounded-lg shadow-sm shadow-brand/25 transition-colors duration-200 hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {

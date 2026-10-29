@@ -44,7 +44,7 @@ const Ctas = ({ center = false, inverse = false }: { center?: boolean; inverse?:
   <div className={`flex flex-col sm:flex-row gap-3 ${center ? "justify-center" : ""}`}>
     <Link
       to={accueilHero.ctaPrincipal.to}
-      className={`btn-main min-h-[52px] w-full sm:w-auto ${inverse ? "!bg-white !text-primary hover:!bg-white/90 !px-4 sm:!px-6" : ""}`}
+      className={`btn-main min-h-[52px] w-full sm:w-auto ${inverse ? "!bg-white !text-brand hover:!bg-white/90 !px-4 sm:!px-6" : ""}`}
     >
       {accueilHero.ctaPrincipal.label} <ArrowRight className="w-4 h-4" aria-hidden="true" />
     </Link>
@@ -204,9 +204,9 @@ const Index = () => {
       <section className="pb-16 md:pb-24">
         <div className="container mx-auto px-4">
           <AnimatedSection>
-            <div className="max-w-5xl mx-auto bg-primary text-primary-foreground rounded-2xl px-4 py-10 sm:px-6 md:px-14 md:py-14 text-center">
+            <div className="max-w-5xl mx-auto bg-brand text-brand-foreground rounded-2xl px-4 py-10 sm:px-6 md:px-14 md:py-14 text-center">
               <h2 className="font-heading text-2xl md:text-3xl font-bold mb-3">{accueilCtaFinal.titre}</h2>
-              <p className="text-primary-foreground/85 mb-8 max-w-xl mx-auto">{accueilCtaFinal.texte}</p>
+              <p className="text-brand-foreground/85 mb-8 max-w-xl mx-auto">{accueilCtaFinal.texte}</p>
               <Ctas center inverse />
             </div>
             <p id="mention-offre" className="max-w-5xl mx-auto text-xs leading-relaxed text-muted-foreground mt-5">

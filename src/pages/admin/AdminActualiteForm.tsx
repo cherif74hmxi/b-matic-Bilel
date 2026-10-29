@@ -344,7 +344,7 @@ const PostForm = ({ post }: { post?: Post }) => {
       </Link>
       <div className="flex items-start justify-between gap-3 mb-6">
         <div className="min-w-0">
-          <h1 className="font-heading text-xl md:text-2xl font-bold text-gradient-neon break-words">{post ? post.title : "Nouvelle actualité"}</h1>
+          <h1 className="font-heading text-xl md:text-2xl font-bold text-foreground break-words">{post ? post.title : "Nouvelle actualité"}</h1>
           {post && (
             <div className="mt-2">
               <PostStatusBadge status={post.status} />
@@ -392,7 +392,7 @@ const PostForm = ({ post }: { post?: Post }) => {
                   : "Générée depuis le titre. Modifiable jusqu'à la publication."
             }
           >
-            <div className="flex items-center rounded-lg border border-border bg-input focus-within:ring-2 focus-within:ring-primary/50">
+            <div className="flex items-center rounded-lg border border-input bg-background focus-within:ring-2 focus-within:ring-primary/50">
               <span className="pl-4 text-sm text-muted-foreground shrink-0">/actualites/</span>
               <input
                 {...fieldProps("slug", true)}

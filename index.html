@@ -4,8 +4,19 @@
     <meta charset="UTF-8" />
     <!-- Polices (Orbitron / Inter) hébergées en local via @fontsource, importées dans src/main.tsx -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Thème clair. Thème sombre : data-theme="sombre" sur <html> + theme-color #08080c (voir src/index.css). -->
-    <meta name="theme-color" content="#f8f7fe" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- Thème clair par défaut ; thème sombre mémorisé (bouton soleil / lune) appliqué AVANT
+         le premier affichage pour éviter un flash. Même clé et couleurs que src/lib/theme.ts. -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem("bmatic-theme") === "sombre") {
+            document.documentElement.setAttribute("data-theme", "sombre");
+            document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0f0d17");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="author" content="B MATIC" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo.png" />
