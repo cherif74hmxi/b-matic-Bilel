@@ -2,12 +2,16 @@
   "5": "SlotPicker.tsx",
   "6": "RdvSteps.tsx",
   "9": "AdminActualiteForm.tsx",
+  "10": "Conseils.tsx",
   "17": "posts.ts",
   "22": "select.tsx",
-  "23": "tabs.tsx",
+  "23": "input-otp.tsx",
   "24": "Image Open Graph B MATIC (partage social)",
   "27": "AdminDashboard.tsx",
   "29": "registrationScan.ts",
+  "31": "AnimatedSection.tsx",
+  "35": "resizable.tsx",
   "37": "lucide-react",
+  "44": "aiCopy.ts",
   "55": "Index.tsx"
 }
