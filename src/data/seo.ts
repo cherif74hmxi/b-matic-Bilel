@@ -28,7 +28,7 @@ export const pagesSeo = {
   [RDV_PATH]: {
     title: "Devis et rendez-vous pare-brise en ligne | B MATIC Ans (Liège)",
     description:
-      "Demandez votre devis pare-brise et réservez votre créneau en 2 minutes : réparation d'impact, remplacement, vitres. Au centre à Ans ou chez vous, 7j/7.",
+      "Devis pare-brise en 1 minute : laissez votre numéro, on vous rappelle pour fixer le rendez-vous. Impact, remplacement, vitres. Au centre à Ans ou chez vous, 7j/7.",
   },
   "/conseils": {
     title: "Conseils pare-brise : impact, remplacement, assurance | B MATIC",

@@ -38,11 +38,11 @@ const PolitiqueConfidentialite = () => {
       <ul>
         <li><strong>Formulaire de contact :</strong> nom, adresse e-mail, numéro de téléphone et contenu de votre message.</li>
         <li>
-          <strong>Demande de devis / prise de rendez-vous pare-brise :</strong> prénom, nom, e-mail,
-          téléphone, besoin (pare-brise, vitre…), véhicule (plaque d'immatriculation, ou marque,
-          modèle et année), couverture bris de glace et <strong>nom</strong> de votre assureur
-          (jamais de numéro de contrat), lieu d'intervention (au centre, ou code postal pour une
-          intervention à domicile ou au travail), date et heure choisies.
+          <strong>Demande de devis / de rappel pour un rendez-vous pare-brise :</strong> prénom,
+          nom, téléphone, e-mail (facultatif), moment de rappel souhaité (dès que possible, ou un
+          jour et une demi-journée), vitrage(s) concerné(s), couverture bris de glace
+          (oui / non / je ne sais pas) et véhicule (plaque d'immatriculation, ou marque, modèle
+          et éventuellement année).
         </li>
       </ul>
       <p>
@@ -79,7 +79,7 @@ const PolitiqueConfidentialite = () => {
             <td>{legalInfo.leadsRetentionYears} ans à compter de la demande</td>
           </tr>
           <tr>
-            <td>Gérer une prise de rendez-vous</td>
+            <td>Vous rappeler et gérer une prise de rendez-vous</td>
             <td>Mesures précontractuelles / exécution du service (art. 6.1.b)</td>
             <td>
               Demande : {legalInfo.leadsRetentionYears} ans à compter de la demande. Factures

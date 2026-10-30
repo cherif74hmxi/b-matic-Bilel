@@ -1,25 +1,71 @@
 // ============================================================================
-//  B MATIC — Formulaire de devis / rendez-vous pare-brise (page /rendez-vous)
+//  B MATIC — Formulaire de demande de rappel pare-brise (page /rendez-vous)
 // ----------------------------------------------------------------------------
-//  Source unique des textes et des choix du formulaire multi-étapes :
-//  la page ne fait que les afficher. Les créneaux (heures, délais) sont dans
-//  src/data/rdv.ts, la liste des assureurs dans src/data/assurances.ts.
+//  Source unique des textes et des choix du formulaire en 4 étapes :
+//  la page ne fait que les afficher. Le visiteur laisse son numéro, le
+//  garage le rappelle pour fixer le rendez-vous (aucune heure précise n'est
+//  réservée en ligne).
 //
-//  ⚠️  Les `id` sont enregistrés avec la demande : ne pas les changer, seuls
-//      les libellés peuvent l'être.
+//  ⚠️  Les `id` sont utilisés par le code : ne pas les changer, seuls les
+//      libellés peuvent l'être.
 // ============================================================================
-import { legalInfo } from "@/data/legal";
-import { franchiseCondition, pareBriseRayonKm } from "@/data/parebrise";
+import { horaires } from "@/data/horaires";
+import { franchiseCondition } from "@/data/parebrise";
 
-export const rdvEtapes = ["Besoin", "Véhicule", "Assurance", "Lieu", "Créneau", "Coordonnées"] as const;
+export const rdvEtapes = ["Coordonnées", "Vitrage", "Assurance", "Véhicule"] as const;
 
 export const rdvIntro = {
   titre: "Devis et rendez-vous pare-brise",
-  texte: "6 petites étapes, 2 minutes. Aucun document à envoyer.",
+  texte: "4 petites étapes, 1 minute. On vous rappelle pour fixer le rendez-vous.",
 };
 
 // ------------------------------------------------------------------ Étape 1
-export type BesoinId = "pare-brise" | "vitre-laterale" | "lunette-arriere" | "toit" | "inconnu";
+export type RappelId = "asap" | "date";
+export type PeriodeId = "matin" | "apres-midi";
+
+export const rdvCoordonnees = {
+  titre: "Vos coordonnées",
+  prenom: "Prénom",
+  nom: "Nom",
+  telephone: "Numéro de téléphone",
+  telephonePlaceholder: "04xx xx xx xx",
+  telephoneInvalide: "Numéro incomplet.",
+  /** Affiché en gras, puis `emailAide` en gris sur la même ligne. */
+  email: "Email (facultatif)",
+  emailAide: "— pour recevoir votre confirmation",
+  emailInvalide: "Adresse e-mail invalide.",
+};
+
+export const rdvRappel = {
+  question: "Quand souhaitez-vous être rappelé ?",
+  asap: {
+    label: "Rappelez-moi dès que possible",
+    texte: `Aux heures d'ouverture : ${horaires.centre.texte}`,
+  },
+  date: {
+    label: "Choisir une date",
+    texte: "Un jour, le matin ou l'après-midi",
+  },
+  jourQuestion: "Quel jour ?",
+  periodeQuestion: "À quel moment ?",
+  /**
+   * Plages de rappel (heures de Bruxelles). `moment` sert dans les phrases :
+   * « le vendredi 31 octobre, le matin ».
+   */
+  periodes: [
+    { id: "matin", label: "Matin", moment: "le matin", debut: 10, fin: 12 },
+    { id: "apres-midi", label: "Après-midi", moment: "l'après-midi", debut: 12, fin: 19 },
+  ] as { id: PeriodeId; label: string; moment: string; debut: number; fin: number }[],
+  /** Nombre de jours proposés. */
+  jours: 14,
+  /** Le jour même, une plage disparaît quand il reste moins de N minutes avant sa fin. */
+  delaiMinutes: 60,
+  /** Fin de phrase de la confirmation pour « dès que possible ». */
+  asapPhrase: `dès que possible (${horaires.centre.texte})`,
+};
+
+// ------------------------------------------------------------------ Étape 2
+export type VitrageId = "pare-brise" | "vitre-laterale" | "lunette-arriere" | "toit" | "inconnu";
 
 /** Vitrages dessinés sur le schéma de voiture (src/components/rdv/GlassDiagram). */
 export type ZoneVitrage =
@@ -31,31 +77,29 @@ export type ZoneVitrage =
   | "arriere-gauche"
   | "arriere-droite";
 
-export interface Besoin {
-  id: BesoinId;
+export interface Vitrage {
+  id: VitrageId;
   label: string;
   texte: string;
   /** Vitre(s) surlignée(s) sur le schéma ; absent = pas de schéma (« Je ne sais pas »). */
   zones?: ZoneVitrage[];
-  /** Sous-choix obligatoire (ex. réparer / remplacer). */
-  sousChoix?: { id: string; label: string; texte?: string; zones?: ZoneVitrage[] }[];
-  /** Question au-dessus des sous-choix. */
-  sousQuestion?: string;
-  /** Ligne d'information sous le choix. */
+  /** Ligne d'information affichée quand ce vitrage est coché. */
   note?: string;
+  /** Choix exclusif : le cocher décoche les autres (et inversement). */
+  exclusif?: boolean;
 }
 
-export const rdvBesoins: Besoin[] = [
+export const rdvVitrage = {
+  titre: "Quel vitrage est abîmé ?",
+  texte: "Plusieurs choix possibles.",
+};
+
+export const rdvVitrages: Vitrage[] = [
   {
     id: "pare-brise",
     label: "Pare-brise",
     texte: "Impact, fissure ou pare-brise cassé",
     zones: ["pare-brise"],
-    sousQuestion: "Réparer ou remplacer ?",
-    sousChoix: [
-      { id: "impact", label: "Réparer un impact", texte: "Petit impact, sans fissure" },
-      { id: "remplacement", label: "Remplacer", texte: "Fissure ou impact trop grand" },
-    ],
     note: "Recalibrage caméra inclus si votre véhicule est équipé d'aides à la conduite.",
   },
   {
@@ -63,20 +107,28 @@ export const rdvBesoins: Besoin[] = [
     label: "Vitre latérale",
     texte: "Vitre de portière cassée",
     zones: ["avant-gauche", "arriere-gauche", "avant-droite", "arriere-droite"],
-    sousQuestion: "Quelle vitre ? (gauche = côté conducteur)",
-    sousChoix: [
-      { id: "avant-gauche", label: "Avant gauche", zones: ["avant-gauche"] },
-      { id: "avant-droite", label: "Avant droite", zones: ["avant-droite"] },
-      { id: "arriere-gauche", label: "Arrière gauche", zones: ["arriere-gauche"] },
-      { id: "arriere-droite", label: "Arrière droite", zones: ["arriere-droite"] },
-    ],
   },
   { id: "lunette-arriere", label: "Lunette arrière", texte: "Vitre du hayon ou du coffre", zones: ["lunette"] },
   { id: "toit", label: "Toit ouvrant / panoramique", texte: "Toit vitré fêlé ou cassé", zones: ["toit"] },
-  { id: "inconnu", label: "Je ne sais pas", texte: "On regarde ensemble, sans engagement" },
+  { id: "inconnu", label: "Je ne sais pas", texte: "On regarde ensemble, sans engagement", exclusif: true },
 ];
 
-// ------------------------------------------------------------------ Étape 2
+// ------------------------------------------------------------------ Étape 3
+export type CouvertureId = "oui" | "non" | "inconnu";
+
+export const rdvAssurance = {
+  titre: "Votre assurance",
+  question: "Avez-vous une couverture bris de glace (bris de vitre ou omnium) ?",
+  couvertures: [
+    { id: "oui", label: "Oui" },
+    { id: "non", label: "Non" },
+    { id: "inconnu", label: "Je ne sais pas" },
+  ] as { id: CouvertureId; label: string }[],
+  rassurance: `On s'occupe des démarches avec votre assureur. ${franchiseCondition}`,
+  sansCouverture: "Pas de couverture bris de glace ? Pas de souci : on vous fait un devis, sans engagement.",
+};
+
+// ------------------------------------------------------------------ Étape 4
 export const rdvVehicule = {
   titre: "Votre véhicule",
   texte: "Pour commander le bon vitrage. Aucun document à envoyer.",
@@ -90,81 +142,22 @@ export const rdvVehicule = {
   plaqueInvalide: "Vérifiez la plaque (lettres et chiffres).",
   marque: "Marque",
   modele: "Modèle",
-  annee: "Année",
-  manuelAide: "Marque, modèle et année : de quoi choisir le bon vitrage.",
+  annee: "Année (facultatif)",
   anneeInvalide: "Année invalide.",
 };
 
-// ------------------------------------------------------------------ Étape 3
-export type CouvertureId = "oui" | "non" | "inconnu";
-
-export const rdvAssurance = {
-  titre: "Votre assurance",
-  question: "Avez-vous une couverture bris de glace (bris de vitre ou omnium) ?",
-  couvertures: [
-    { id: "oui", label: "Oui" },
-    { id: "non", label: "Non" },
-    { id: "inconnu", label: "Je ne sais pas" },
-  ] as { id: CouvertureId; label: string }[],
-  assureurQuestion: "Votre assureur",
-  assureurAutre: "Autre",
-  assureurAutrePlaceholder: "Nom de votre assureur (facultatif)",
-  rassurance: `On s'occupe des démarches avec votre assureur. ${franchiseCondition}`,
-  sansCouverture: "Pas de couverture bris de glace ? Pas de souci : on vous fait un devis, sans engagement.",
-  /** Juste le nom de l'assureur : jamais de numéro de contrat ici. */
-  aide: "Juste le nom : pas besoin de numéro de contrat.",
-};
-
-// ------------------------------------------------------------------ Étape 4
-export type LieuId = "centre" | "domicile";
-
-export const rdvLieu = {
-  titre: "Où intervenir ?",
-  centre: {
-    label: "Au centre",
-    texte: legalInfo.address.replace(/, Belgique$/, ""),
-  },
-  domicile: {
-    label: "À domicile ou au travail",
-    texte: `Liège et jusqu'à ${pareBriseRayonKm} km autour`,
-  },
-  codePostal: "Code postal du lieu d'intervention",
-  codePostalInvalide: "Un code postal belge compte 4 chiffres.",
-  horsZone: `Ce code postal est peut-être au-delà de ${pareBriseRayonKm} km de Liège. Continuez : nous vous confirmons rapidement si nous pouvons venir.`,
-  /**
-   * Codes postaux sûrs d'être dans la zone (province de Liège). Les autres
-   * sont acceptés avec un message « on vous confirme ». Modifiable.
-   */
-  zoneSure: [[4000, 4999]] as [number, number][],
-};
-
-// ------------------------------------------------------------------ Étape 5
-export const rdvCreneau = {
-  titre: "Choisissez votre créneau",
-  texte: "7j/7, de 10h à 19h. Les créneaux déjà pris sont masqués.",
-  domicileNote: "À domicile : l'heure choisie est l'heure d'arrivée de notre technicien.",
-  choisirDate: "Choisissez d'abord une date.",
-  aucunCreneau: "Plus de créneau libre ce jour-là : choisissez une autre date.",
-};
-
-// ------------------------------------------------------------------ Étape 6
-export const rdvCoordonnees = {
-  titre: "Vos coordonnées",
-  texte: "Pour vous confirmer le rendez-vous.",
-  recapTitre: "Votre demande",
-  consentement: "J'accepte que B MATIC traite mes données pour gérer cette demande de devis et ce rendez-vous, conformément à la",
+// ------------------------------------------------------------------ Envoi
+export const rdvEnvoi = {
+  consentement: "J'accepte que B MATIC traite mes données pour me rappeler au sujet de cette demande de devis et de rendez-vous, conformément à la",
   consentementLien: "politique de confidentialité",
-  envoyer: "Confirmer mon rendez-vous",
+  envoyer: "Envoyer ma demande",
   envoi: "Envoi en cours…",
   erreur: "Une erreur est survenue. Réessayez ou appelez-nous directement.",
 };
 
 // ------------------------------------------------------------------ Confirmation
 export const rdvConfirmation = {
-  titreReserve: "Rendez-vous confirmé",
-  titreDemande: "Demande bien reçue",
-  texteReserve: (prenom: string, quand: string) =>
-    `Merci ${prenom}. Votre créneau du ${quand} est réservé. Nous vous appelons si un détail doit être précisé.`,
-  texteDemande: (prenom: string) =>
-    `Merci ${prenom}. Votre demande est enregistrée : nous vous rappelons rapidement pour confirmer le créneau.`,
+  titre: "Merci, on vous rappelle pour convenir du rendez-vous.",
+  /** `quand` : « dès que possible (…) » ou « le vendredi 31 octobre 2026, le matin (10h–12h) ». */
+  texte: (telephone: string, quand: string) => `Nous vous appelons au ${telephone} ${quand}.`,
 };

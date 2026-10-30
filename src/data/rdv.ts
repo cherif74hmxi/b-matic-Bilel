@@ -1,7 +1,9 @@
 // ============================================================================
-//  B MATIC — Règles des créneaux de rendez-vous (page /rendez-vous)
+//  B MATIC — Règles des créneaux de rendez-vous (agenda admin)
 // ----------------------------------------------------------------------------
-//  Créneaux d'1 h, un seul véhicule à la fois, 7j/7.
+//  Créneaux d'1 h, un seul véhicule à la fois, 7j/7. Le formulaire public
+//  /rendez-vous ne réserve plus d'heure : c'est une demande de rappel
+//  (plages de rappel dans src/data/rendezvous.ts).
 //  ⚠️  Ces valeurs sont AUSSI dans la base (supabase/migrations/
 //      20261027000001_rdv_slots.sql, fonction book_rdv) : la base refuse un
 //      créneau hors de ces règles. Les modifier aux deux endroits.
@@ -26,14 +28,3 @@ export const rdvHeures = Array.from(
   { length: rdvRegles.derniereHeure - rdvRegles.premiereHeure + 1 },
   (_, i) => rdvRegles.premiereHeure + i,
 );
-
-export const rdvTextes = {
-  /** Créneau pris pendant que le visiteur remplissait le formulaire. */
-  creneauPris: "Ce créneau vient d'être réservé par quelqu'un d'autre. Choisissez-en un autre.",
-  creneauInvalide: "Ce créneau n'est plus disponible. Choisissez-en un autre.",
-  limite:
-    "Vous avez déjà 3 rendez-vous à venir. Pour en ajouter un, appelez-nous ou écrivez-nous sur WhatsApp.",
-  /** Agenda injoignable : la demande part quand même, le garage confirme. */
-  agendaIndisponible:
-    "Les disponibilités en ligne ne sont pas accessibles pour le moment : choisissez un horaire, nous vous confirmerons le créneau.",
-};

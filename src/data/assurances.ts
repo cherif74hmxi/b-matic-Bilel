@@ -6,8 +6,8 @@
 //  « Nous travaillons avec toutes les assurances, dont… ».
 //
 //  ➜ Pour ajouter / retirer un assureur : modifier simplement le tableau
-//    `assureurs` ci-dessous. La grille ET la liste du formulaire de
-//    rendez-vous (étape « Assurance », + « Autre ») se mettent à jour.
+//    `assureurs` ci-dessous. La grille se met à jour (le formulaire de
+//    rendez-vous ne demande plus le nom de l'assureur).
 //  ➜ Logos : un fichier par assureur dans public/assureurs/ (WebP recadré sur
 //    le logo, ou SVG). `largeur` / `hauteur` = dimensions réelles du fichier :
 //    elles servent à équilibrer visuellement les logos larges et carrés dans

@@ -72,7 +72,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Rendez-vous & délais",
     question: "Comment prendre rendez-vous ?",
     reponse:
-      "En ligne en 2 minutes depuis la page « Demander un devis » : vous indiquez la vitre à traiter, votre véhicule, votre assurance, le lieu et le créneau. Vous pouvez aussi nous appeler ou nous écrire sur WhatsApp.",
+      "En ligne en 1 minute depuis la page « Demander un devis » : vous laissez votre numéro, la ou les vitres à traiter, votre assurance et votre véhicule. Nous vous rappelons pour fixer le rendez-vous, dès que possible ou le jour de votre choix (matin ou après-midi). Vous pouvez aussi nous appeler ou nous écrire sur WhatsApp.",
   },
   {
     categorie: "Rendez-vous & délais",
@@ -84,7 +84,7 @@ export const faqItems: FaqItem[] = [
     categorie: "Rendez-vous & délais",
     question: "Quels jours êtes-vous ouverts ?",
     reponse:
-      "Tous les jours, de 10h à 19h, dimanche compris. Les créneaux proposés en ligne correspondent à ces horaires.",
+      "Tous les jours, de 10h à 19h, dimanche compris. Nous rappelons les demandes en ligne pendant ces horaires.",
   },
 
   // --- Zone & intervention ---------------------------------------------------

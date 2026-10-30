@@ -236,7 +236,7 @@ export const pareBriseFaq: PareBriseQuestion[] = [
 // ------------------------------------------------------------------ CTA final
 export const pareBriseCtaFinal = {
   titre: "Un impact ou une fissure ?",
-  texte: "Réservez votre créneau : on s'occupe de l'assurance, vous choisissez votre cadeau.",
+  texte: "Laissez votre numéro, on vous rappelle : on s'occupe de l'assurance, vous choisissez votre cadeau.",
   cta: { label: "Obtenir mon devis et mon cadeau", to: RDV_PATH },
 };
 
