@@ -153,6 +153,46 @@ Tu peux aussi le lancer à la main : onglet **Actions → Déploiement VPS → R
 
 ---
 
+## 8. Email de confirmation au client (Brevo)
+
+Quand un client laisse son email dans le formulaire `/rendez-vous`, le serveur lui envoie
+une confirmation (route `POST /api/confirmation-rdv`, fichier `server/confirmation.ts`).
+Tant que la clé n'est pas renseignée, rien n'est envoyé et le formulaire marche normalement.
+
+**a) Compte et domaine** (une seule fois) :
+
+1. Crée un compte gratuit sur [brevo.com](https://www.brevo.com) (300 emails/jour).
+2. Dans Brevo, menu **Expéditeurs, domaines et IP dédiées → Domaines** : ajoute
+   `bmatic-pare-brise.com`. Brevo affiche des enregistrements DNS (code de vérification
+   Brevo, DKIM, DMARC) : ajoute-les **tels quels** chez ton registrar, à côté des
+   enregistrements `A` de la partie 1, puis clique sur **Vérifier** (la propagation peut
+   prendre de quelques minutes à quelques heures).
+3. Menu **Expéditeurs** : ajoute `contact@bmatic-pare-brise.com`, nom « B MATIC ».
+4. Menu **SMTP & API → Clés API** : génère une clé et copie-la.
+
+**b) Sur le VPS**, complète le `.env` puis relance :
+
+```bash
+cd /var/www/bmatic
+cat >> .env <<'EOF2'
+BREVO_API_KEY=xkeysib-...ta-clé...
+MAIL_FROM=contact@bmatic-pare-brise.com
+MAIL_REPLY_TO=bmatic63s@gmail.com
+EOF2
+pm2 reload bmatic --update-env
+```
+
+`MAIL_REPLY_TO` : si le client répond à l'email, la réponse arrive dans cette boîte.
+
+**c) Tester** : remplis le formulaire sur le site avec ton email. L'écran final doit
+afficher « Un e-mail de confirmation vient de vous être envoyé… ». Sinon :
+`pm2 logs bmatic --lines 50` (les erreurs Brevo y sont notées).
+
+Anti-abus intégré : 5 envois max par heure et par connexion, 3 par jour et par adresse,
+200 par jour au total (`LIMITES` dans `server/confirmation.ts`).
+
+---
+
 ## Dépannage
 
 ```bash

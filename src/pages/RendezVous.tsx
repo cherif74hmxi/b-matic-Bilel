@@ -6,6 +6,7 @@ import { pagesSeo } from "@/data/seo";
 import { legalInfo } from "@/data/legal";
 import { RDV_PATH } from "@/data/rdv";
 import { rdvConfirmation, rdvEnvoi, rdvEtapes, rdvIntro } from "@/data/rendezvous";
+import { sendConfirmation } from "@/lib/confirmationRdv";
 import { sendLead } from "@/lib/leads";
 import { buildDetails, emptyRdvForm, isStepValid, rappelPhrase, type RdvForm } from "@/lib/rendezvous";
 import StepProgress from "@/components/rdv/StepProgress";
@@ -18,7 +19,8 @@ import { AssuranceStep, CoordonneesStep, Recap, VehiculeStep, VitrageStep } from
 //  puis confirmation. Aucune heure n'est réservée en ligne : le garage
 //  rappelle pour fixer le rendez-vous. Aucun document n'est demandé.
 //  Envoi : double envoi classique (sendLead) → e-mail Formspree + demande
-//  dans Supabase (leads, type « rdv »).
+//  dans Supabase (leads, type « rdv »). Puis, si le client a donné son email,
+//  confirmation envoyée par le serveur du site (lib/confirmationRdv).
 // ============================================================================
 
 const FORMSPREE_URL = "https://formspree.io/f/xlgokywp";
@@ -32,6 +34,7 @@ const RendezVous = () => {
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [emailEnvoye, setEmailEnvoye] = useState(false);
   const top = useRef<HTMLDivElement>(null);
 
   const valid = isStepValid(form, step);
@@ -79,6 +82,8 @@ const RendezVous = () => {
         setMessage(rdvEnvoi.erreur);
         return;
       }
+      // Facultatif : un échec n'empêche jamais l'écran de confirmation.
+      if (email) setEmailEnvoye(await sendConfirmation(form));
       done();
     } finally {
       setSending(false);
@@ -107,6 +112,11 @@ const RendezVous = () => {
             <p className="text-muted-foreground max-w-md mx-auto leading-relaxed" role="status">
               {rdvConfirmation.texte(form.telephone.trim(), rappelPhrase(form))}
             </p>
+            {emailEnvoye && (
+              <p className="text-sm text-muted-foreground max-w-md mx-auto mt-2 break-words">
+                {rdvConfirmation.emailEnvoye(form.email.trim())}
+              </p>
+            )}
           </div>
 
           <Recap form={form} />

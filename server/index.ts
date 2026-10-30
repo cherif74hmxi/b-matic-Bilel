@@ -6,6 +6,7 @@
 //   • URLs propres : /contact est servi depuis dist/contact.html ;
 //   • fonctions dynamiques : aperçu de partage des actualités (api/share.ts)
 //     et sitemap des actualités (api/sitemap-annonces.ts) ;
+//   • email de confirmation des demandes de rappel (server/confirmation.ts) ;
 //   • cache long sur /assets (fichiers au nom versionné) ;
 //   • repli SPA : tout le reste renvoie dist/index.html, React prend la main.
 //
@@ -18,6 +19,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { GET as shareGET } from "../api/share.ts";
 import { GET as sitemapGET } from "../api/sitemap-annonces.ts";
+import { confirmationHandler } from "./confirmation.ts";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(dirname, "..");
@@ -44,6 +46,8 @@ const REDIRECTS: Record<string, string> = {
 
 const app = express();
 app.disable("x-powered-by");
+// Derrière nginx (même machine) : req.ip = IP réelle du visiteur (X-Forwarded-For).
+app.set("trust proxy", "loopback");
 
 // Exécute une fonction Web (Request -> Response) et renvoie le résultat via Express.
 async function runFetch(
@@ -82,6 +86,9 @@ app.get("/actualites/:slug", async (req, res, next) => {
     next(err);
   }
 });
+
+// 2 bis) Email de confirmation de la demande de rappel (/rendez-vous).
+app.post("/api/confirmation-rdv", express.json({ limit: "4kb" }), confirmationHandler());
 
 // 3) Fichiers réels (assets, images, robots.txt, sitemaps…), cache long sur /assets.
 app.use(

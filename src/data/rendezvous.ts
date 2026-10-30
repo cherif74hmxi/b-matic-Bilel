@@ -10,6 +10,7 @@
 //      libellés peuvent l'être.
 // ============================================================================
 import { horaires } from "@/data/horaires";
+import { legalInfo } from "@/data/legal";
 import { franchiseCondition } from "@/data/parebrise";
 
 export const rdvEtapes = ["Coordonnées", "Vitrage", "Assurance", "Véhicule"] as const;
@@ -160,4 +161,24 @@ export const rdvConfirmation = {
   titre: "Merci, on vous rappelle pour convenir du rendez-vous.",
   /** `quand` : « dès que possible (…) » ou « le vendredi 31 octobre 2026, le matin (10h–12h) ». */
   texte: (telephone: string, quand: string) => `Nous vous appelons au ${telephone} ${quand}.`,
+  /** Affiché seulement si l'email de confirmation est bien parti. */
+  emailEnvoye: (email: string) => `Un e-mail de confirmation vient de vous être envoyé à ${email}.`,
+};
+
+// ------------------------------------------------------------------ Email de confirmation
+/**
+ * Email envoyé au client s'il a donné son adresse (server/confirmation.ts,
+ * via Brevo). Aucun texte libre du visiteur n'y figure, à part son prénom
+ * filtré : impossible de s'en servir pour envoyer un message à un tiers.
+ */
+export const rdvEmail = {
+  expediteur: "B MATIC",
+  sujet: "Votre demande de rappel pare-brise — B MATIC",
+  titre: "Demande bien reçue",
+  appel: (telephone: string, quand: string) =>
+    `Nous vous appelons${telephone ? ` au ${telephone}` : ""} ${quand} pour convenir du rendez-vous.`,
+  recapTitre: "Votre demande",
+  question: `Une question ? Appelez-nous au ${legalInfo.phone} ou répondez simplement à cet e-mail.`,
+  signature: "L'équipe B MATIC — pare-brise et vitrages auto",
+  mention: "Vous recevez cet e-mail car une demande de rappel a été faite avec votre adresse sur notre site. Si vous n'en êtes pas à l'origine, ignorez simplement ce message.",
 };

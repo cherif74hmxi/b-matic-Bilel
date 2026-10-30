@@ -39,7 +39,8 @@ const PolitiqueConfidentialite = () => {
         <li><strong>Formulaire de contact :</strong> nom, adresse e-mail, numéro de téléphone et contenu de votre message.</li>
         <li>
           <strong>Demande de devis / de rappel pour un rendez-vous pare-brise :</strong> prénom,
-          nom, téléphone, e-mail (facultatif), moment de rappel souhaité (dès que possible, ou un
+          nom, téléphone, e-mail (facultatif : sert uniquement à vous envoyer la confirmation de
+          votre demande), moment de rappel souhaité (dès que possible, ou un
           jour et une demi-journée), vitrage(s) concerné(s), couverture bris de glace
           (oui / non / je ne sais pas) et véhicule (plaque d'immatriculation, ou marque, modèle
           et éventuellement année).
@@ -120,6 +121,14 @@ const PolitiqueConfidentialite = () => {
           tout transfert éventuel hors de l'Union européenne est encadré par des garanties
           appropriées (clauses contractuelles types). Voir leur politique :{" "}
           <a href={legalInfo.database.privacyUrl} target="_blank" rel="noopener noreferrer">supabase.com</a>.
+        </li>
+        <li>
+          <strong>{legalInfo.emailService.name}</strong> ({legalInfo.emailService.company}) — envoi
+          de l'e-mail de confirmation de votre demande de rappel, uniquement si vous avez indiqué
+          votre adresse e-mail. Seuls votre adresse, votre prénom, votre numéro de téléphone et le
+          résumé de votre demande (moment du rappel, vitrage, couverture bris de glace) lui sont
+          transmis. Prestataire établi dans l'Union européenne. Voir leur politique :{" "}
+          <a href={legalInfo.emailService.privacyUrl} target="_blank" rel="noopener noreferrer">brevo.com</a>.
         </li>
         <li>
           <strong>{legalInfo.host.name}</strong> — hébergement du site.

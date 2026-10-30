@@ -74,6 +74,15 @@ export const legalInfo = {
     privacyUrl: "https://supabase.com/privacy",
   },
 
+  // Envoi de l'e-mail de confirmation des demandes de rappel (server/confirmation.ts),
+  // seulement si le client a indiqué son adresse. Raison sociale à vérifier
+  // dans le contrat Brevo.
+  emailService: {
+    name: "Brevo",
+    company: "Sendinblue SAS, France",
+    privacyUrl: "https://www.brevo.com/fr/legal/privacypolicy/",
+  },
+
   // Assistant IA (Edge Function « generate-copy ») : aide à la rédaction des
   // actualités dans l'admin.
   aiAssistant: {
