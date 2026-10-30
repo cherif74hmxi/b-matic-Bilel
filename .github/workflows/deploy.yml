@@ -1,0 +1,37 @@
+name: Déploiement VPS
+
+# À chaque push sur main, GitHub se connecte au VPS en SSH et redéploie le site.
+# Secrets requis (repo > Settings > Secrets and variables > Actions) :
+#   VPS_HOST    = 51.75.126.171
+#   VPS_USER    = <utilisateur SSH du VPS>
+#   VPS_SSH_KEY = clé privée SSH dédiée au déploiement (voir DEPLOY.md)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Déployer via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -e
+            cd /var/www/bmatic
+            git fetch --depth 1 origin main
+            git reset --hard origin/main
+            npm ci
+            npm run build
+            pm2 reload bmatic --update-env || pm2 start deploy/ecosystem.config.cjs
+            pm2 save
