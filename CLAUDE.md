@@ -20,7 +20,9 @@
   (rendu par `accentuer()` de `src/lib/accent.tsx`).
 - **Jamais de dégradé sur un texte** (`.text-gradient-neon` n'est plus utilisé ; le logo garde
   le sien). Pas de lueurs (glow).
-- Polices **Orbitron** (titres) + **Inter** (texte, boutons, navigation).
+- Polices **Poppins** SemiBold/Bold (titres, arrondie et moderne) + **Inter** (texte, boutons,
+  navigation), hébergées en local (@fontsource, jamais Google Fonts). Familles définies dans
+  `src/index.css` (`--font-heading` / `--font-body`), classes `font-heading` / `font-body`.
 - Réutiliser les composants existants : `GlowCard`, `NeonButton`, classes `.btn-main`
   (violet plein) / `.btn-ghost` (contour violet).
 - **Deux thèmes, clair par défaut** : bouton soleil / lune du menu (`ThemeToggle`), choix

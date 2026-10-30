@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Orbitron"', 'sans-serif'],
-        body: ['"Inter"', 'sans-serif'],
+        // Familles définies dans src/index.css (--font-heading : Poppins, --font-body : Inter).
+        heading: ['var(--font-heading)'],
+        body: ['var(--font-body)'],
       },
       colors: {
         border: "hsl(var(--border))",

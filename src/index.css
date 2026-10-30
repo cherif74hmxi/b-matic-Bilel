@@ -24,6 +24,12 @@
   :root {
     color-scheme: light;
 
+    /* Polices (fichiers locaux @fontsource, importés dans src/main.tsx),
+       reprises par les classes font-heading / font-body (tailwind.config.ts).
+       Titres : Poppins SemiBold / Bold. Texte, boutons, navigation : Inter. */
+    --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
     --background: 0 0% 100%;
     --foreground: 250 30% 12%;
 

@@ -1,12 +1,10 @@
 import { createRoot } from "react-dom/client";
 // Polices hébergées en local (self-hosted) — aucun appel à Google Fonts.
-// Familles nommées "Orbitron" / "Inter", cohérentes avec tailwind.config.ts.
-import "@fontsource/orbitron/400.css";
-import "@fontsource/orbitron/500.css";
-import "@fontsource/orbitron/600.css";
-import "@fontsource/orbitron/700.css";
-import "@fontsource/orbitron/800.css";
-import "@fontsource/orbitron/900.css";
+// Familles nommées "Poppins" (titres) / "Inter", cohérentes avec src/index.css.
+// Poppins : 400 (petits libellés en majuscules), 600 et 700 (titres).
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
 import "@fontsource/inter/300.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
