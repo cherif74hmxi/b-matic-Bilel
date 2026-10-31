@@ -95,7 +95,8 @@ Tests must match `src/**/*.{test,spec}.{ts,tsx}`. `playwright.config.ts` uses Lo
 
 - Client: `src/lib/supabase.ts` (single instance, plus `STORAGE_BUCKETS`). It reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` from `.env` (gitignored; template in `.env.example`) and throws if they are missing. Only the public (publishable) key may ever be used in the front end.
 - Schema: `supabase/schema.sql` (re-runnable; run it in the Supabase SQL Editor). Tables are `admins`, `vehicles`, `vehicle_photos`, `posts`, `page_views` and `leads`, plus the public buckets `vehicle-photos` and `post-images`.
-- RLS: visitors can read published content (vehicles `published`/`sold`, posts `published`) and can only *insert* into `page_views` and `leads`. All writes require `public.is_admin()`, meaning the user is listed in `public.admins`. Insert leads **without** `.select()`, because visitors cannot read them back.
+- RLS: visitors can read published content (vehicles `published`/`sold`, posts `published`) and can only *insert* into `page_views`, `click_events`, `form_events` and `leads`. All writes require `public.is_admin()`, meaning the user is listed in `public.admins`. Insert leads **without** `.select()`, because visitors cannot read them back.
+- Tracking without cookies: `src/lib/attribution.ts` keeps the visit origin (utm_*, gclid, referrer) and a random `session_id` in sessionStorage. `PageViewTracker` adds them to `page_views` and `src/lib/formTracking.ts` logs form progress (`start`/`step`/`submit`) to `form_events`. `form_events` was created directly in the production database, outside `schema.sql`.
 
 ## Graphify
 

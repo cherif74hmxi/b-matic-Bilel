@@ -6,10 +6,14 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import MapEmbed from "@/components/MapEmbed";
 import { legalInfo } from "@/data/legal";
+import { trackFormStart, trackFormSubmit } from "@/lib/formTracking";
 import { sendLead } from "@/lib/leads";
 import useSeo from "@/hooks/useSeo";
 import { pagesSeo } from "@/data/seo";
 import { contactJsonLd } from "@/seo/schema";
+
+// Formulaire en une seule étape : nom de l'étape pour la mesure d'audience (lib/formTracking).
+const ETAPE = "Message";
 
 const Contact = () => {
   useSeo({ ...pagesSeo["/contact"], jsonLd: contactJsonLd() });
@@ -36,6 +40,7 @@ const Contact = () => {
         { type: "contact", name: form.nom, email: form.email, phone: form.telephone, message: form.message },
       );
       if (!ok) throw new Error("server");
+      trackFormSubmit("contact", 1, ETAPE);
       setForm({ nom: "", email: "", telephone: "", message: "" });
       setConsent(false);
       setFormState({ status: "success", message: "Merci ! Votre message a bien été envoyé. Nous vous répondrons rapidement." });
@@ -95,7 +100,7 @@ const Contact = () => {
           <AnimatedSection delay={200}>
             <GlowCard>
               <h2 className="font-heading text-xl font-semibold mb-6 text-foreground">Envoyez-nous un message</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} onChange={() => trackFormStart("contact", ETAPE)} className="space-y-4">
                 <input
                   type="text"
                   placeholder="Nom complet *"

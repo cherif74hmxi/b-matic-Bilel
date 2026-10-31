@@ -7,6 +7,7 @@ import { legalInfo } from "@/data/legal";
 import { RDV_PATH } from "@/data/rdv";
 import { rdvConfirmation, rdvEnvoi, rdvEtapes, rdvIntro } from "@/data/rendezvous";
 import { sendConfirmation } from "@/lib/confirmationRdv";
+import { trackFormStart, trackFormStep, trackFormSubmit } from "@/lib/formTracking";
 import { sendLead } from "@/lib/leads";
 import { buildDetails, emptyRdvForm, isStepValid, rappelPhrase, type RdvForm } from "@/lib/rendezvous";
 import StepProgress from "@/components/rdv/StepProgress";
@@ -21,6 +22,7 @@ import { AssuranceStep, CoordonneesStep, Recap, VehiculeStep, VitrageStep } from
 //  Envoi : double envoi classique (sendLead) → e-mail Formspree + demande
 //  dans Supabase (leads, type « rdv »). Puis, si le client a donné son email,
 //  confirmation envoyée par le serveur du site (lib/confirmationRdv).
+//  Progression mesurée sans cookie (lib/formTracking : début, étapes, envoi).
 // ============================================================================
 
 const FORMSPREE_URL = "https://formspree.io/f/xlgokywp";
@@ -30,7 +32,10 @@ const RendezVous = () => {
   useSeo({ ...pagesSeo[RDV_PATH] });
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<RdvForm>(emptyRdvForm);
-  const update = useCallback((patch: Partial<RdvForm>) => setForm((f) => ({ ...f, ...patch })), []);
+  const update = useCallback((patch: Partial<RdvForm>) => {
+    trackFormStart("rdv", rdvEtapes[0]);
+    setForm((f) => ({ ...f, ...patch }));
+  }, []);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
@@ -40,6 +45,7 @@ const RendezVous = () => {
   const valid = isStepValid(form, step);
 
   const goto = (n: number) => {
+    trackFormStep("rdv", n, rdvEtapes[n - 1]);
     setStep(n);
     setMessage("");
     top.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -82,6 +88,7 @@ const RendezVous = () => {
         setMessage(rdvEnvoi.erreur);
         return;
       }
+      trackFormSubmit("rdv", LAST_STEP, rdvEtapes[LAST_STEP - 1]);
       // Facultatif : un échec n'empêche jamais l'écran de confirmation.
       if (email) setEmailEnvoye(await sendConfirmation(form));
       done();
