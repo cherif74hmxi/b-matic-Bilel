@@ -15,9 +15,13 @@ import { franchiseCondition } from "@/data/parebrise";
 
 export const rdvEtapes = ["Coordonnées", "Vitrage", "Assurance", "Véhicule"] as const;
 
+// Bloc visible au-dessus du formulaire : ce que fait B MATIC, la zone, et
+// 2 points de réassurance (coches). Rester court : c'est lu sur téléphone.
+// Assurance : formulation douce, ne jamais écrire qu'on « appelle » l'assureur.
 export const rdvIntro = {
   titre: "Devis et rendez-vous pare-brise",
-  texte: "4 petites étapes, 1 minute. On vous rappelle pour fixer le rendez-vous.",
+  texte: "Remplacement et réparation de pare-brise et vitrages auto, à Ans et dans toute la région de Liège.",
+  points: ["Votre assurance\u00a0? On s'occupe de tout.", "On vous rappelle rapidement."],
 };
 
 // ------------------------------------------------------------------ Étape 1

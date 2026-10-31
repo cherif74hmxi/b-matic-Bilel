@@ -142,7 +142,14 @@ const RendezVous = () => {
           <h1 className="font-heading text-2xl md:text-4xl font-bold leading-tight" style={{ textWrap: "balance" }}>
             {rdvIntro.titre}
           </h1>
-          <p className="text-muted-foreground mt-2 text-sm md:text-base">{rdvIntro.texte}</p>
+          <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-lg mx-auto">{rdvIntro.texte}</p>
+          <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 mt-3 text-sm font-medium">
+            {rdvIntro.points.map((p) => (
+              <li key={p} className="inline-flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-highlight shrink-0" strokeWidth={2.5} aria-hidden="true" /> {p}
+              </li>
+            ))}
+          </ul>
         </header>
 
         <form onSubmit={onSubmit} noValidate className="relative rounded-2xl border border-border bg-card p-5 md:p-8">
