@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { matchPath, useLocation } from "react-router-dom";
+import { ATTRIBUTION_PARAMS, getAttribution, getSessionId } from "@/lib/attribution";
 import { insertPublicRow } from "@/lib/publicInsert";
 
 // ============================================================================
@@ -11,8 +12,11 @@ import { insertPublicRow } from "@/lib/publicInsert";
 //    · entry    : vrai pour la première page comptée de la visite (premier
 //                 affichage du site dans cet onglet) → nombre de visites ;
 //    · referrer : nom de domaine du site d'origine, seulement à l'arrivée et
-//                 seulement s'il est externe (ex. « www.google.com »).
-//  Aucune IP, aucun cookie, aucun identifiant de visiteur, aucun stockage local.
+//                 seulement s'il est externe (ex. « www.google.com ») ;
+//    · session_id : numéro de visite anonyme, tiré au hasard pour cet onglet
+//                 (sessionStorage, src/lib/attribution.ts) ;
+//    · utm_*, gclid : campagne d'où vient la visite, sur la page d'entrée seulement.
+//  Aucune IP, aucun cookie, aucun suivi d'une visite à l'autre.
 //  Seules les routes connues sont comptées (pas les 404). Désactivé en
 //  développement et pour les navigateurs automatisés.
 // ============================================================================
@@ -33,6 +37,12 @@ function externalReferrerHost(): string | null {
   }
 }
 
+/** Paramètres de campagne (utm_*, gclid) notés à l'arrivée dans cet onglet. */
+function pickCampaign(): Record<string, string> {
+  const a = getAttribution();
+  return Object.fromEntries(ATTRIBUTION_PARAMS.flatMap((k) => (a[k] ? [[k, a[k]]] : [])));
+}
+
 const PageViewTracker = ({ trackedPaths }: { trackedPaths: string[] }) => {
   const { pathname } = useLocation();
 
@@ -43,9 +53,14 @@ const PageViewTracker = ({ trackedPaths }: { trackedPaths: string[] }) => {
     const entry = !referrerSent;
     const referrer = entry ? externalReferrerHost() : null;
     referrerSent = true;
+    const row = { path: pathname.slice(0, 512), referrer, entry };
+    const campaign = entry ? pickCampaign() : {};
     // Envoi immédiat (keepalive) : une petite requête, rien n'est perdu si
-    // l'onglet est fermé juste après.
-    void insertPublicRow("page_views", { path: pathname.slice(0, 512), referrer, entry });
+    // l'onglet est fermé juste après. Si la base refuse les nouvelles colonnes,
+    // la vue est renvoyée sans elles : jamais perdue.
+    void insertPublicRow("page_views", { ...row, session_id: getSessionId(), ...campaign }).then(
+      (ok) => ok || insertPublicRow("page_views", row),
+    );
   }, [pathname, trackedPaths]);
 
   return null;

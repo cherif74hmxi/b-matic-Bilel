@@ -6,11 +6,19 @@
 //  page d'arrivée, UNE seule fois dans sessionStorage : effacé à la fermeture
 //  de l'onglet, jamais partagé entre visites ni avec un tiers.
 //  Joint ensuite à chaque demande (src/lib/leads.ts → colonnes de leads),
-//  pour savoir quelle publicité ou campagne l'a générée.
+//  pour savoir quelle publicité ou campagne l'a générée, à la page d'entrée
+//  (PageViewTracker) et à la progression dans les formulaires (formTracking).
+//
+//  Numéro de visite (session_id) : UUID tiré au hasard, une fois par onglet,
+//  gardé lui aussi dans sessionStorage. Il relie les pages vues et les étapes
+//  de formulaire d'une même visite, rien de plus (pas de suivi d'une visite à
+//  l'autre).
 // ============================================================================
 
 const STORAGE_KEY = "bmatic-attribution";
+const SESSION_KEY = "bmatic-session";
 const MAX = 255;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 /** Noms identiques aux colonnes de la table leads. */
 export const ATTRIBUTION_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid"] as const;
@@ -76,4 +84,34 @@ export function getAttribution(): Attribution {
   } catch {
     return {};
   }
+}
+
+/** Repli si le stockage est indisponible : même numéro pour toute la page. */
+let sessionId: string | undefined;
+
+function newUuid(): string {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  // Anciens navigateurs : UUID v4 à la main.
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+
+/** Numéro de visite anonyme de cet onglet (créé au premier appel). */
+export function getSessionId(): string {
+  try {
+    const saved = sessionStorage.getItem(SESSION_KEY);
+    if (saved && UUID.test(saved)) return (sessionId = saved);
+  } catch {
+    // Stockage indisponible : numéro gardé en mémoire.
+  }
+  sessionId ??= newUuid();
+  try {
+    sessionStorage.setItem(SESSION_KEY, sessionId);
+  } catch {
+    // idem
+  }
+  return sessionId;
 }
