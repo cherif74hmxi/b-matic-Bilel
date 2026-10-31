@@ -57,14 +57,18 @@ const PolitiqueConfidentialite = () => {
       <p>
         <strong>Statistiques de fréquentation :</strong> nous comptons les pages consultées
         (adresse de la page, sans paramètres), la date et, à l'arrivée sur le site, le seul nom
-        du site d'origine (par exemple « google.com »). Nous comptons aussi les clics sur nos
-        boutons de contact (WhatsApp, téléphone, e-mail, prise de rendez-vous) : seuls le type
-        de bouton, la page et la date sont notés. Ces statistiques sont mesurées{" "}
-        <strong>sans cookie</strong>, sans identifiant et sans aucun stockage sur votre
-        appareil ; nous n'enregistrons pas votre adresse IP (comme pour toute connexion à un
-        site, elle est techniquement transmise à nos hébergeurs pour acheminer la requête,
-        mais elle n'est pas associée à ces statistiques). Elles ne permettent pas de vous
-        identifier.
+        du site d'origine (par exemple « google.com ») et la campagne d'où vous venez
+        (paramètres UTM, gclid). Nous comptons aussi les clics sur nos boutons de contact
+        (WhatsApp, téléphone, e-mail, prise de rendez-vous) : seuls le type de bouton, la page
+        et la date sont notés. Pour nos formulaires, nous notons seulement leur progression
+        (formulaire commencé, étape atteinte, demande envoyée), jamais ce que vous y saisissez.
+        Il s'agit d'une <strong>mesure d'audience interne, anonyme, sans cookie ni transfert à
+        des tiers</strong> (navigation et progression dans le formulaire) : les pages vues et
+        les étapes d'une même visite sont reliées par un numéro de visite tiré au hasard,
+        effacé à la fermeture de l'onglet (voir § 5). Nous n'enregistrons pas votre adresse IP
+        (comme pour toute connexion à un site, elle est techniquement transmise à nos
+        hébergeurs pour acheminer la requête, mais elle n'est pas associée à ces
+        statistiques). Elles ne permettent pas de vous identifier.
       </p>
       <p>
         Nous ne collectons aucune donnée dite « sensible » et ne pratiquons aucun profilage
@@ -160,16 +164,18 @@ const PolitiqueConfidentialite = () => {
       <p>
         Ce site n'utilise <strong>aucun cookie publicitaire ni de suivi (tracking)</strong>, y
         compris pour la mesure de fréquentation décrite plus haut.
-        Nous utilisons uniquement un stockage strictement nécessaire au fonctionnement du site,
+        En dehors de la mesure d'audience décrite ci-dessous, nous utilisons uniquement un
+        stockage strictement nécessaire au fonctionnement du site,
         par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
         Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
       </p>
       <p>
-        <strong>Origine de la visite :</strong> à votre arrivée, ces informations (voir § 2)
-        sont notées dans le stockage de session de votre navigateur (« sessionStorage »), effacé
-        à la fermeture de l'onglet. Elles ne nous sont transmises que si vous envoyez une
-        demande. Aucun cookie, aucun suivi d'une visite à l'autre.
+        <strong>Origine et numéro de visite :</strong> à votre arrivée, l'origine de la visite
+        et un numéro de visite tiré au hasard (voir § 2) sont notés dans le stockage de session
+        de votre navigateur (« sessionStorage »), effacé à la fermeture de l'onglet. Ils
+        accompagnent les pages consultées, la progression dans un formulaire et votre
+        éventuelle demande. Aucun cookie, aucun suivi d'une visite à l'autre.
       </p>
       <p>
         <strong>Carte Google Maps :</strong> la carte du centre (pages Accueil et Contact) est
