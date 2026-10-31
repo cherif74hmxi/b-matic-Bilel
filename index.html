@@ -19,7 +19,8 @@
     </script>
     <!-- Consent Mode v2 : tout « denied » par défaut, AVANT GTM. GTM (qui porte GA4) n'est
          chargé qu'avec un accord : choix mémorisé ici, nouveau choix via src/lib/consent.ts
-         (même clé, testé). Pas de GA4 en direct : tout passe par GTM. -->
+         (même clé, testé). Pas de GA4 en direct : tout passe par GTM. Mode « basic » voulu :
+         aucune requête Google sans accord (donc pas de <noscript> GTM). -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() { dataLayer.push(arguments); }
@@ -72,10 +73,6 @@
   </head>
 
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W2CZ7DTJ"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

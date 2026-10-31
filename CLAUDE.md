@@ -43,8 +43,10 @@
 
 ## Règles de travail
 - **Mobile-first** : chaque page doit être impeccable sur téléphone.
-- **RGPD** : pas de cookie de suivi ; consentement sur tout nouveau formulaire ; mettre à jour
-  la politique de confidentialité si on collecte de nouvelles données. Secrets **jamais** côté front.
+- **RGPD** : cookies de suivi Google (Analytics/Ads) uniquement après consentement explicite ;
+  mesure d'audience interne (page_views/form_events) sans cookie ni consentement ;
+  consentement sur tout nouveau formulaire ; mettre à jour la politique de confidentialité si on
+  collecte de nouvelles données. Secrets **jamais** côté front.
 - **Contenus modifiables** (prix, services, assureurs, FAQ…) → dans des fichiers `src/data/*`
   commentés et faciles à éditer, pas en dur dans les composants.
 - **Avant chaque commit** : `npm run build` doit passer **sans erreur**. Commits clairs, par sous-tâche.
@@ -89,7 +91,7 @@ Tests must match `src/**/*.{test,spec}.{ts,tsx}`. `playwright.config.ts` uses Lo
   - `rendezvous.ts`: texts and choices of the multi-step quote/booking form (`/rendez-vous`, page `RendezVous.tsx`, steps in `components/rdv/`, logic in `lib/rendezvous.ts`). Slot rules are in `rdv.ts`, insurers in `assurances.ts`.
 - **Forms**: Contact and RendezVous post to Formspree and to `leads` (Supabase). If the RendezVous customer gives an e-mail, the VPS server sends them a confirmation (`server/confirmation.ts`, Brevo API, called from `lib/confirmationRdv.ts`); the Brevo key lives only in the VPS `.env` (see `DEPLOY.md` §8). Every form has a mandatory GDPR consent checkbox. The RendezVous form is a callback request: no hour is booked online (the `rdv_slots` table and `book_rdv` RPC remain for the admin agenda only). No document is collected (no upload, no registration-document scan): the vehicle is entered by hand (plate, or make + model, year optional) and the garage contacts the insurer itself.
 - **UI**: `src/components/ui/` holds generated shadcn/ui primitives, so avoid hand-editing them. The site's own look comes from the custom components `GlowCard`, `NeonButton` and `AnimatedSection` (an IntersectionObserver fade-in with a `delay` prop), plus the Tailwind theme tokens `neon-{blue,purple,pink,cyan}`, `text-gradient-neon`, `font-heading`/`font-body` and the `glow-pulse` animation, defined in `tailwind.config.ts` and `src/index.css`. Pages tend to use raw Tailwind and these components more than shadcn primitives.
-- `CookieConsent` stores the user's choice in `localStorage` (inside try/catch). It only controls Google (GTM `GTM-W2CZ7DTJ`, which carries GA4 and Ads). The inline script in `index.html` sets Consent Mode v2 to denied by default and loads GTM only after consent; `src/lib/consent.ts` saves a new choice and pushes the dataLayer conversions (no personal data). The first-party tracking (`page_views`, `form_events`) does not depend on this banner.
+- `CookieConsent` stores the user's choice in `localStorage` (inside try/catch). It only controls Google (GTM `GTM-W2CZ7DTJ`, which carries GA4 and Ads). The inline script in `index.html` sets Consent Mode v2 to denied by default and loads GTM only after consent (basic mode on purpose: no Google request without consent, so no GTM `<noscript>`; do not switch to advanced mode); `src/lib/consent.ts` saves a new choice and pushes the dataLayer conversions (no personal data). The first-party tracking (`page_views`, `form_events`) does not depend on this banner.
 
 ## Supabase
 

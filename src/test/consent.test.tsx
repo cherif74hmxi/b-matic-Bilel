@@ -54,9 +54,10 @@ afterEach(() => {
 });
 
 describe("index.html — Consent Mode v2 et GTM", () => {
-  it("GTM officiel (head + noscript), même clé que src/lib/consent.ts, pas de GA4 en direct", () => {
+  it("GTM officiel dans le head, même clé que src/lib/consent.ts, ni noscript ni GA4 en direct", () => {
     expect(HTML).toContain("'GTM-W2CZ7DTJ'");
-    expect(HTML).toMatch(/<body>\s*<!-- Google Tag Manager \(noscript\) -->\s*<noscript><iframe src="https:\/\/www\.googletagmanager\.com\/ns\.html\?id=GTM-W2CZ7DTJ"/);
+    // Aucune requête Google sans accord : pas d'iframe GTM pour les navigateurs sans JavaScript.
+    expect(HTML).not.toContain("ns.html");
     expect(HEAD_SCRIPT).toContain(`localStorage.getItem("${CONSENT_STORAGE_KEY}")`);
     expect(HTML).not.toContain("gtag/js");
     expect(HTML).not.toContain("G-BG2WRCLCKP");
