@@ -27,7 +27,7 @@
 //  Secrets / variables (supabase secrets set …) :
 //   GEMINI_API_KEY      (obligatoire)
 //   GEMINI_MODEL        (facultatif, défaut ci-dessous)
-//   ALLOWED_ORIGINS     (facultatif : « https://bmatic.be,http://localhost:8080 » ; défaut *)
+//   ALLOWED_ORIGINS     (facultatif : « https://bmatic-pare-brise.com,http://localhost:8080 » ; défaut *)
 //   SCAN_MAX_PER_HOUR   (facultatif, scans par appareil et par heure, défaut 5)
 //   SCAN_MAX_PER_DAY    (facultatif, scans publics sur 24 h, défaut 150)
 //   SCAN_IP_SALT        (facultatif, sel du hachage d'IP ; défaut : dérivé de la clé de service)

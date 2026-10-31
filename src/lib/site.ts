@@ -1,7 +1,7 @@
 // ============================================================================
 //  Adresse publique du site (liens absolus : données structurées, partage)
 // ----------------------------------------------------------------------------
-//  VITE_SITE_URL (ex. « https://www.bmatic.be ») une fois le domaine connu ;
+//  VITE_SITE_URL (« https://bmatic-pare-brise.com ») ;
 //  à défaut, l'adresse depuis laquelle la page est servie.
 // ============================================================================
 

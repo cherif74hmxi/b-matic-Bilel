@@ -134,7 +134,8 @@ const PolitiqueConfidentialite = () => {
           <a href={legalInfo.emailService.privacyUrl} target="_blank" rel="noopener noreferrer">brevo.com</a>.
         </li>
         <li>
-          <strong>{legalInfo.host.name}</strong> — hébergement du site.
+          <strong>{legalInfo.host.name}</strong> ({legalInfo.host.company}, France) — hébergement
+          du site.
         </li>
         <li>
           <strong>Google Maps</strong> (Google Ireland Ltd.) — carte du centre affichée sur les

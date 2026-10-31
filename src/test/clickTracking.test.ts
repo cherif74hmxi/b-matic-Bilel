@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { classifyContactLink } from "@/lib/clickTracking";
 
-const origin = "https://bmatic.be";
+const origin = "https://bmatic-pare-brise.com";
 
 describe("classifyContactLink", () => {
   it("reconnaît les liens de contact", () => {
@@ -13,7 +13,7 @@ describe("classifyContactLink", () => {
 
   it("compte les liens vers la réservation comme RDV", () => {
     expect(classifyContactLink("/rendez-vous", origin)).toBe("rdv");
-    expect(classifyContactLink("https://bmatic.be/rendez-vous/?besoin=pare-brise", origin)).toBe("rdv");
+    expect(classifyContactLink("https://bmatic-pare-brise.com/rendez-vous/?besoin=pare-brise", origin)).toBe("rdv");
   });
 
   it("ignore les autres liens", () => {

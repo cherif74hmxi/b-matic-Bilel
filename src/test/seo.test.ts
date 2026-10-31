@@ -89,7 +89,7 @@ describe("api/share — actualité", () => {
       ),
     );
     const { postMeta } = await import("../../api/share");
-    const meta = await postMeta("nouveaux-cadeaux", "https://www.bmatic.be");
+    const meta = await postMeta("nouveaux-cadeaux", "https://bmatic-pare-brise.com");
     expect(meta?.title).toBe("Nouveaux cadeaux pare-brise — Actualités B MATIC");
     expect(meta?.description).toBe("Une Switch 2 au choix.");
     expect(meta?.image).toBe("https://sb.test/storage/v1/object/public/post-images/p1/photo%201.webp");

@@ -2,8 +2,9 @@
 //  B MATIC — Informations légales centralisées (RGPD / mentions légales)
 // ----------------------------------------------------------------------------
 //  Tout est regroupé ici : il suffit de modifier ce fichier, les pages se
-//  mettent à jour automatiquement. Les champs entre crochets « [ ... ] »
-//  restent à compléter (hébergeur au déploiement, région Supabase).
+//  mettent à jour automatiquement. Site : https://bmatic-pare-brise.com.
+//  Adresse légale de l'atelier : 4432 Ans (Belgique) — « région de Liège »
+//  reste réservé aux textes marketing / SEO.
 // ============================================================================
 
 export const legalInfo = {
@@ -56,21 +57,20 @@ export const legalInfo = {
   // "BE" → autorité : APD / GBA  |  "FR" → autorité : CNIL
   country: "BE" as "BE" | "FR",
 
-  // --- Hébergeur du site -------------------------------------------------
+  // --- Hébergeur du site (VPS, voir DEPLOY.md) ----------------------------
   host: {
-    name: "Vercel",
-    company: "Vercel Inc.",
-    address: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
-    website: "https://vercel.com",
+    name: "OVHcloud",
+    company: "OVH SAS",
+    address: "2 rue Kellermann, 59100 Roubaix, France",
+    website: "https://www.ovhcloud.com",
   },
 
   // --- Base de données (Supabase) ----------------------------------------
-  // Région : Supabase > Project Settings > General > « Region »
-  // (ex. « Union européenne (Francfort, Allemagne) »).
+  // Région : Supabase > Project Settings > General > « Region » (eu-west-1).
   database: {
     name: "Supabase",
     company: "Supabase, Inc.",
-    region: "[région du projet Supabase]",
+    region: "Union européenne (Irlande, eu-west-1)",
     privacyUrl: "https://supabase.com/privacy",
   },
 
