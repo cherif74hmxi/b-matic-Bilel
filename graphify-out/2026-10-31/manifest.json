@@ -426,9 +426,9 @@
     "semantic_hash": ""
   },
   "src/pages/Contact.tsx": {
-    "mtime": 1793287212.4044974,
-    "seen": 1793287337.0614426,
-    "ast_hash": "a2a5cb35c882e44c2210c2113912c5f6",
+    "mtime": 1793478285.307095,
+    "seen": 1793478563.7119722,
+    "ast_hash": "9242c32d374ab2c0453a1fc567a21fc8",
     "semantic_hash": ""
   },
   "src/pages/Index.tsx": {
@@ -450,9 +450,9 @@
     "semantic_hash": ""
   },
   "src/pages/PolitiqueConfidentialite.tsx": {
-    "mtime": 1793464823.4489963,
-    "seen": 1793473918.1005726,
-    "ast_hash": "43586e2f10f811a27979f30f2cfda48c",
+    "mtime": 1793478301.2894623,
+    "seen": 1793478563.712273,
+    "ast_hash": "aca899b74f03ecbd47c5550b91d9b508",
     "semantic_hash": ""
   },
   "src/test/example.test.ts": {
@@ -534,9 +534,9 @@
     "semantic_hash": "1ea33c386606b2932d06052c0404cfa0"
   },
   "CLAUDE.md": {
-    "mtime": 1793332971.331285,
-    "seen": 1793333220.0546598,
-    "ast_hash": "071dad72da6ef2415a0fbf2a70bdd45e",
+    "mtime": 1793478545.4403179,
+    "seen": 1793478563.714477,
+    "ast_hash": "ceb283b4ccc96b595db364d57ccfcc9e",
     "semantic_hash": ""
   },
   "docs/PROJET-V2.md": {
@@ -630,10 +630,10 @@
     "semantic_hash": "63334c32ae40fc57384c98b31ed53fff"
   },
   "src/components/PageViewTracker.tsx": {
-    "mtime": 1792645523.42186,
-    "seen": 1793275883.8102021,
-    "ast_hash": "611b77acbed4eec49229ee5a2df75ba6",
-    "semantic_hash": "611b77acbed4eec49229ee5a2df75ba6"
+    "mtime": 1793478261.6627483,
+    "seen": 1793478563.7052526,
+    "ast_hash": "b79efea7f708cadef9eea0347eaee88e",
+    "semantic_hash": ""
   },
   "src/components/admin/AdminLayout.tsx": {
     "mtime": 1793300810.3874812,
@@ -720,10 +720,10 @@
     "semantic_hash": "84224433b0d24a8c03cc87a5035bc963"
   },
   "src/lib/publicInsert.ts": {
-    "mtime": 1792645523.4223201,
-    "seen": 1793275883.8105106,
-    "ast_hash": "2a3d0a5c78e9f6e7772bfac9099f1966",
-    "semantic_hash": "2a3d0a5c78e9f6e7772bfac9099f1966"
+    "mtime": 1793478224.0638812,
+    "seen": 1793478563.7111232,
+    "ast_hash": "8aa12d51d5b0b21ea45ed4ecdb3375c4",
+    "semantic_hash": ""
   },
   "src/lib/slug.ts": {
     "mtime": 1793276370.1878912,
@@ -1104,9 +1104,9 @@
     "semantic_hash": ""
   },
   "src/pages/RendezVous.tsx": {
-    "mtime": 1793464988.5436115,
-    "seen": 1793473918.1005764,
-    "ast_hash": "4b8b5bdd279c0cf189bcefafb6be12a2",
+    "mtime": 1793478273.1526191,
+    "seen": 1793478563.7122767,
+    "ast_hash": "45d1537bbf077f77f948796ad7f765f7",
     "semantic_hash": ""
   },
   "src/test/rendezvous.test.ts": {
@@ -1440,9 +1440,9 @@
     "semantic_hash": ""
   },
   "src/lib/attribution.ts": {
-    "mtime": 1793464464.178961,
-    "seen": 1793473918.09877,
-    "ast_hash": "44dec7bd53847b9b321691162a912b7a",
+    "mtime": 1793478211.4366016,
+    "seen": 1793478563.7105668,
+    "ast_hash": "133440976070d707c15cf8eb8801a7e2",
     "semantic_hash": ""
   },
   "src/lib/routes.ts": {
@@ -1461,6 +1461,24 @@
     "mtime": 1793464622.1753824,
     "seen": 1793473918.101454,
     "ast_hash": "63260187ae2d4d0ce530bcdd489f672d",
+    "semantic_hash": ""
+  },
+  "src/lib/formTracking.ts": {
+    "mtime": 1793478250.203552,
+    "seen": 1793478563.710814,
+    "ast_hash": "acd10b22f43da09a078c250c17df6325",
+    "semantic_hash": ""
+  },
+  "src/test/formTracking.test.ts": {
+    "mtime": 1793478323.7930787,
+    "seen": 1793478563.7129905,
+    "ast_hash": "8bc62dc7e7e046bd756899ee45fcfb8d",
+    "semantic_hash": ""
+  },
+  "src/test/pageViewTracker.test.tsx": {
+    "mtime": 1793478344.5088568,
+    "seen": 1793478563.7130964,
+    "ast_hash": "fa55a59be528c3d0687280c5658d602d",
     "semantic_hash": ""
   }
 }
