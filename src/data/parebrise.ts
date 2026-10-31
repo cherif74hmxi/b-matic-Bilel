@@ -35,7 +35,7 @@ export const franchiseCondition =
 
 // ------------------------------------------------------------------ SEO
 export const pareBriseSeo = {
-  title: "Remplacement pare-brise Liège — jusqu'à 300 € ou un cadeau | B MATIC",
+  title: "Remplacement de pare-brise à Liège, assurance gérée | B MATIC",
   description:
     `Pare-brise remplacé à ${zone}. Toutes assurances, franchise prise en charge selon votre contrat, jusqu'à 300 € ou un cadeau. Centre à Ans, 7j/7.`,
   /** Nom du service dans les données structurées. */

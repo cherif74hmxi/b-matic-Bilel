@@ -21,7 +21,7 @@ export interface PageSeo {
 
 export const pagesSeo = {
   "/": {
-    title: "B MATIC — Pare-brise à Ans (Liège) | Jusqu'à 300 € ou un cadeau",
+    title: "B MATIC — Remplacement de pare-brise à Ans (Liège)",
     description:
       "Pare-brise à Ans (Liège) : toutes assurances, franchise prise en charge selon votre contrat, jusqu'à 300 € ou un cadeau. Au centre ou à domicile, 7j/7.",
   },

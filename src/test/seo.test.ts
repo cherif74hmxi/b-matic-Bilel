@@ -23,6 +23,14 @@ describe("SEO — titres et descriptions", () => {
     }
   });
 
+  it("accueil et /pare-brise : titres distincts, ~60 caractères max (au-delà, Google coupe)", () => {
+    const accueil = pagesSeo["/"].title;
+    const pareBrise = pagesSeo["/pare-brise"].title;
+    expect(accueil).not.toBe(pareBrise);
+    expect(accueil).toMatch(/B MATIC.*Ans/);
+    for (const t of [accueil, pareBrise]) expect(t.length, t).toBeLessThanOrEqual(62);
+  });
+
   it("toutes les routes fixes sont pré-rendues, avec un JSON-LD sur l'accueil", () => {
     const paths = pages.map((p) => p.path);
     for (const path of Object.keys(pagesSeo)) expect(paths).toContain(path);
