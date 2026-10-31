@@ -49,7 +49,10 @@ const PolitiqueConfidentialite = () => {
       <p>
         Les demandes envoyées via ces formulaires nous parviennent par e-mail et sont
         également enregistrées dans notre espace de gestion sécurisé, accessible aux seules
-        personnes habilitées.
+        personnes habilitées. Avec chaque demande, nous conservons l'origine de votre visite
+        (publicité ou campagne d'où vous venez — paramètres « UTM » et identifiant de clic
+        Google Ads « gclid » —, site référent et première page consultée), à des fins
+        statistiques : savoir quelles annonces nous amènent des demandes.
       </p>
       <p>
         <strong>Statistiques de fréquentation :</strong> nous comptons les pages consultées
@@ -160,6 +163,12 @@ const PolitiqueConfidentialite = () => {
         par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
         Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
+      </p>
+      <p>
+        <strong>Origine de la visite :</strong> à votre arrivée, ces informations (voir § 2)
+        sont notées dans le stockage de session de votre navigateur (« sessionStorage »), effacé
+        à la fermeture de l'onglet. Elles ne nous sont transmises que si vous envoyez une
+        demande. Aucun cookie, aucun suivi d'une visite à l'autre.
       </p>
       <p>
         <strong>Carte Google Maps :</strong> la carte du centre (pages Accueil et Contact) est

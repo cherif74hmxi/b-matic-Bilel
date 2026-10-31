@@ -1,6 +1,7 @@
 // ============================================================================
 //  Demandes (table public.leads) — libellés partagés site public / admin
 // ============================================================================
+import { getAttribution } from "@/lib/attribution";
 import { insertPublicRow } from "@/lib/publicInsert";
 
 // « reprise » : formulaire retiré lors du pivot pare-brise, gardé pour afficher
@@ -44,17 +45,18 @@ const clip = (value: string | undefined, max: number) => {
 };
 
 /**
- * Enregistre la demande dans public.leads. À n'appeler qu'après consentement
- * (case RGPD cochée). Ne lève jamais d'exception : renvoie false en cas d'échec.
+ * Enregistre la demande dans public.leads, avec l'origine de la visite
+ * (src/lib/attribution.ts). À n'appeler qu'après consentement (case RGPD
+ * cochée). Ne lève jamais d'exception : renvoie false en cas d'échec.
  * Les limites de taille reprennent les contraintes de la table.
  */
-export function submitLead(lead: LeadSubmission): Promise<boolean> {
+export async function submitLead(lead: LeadSubmission): Promise<boolean> {
   const details = Object.fromEntries(
     Object.entries(lead.details ?? {})
       .filter(([, v]) => v !== undefined && v !== null && v !== "")
       .map(([k, v]) => [k, typeof v === "string" ? v.slice(0, 2000) : v]),
   );
-  return insertPublicRow("leads", {
+  const row = {
     type: lead.type,
     name: clip(lead.name, 120) ?? "—",
     email: clip(lead.email, 254),
@@ -62,7 +64,12 @@ export function submitLead(lead: LeadSubmission): Promise<boolean> {
     message: clip(lead.message, 5000),
     details,
     consent: true,
-  });
+  };
+  const attribution = getAttribution();
+  if (Object.keys(attribution).length === 0) return insertPublicRow("leads", row);
+  // Origine refusée par la base (colonnes ou droits absents, migration
+  // 20261031000001 non exécutée) : la demande passe sans elle, jamais perdue.
+  return (await insertPublicRow("leads", { ...row, ...attribution })) || insertPublicRow("leads", row);
 }
 
 /**

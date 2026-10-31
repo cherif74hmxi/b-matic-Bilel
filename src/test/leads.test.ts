@@ -42,4 +42,18 @@ describe("submitLead", () => {
     expect(row.details).toEqual({ C: "ok", D: 0 });
     expect(row.consent).toBe(true);
   });
+
+  it("joint l'origine de la visite, et renvoie la demande sans elle si la base la refuse", async () => {
+    sessionStorage.setItem("bmatic-attribution", JSON.stringify({ utm_source: "google", gclid: "abc", landing_path: "/" }));
+    insertPublicRow.mockResolvedValueOnce(true);
+    expect(await submitLead(lead)).toBe(true);
+    expect(insertPublicRow.mock.calls[0][1]).toMatchObject({ utm_source: "google", gclid: "abc", landing_path: "/" });
+
+    insertPublicRow.mockReset();
+    insertPublicRow.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
+    expect(await submitLead(lead)).toBe(true);
+    expect(insertPublicRow).toHaveBeenCalledTimes(2);
+    expect(insertPublicRow.mock.calls[1][1]).not.toHaveProperty("utm_source");
+    sessionStorage.clear();
+  });
 });
