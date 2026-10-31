@@ -99,6 +99,11 @@ const PolitiqueConfidentialite = () => {
             <td>Notre intérêt légitime à améliorer le site (art. 6.1.f) — données non identifiantes</td>
             <td>Données anonymes, conservées à des fins statistiques</td>
           </tr>
+          <tr>
+            <td>Mesurer l'audience et l'efficacité de nos annonces (Google Analytics, Google Ads)</td>
+            <td>Votre consentement (art. 6.1.a), donné et retiré à tout moment via le bandeau</td>
+            <td>Durée des cookies fixée par Google (jusqu'à 2 ans pour Google Analytics)</td>
+          </tr>
         </tbody>
       </table>
       <p>
@@ -150,6 +155,15 @@ const PolitiqueConfidentialite = () => {
           <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>.
         </li>
         <li>
+          <strong>Google Analytics et Google Ads</strong> (Google Ireland Ltd.), via Google Tag
+          Manager — <strong>uniquement si vous l'acceptez</strong> dans le bandeau : mesure de
+          l'audience du site et des demandes venues de nos annonces. Aucune donnée saisie dans
+          les formulaires (nom, téléphone, e-mail, plaque) ne leur est transmise. Des données
+          peuvent être transférées aux États-Unis (Google LLC, certifiée au cadre de protection
+          des données UE–États-Unis). Voir leur politique :{" "}
+          <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer">policies.google.com</a>.
+        </li>
+        <li>
           <strong>{legalInfo.aiAssistant.name}</strong> ({legalInfo.aiAssistant.company}) — assistant
           d'intelligence artificielle utilisé uniquement pour l'aide à la rédaction des
           actualités, dans l'espace d'administration (seuls les textes du centre lui sont
@@ -162,11 +176,18 @@ const PolitiqueConfidentialite = () => {
 
       <h2>5. Cookies et stockage local</h2>
       <p>
-        Ce site n'utilise <strong>aucun cookie publicitaire ni de suivi (tracking)</strong>, y
-        compris pour la mesure de fréquentation décrite plus haut.
-        En dehors de la mesure d'audience décrite ci-dessous, nous utilisons uniquement un
-        stockage strictement nécessaire au fonctionnement du site,
-        par exemple pour mémoriser votre choix concernant le présent bandeau d'information.
+        <strong>Cookies Google (avec votre accord seulement) :</strong> si vous cliquez sur
+        « Accepter » ou cochez une catégorie dans « Personnaliser », Google Analytics
+        (statistiques) et Google Ads (marketing) sont chargés via Google Tag Manager et peuvent
+        déposer leurs cookies (par exemple « _ga », « _gcl_au »). Sans accord, ces outils ne
+        sont pas chargés. Vous pouvez changer d'avis à tout moment avec le lien « Gérer mes
+        cookies » en bas de page ; en cas de retrait, leurs cookies sont effacés.
+      </p>
+      <p>
+        La mesure de fréquentation interne décrite plus haut n'utilise aucun cookie et ne
+        dépend pas de ce choix. En dehors de cette mesure d'audience, nous utilisons uniquement
+        un stockage strictement nécessaire au fonctionnement du site,
+        par exemple pour mémoriser votre choix concernant le présent bandeau.
         Ce stockage ne nécessite pas de consentement. Les polices d'écriture sont hébergées
         localement sur le site : leur affichage n'entraîne aucun appel vers un serveur tiers.
       </p>
