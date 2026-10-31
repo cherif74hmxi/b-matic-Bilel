@@ -6,6 +6,7 @@ import GlowCard from "@/components/GlowCard";
 import NeonButton from "@/components/NeonButton";
 import MapEmbed from "@/components/MapEmbed";
 import { legalInfo } from "@/data/legal";
+import { pushConversion } from "@/lib/consent";
 import { trackFormStart, trackFormSubmit } from "@/lib/formTracking";
 import { sendLead } from "@/lib/leads";
 import useSeo from "@/hooks/useSeo";
@@ -41,6 +42,7 @@ const Contact = () => {
       );
       if (!ok) throw new Error("server");
       trackFormSubmit("contact", 1, ETAPE);
+      pushConversion("contact");
       setForm({ nom: "", email: "", telephone: "", message: "" });
       setConsent(false);
       setFormState({ status: "success", message: "Merci ! Votre message a bien été envoyé. Nous vous répondrons rapidement." });

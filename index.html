@@ -17,6 +17,43 @@
         } catch (e) {}
       })();
     </script>
+    <!-- Consent Mode v2 : tout « denied » par défaut, AVANT GTM. GTM (qui porte GA4) n'est
+         chargé qu'avec un accord : choix mémorisé ici, nouveau choix via src/lib/consent.ts
+         (même clé, testé). Pas de GA4 en direct : tout passe par GTM. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+      });
+      window.bmaticLoadGtm = function () {
+        if (window.bmaticGtmLoaded || location.pathname.indexOf("/admin") === 0) return;
+        window.bmaticGtmLoaded = true;
+        // Google Tag Manager (extrait officiel)
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-W2CZ7DTJ');
+        // End Google Tag Manager
+      };
+      (function () {
+        try {
+          var c = JSON.parse(localStorage.getItem("bmatic-cookie-consent"));
+          if (!c || c.v !== 2) return;
+          gtag("consent", "update", {
+            analytics_storage: c.analytics === true ? "granted" : "denied",
+            ad_storage: c.marketing === true ? "granted" : "denied",
+            ad_user_data: c.marketing === true ? "granted" : "denied",
+            ad_personalization: c.marketing === true ? "granted" : "denied",
+          });
+          if (c.analytics === true || c.marketing === true) window.bmaticLoadGtm();
+        } catch (e) {}
+      })();
+    </script>
     <meta name="author" content="B MATIC" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/logo.png" />
@@ -35,6 +72,10 @@
   </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W2CZ7DTJ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

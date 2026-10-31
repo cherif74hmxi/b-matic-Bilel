@@ -6,6 +6,7 @@ import { pagesSeo } from "@/data/seo";
 import { legalInfo } from "@/data/legal";
 import { RDV_PATH } from "@/data/rdv";
 import { rdvConfirmation, rdvEnvoi, rdvEtapes, rdvIntro } from "@/data/rendezvous";
+import { pushConversion } from "@/lib/consent";
 import { sendConfirmation } from "@/lib/confirmationRdv";
 import { trackFormStart, trackFormStep, trackFormSubmit } from "@/lib/formTracking";
 import { sendLead } from "@/lib/leads";
@@ -89,6 +90,7 @@ const RendezVous = () => {
         return;
       }
       trackFormSubmit("rdv", LAST_STEP, rdvEtapes[LAST_STEP - 1]);
+      pushConversion("rdv");
       // Facultatif : un échec n'empêche jamais l'écran de confirmation.
       if (email) setEmailEnvoye(await sendConfirmation(form));
       done();
