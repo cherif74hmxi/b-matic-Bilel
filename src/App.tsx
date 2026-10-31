@@ -10,6 +10,7 @@ import ChunkErrorBoundary from "@/components/ChunkErrorBoundary";
 import PageViewTracker from "@/components/PageViewTracker";
 import ContactClickTracker from "@/components/ContactClickTracker";
 import { RDV_PATH } from "@/data/rdv";
+import { PUBLIC_PATHS, type PublicPath } from "@/lib/routes";
 // Accueil chargé immédiatement (page d'atterrissage → LCP rapide).
 import Index from "./pages/Index";
 
@@ -37,21 +38,23 @@ const RouteFallback = () => <div className="min-h-screen" aria-hidden="true" />;
 
 // Site public : Header / Footer / bannière cookies restent affichés pendant
 // le chargement du chunk de la page.
-// Pages publiques. Seules ces routes sont comptées dans les statistiques :
+// Pages publiques : chemins dans src/lib/routes.ts (repris par le serveur pour
+// les vrais 404). Seules ces routes sont comptées dans les statistiques :
 // les 404 (robots qui testent /wp-login.php, fautes de frappe…) ne le sont pas.
-const publicRoutes = [
-  { path: "/", element: <Index /> },
-  { path: "/a-propos", element: <APropos /> },
-  { path: "/contact", element: <Contact /> },
-  { path: RDV_PATH, element: <RendezVous /> },
-  { path: "/pare-brise", element: <PareBrise /> },
-  { path: "/conseils", element: <Conseils /> },
-  { path: "/conseils/:slug", element: <ConseilDetail /> },
-  { path: "/actualites", element: <Actualites /> },
-  { path: "/actualites/:slug", element: <ActualiteDetail /> },
-  { path: "/politique-de-confidentialite", element: <PolitiqueConfidentialite /> },
-  { path: "/mentions-legales", element: <MentionsLegales /> },
-];
+const pages: Record<PublicPath, JSX.Element> = {
+  "/": <Index />,
+  "/a-propos": <APropos />,
+  "/contact": <Contact />,
+  [RDV_PATH]: <RendezVous />,
+  "/pare-brise": <PareBrise />,
+  "/conseils": <Conseils />,
+  "/conseils/:slug": <ConseilDetail />,
+  "/actualites": <Actualites />,
+  "/actualites/:slug": <ActualiteDetail />,
+  "/politique-de-confidentialite": <PolitiqueConfidentialite />,
+  "/mentions-legales": <MentionsLegales />,
+};
+const publicRoutes = PUBLIC_PATHS.map((path) => ({ path, element: pages[path] }));
 const trackedPaths = publicRoutes.map((r) => r.path);
 
 // Pages retirées lors du pivot pare-brise (garder vercel.json en phase).

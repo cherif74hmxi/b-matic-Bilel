@@ -8,7 +8,9 @@
 //     et sitemap des actualités (api/sitemap-annonces.ts) ;
 //   • email de confirmation des demandes de rappel (server/confirmation.ts) ;
 //   • cache long sur /assets (fichiers au nom versionné) ;
-//   • repli SPA : tout le reste renvoie dist/index.html, React prend la main.
+//   • repli SPA : les pages de l'application (src/lib/routes.ts) renvoient
+//     dist/index.html, React prend la main ; toute autre adresse renvoie
+//     dist/404.html avec un VRAI statut 404 (React affiche « introuvable »).
 //
 //  Lancé par pm2 (deploy/ecosystem.config.cjs), derrière nginx qui gère le HTTPS.
 //  Écoute uniquement sur 127.0.0.1 : il n'est joignable qu'à travers nginx.
@@ -20,6 +22,7 @@ import { fileURLToPath } from "node:url";
 import { GET as shareGET } from "../api/share.ts";
 import { GET as sitemapGET } from "../api/sitemap-annonces.ts";
 import { confirmationHandler } from "./confirmation.ts";
+import { isAppPath } from "@/lib/routes";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(dirname, "..");
@@ -94,6 +97,9 @@ app.post("/api/confirmation-rdv", express.json({ limit: "4kb" }), confirmationHa
 app.use(
   express.static(DIST, {
     index: false,
+    // Pas de « /conseils → /conseils/ » (dossier d'images du même nom) : la page
+    // canonique est /conseils, servie juste après depuis conseils.html.
+    redirect: false,
     setHeaders(res, filePath) {
       if (filePath.includes(`${path.sep}assets${path.sep}`)) {
         res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
@@ -115,9 +121,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// 5) Repli SPA : tout le reste renvoie l'application.
-app.use((_req, res) => {
-  res.sendFile(path.join(DIST, "index.html"));
+// 5) Repli SPA : pages de l'application en 200, toute autre adresse en 404
+//    (pas de « soft 404 » : les robots voient bien que la page n'existe pas).
+const PAGE_404 = fs.existsSync(path.join(DIST, "404.html")) ? path.join(DIST, "404.html") : path.join(DIST, "index.html");
+app.use((req, res) => {
+  if (isAppPath(req.path)) return res.sendFile(path.join(DIST, "index.html"));
+  // Sans ETag ni date : jamais de « 304 » à la place du 404.
+  res.status(404).sendFile(PAGE_404, { etag: false, lastModified: false });
 });
 
 app.listen(PORT, "127.0.0.1", () => {

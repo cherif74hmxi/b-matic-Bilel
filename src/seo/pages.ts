@@ -7,7 +7,7 @@
 //  api/sitemap-annonces.ts.
 // ============================================================================
 import type { HeadMeta } from "../../api/_lib/head";
-import { pagesSeo, type StaticPath } from "@/data/seo";
+import { notFoundSeo, pagesSeo, type StaticPath } from "@/data/seo";
 import { conseils } from "@/data/conseils";
 import { absoluteUrl, siteUrl } from "@/lib/site";
 import {
@@ -59,4 +59,9 @@ export function prerenderPages(): PrerenderPage[] {
     },
   }));
   return [...fixes, ...articles];
+}
+
+/** <head> de dist/404.html, servi avec le statut 404 (server/index.ts) : pas d'URL canonique, noindex. */
+export function notFoundMeta(): HeadMeta {
+  return { ...notFoundSeo, image: absoluteUrl(OG_IMAGE), noindex: true };
 }

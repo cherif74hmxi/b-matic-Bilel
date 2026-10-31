@@ -8,6 +8,9 @@
 //  relais comme avant. Seul le <head> est pré-rendu : c'est ce que lisent les
 //  robots de partage (WhatsApp, Facebook…), qui n'exécutent pas JavaScript.
 //
+//  dist/404.html : même page, <head> « introuvable » en noindex, servie avec
+//  le statut 404 pour toute adresse inconnue (server/index.ts).
+//
 //  Les modules de src/ sont chargés par un serveur Vite interne (alias « @/ »
 //  et imports d'images compris), sans dupliquer de texte.
 //
@@ -51,9 +54,11 @@ export default function seoPrerender({ siteUrl, alias }: { siteUrl: string; alia
       });
 
       let pages: PrerenderPage[];
+      let notFound: PrerenderPage["meta"];
       try {
         const mod = await server.ssrLoadModule("/src/seo/pages.ts");
         pages = (mod.prerenderPages as () => PrerenderPage[])();
+        notFound = (mod.notFoundMeta as () => PrerenderPage["meta"])();
       } finally {
         await server.close();
       }
@@ -66,6 +71,8 @@ export default function seoPrerender({ siteUrl, alias }: { siteUrl: string; alia
         await fs.mkdir(path.dirname(target), { recursive: true });
         await fs.writeFile(target, injectHead(template, page.meta));
       }
+      // Page des adresses inconnues, servie avec le statut 404 par server/index.ts.
+      await fs.writeFile(path.join(outDir, "404.html"), injectHead(template, notFound));
 
       // robots.txt : tout est autorisé. L'admin n'est PAS bloqué ici : ses pages
       // portent « noindex », que Google ne verrait plus si elles étaient bloquées.
